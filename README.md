@@ -93,12 +93,13 @@ others.
 | DFS_IMS_LINEGRP | DC terminal unit type|
 | IST_VTAM_IMSAPPLID | IMS APPLID|
 | DFS_AUTH_LIB_HLQ| HLQ for IMS installation libraries|
+| DFS_AUTH_LIB_HLQ1| First High level HLQ for target for IMS instance data sets|
 | DFS_AUTH_LIB_HLQ2 | 2nd level HLQ for IMS instance data sets to read or write|
 | DFS_AUTH_LIB_SYSHLQ2 | 2nd level HLQ for IMS system data sets to read from|
 | DFS_SMS_ENVIRONMENT | True or false value for SMS environment|
 | DFS_SMS_CLASS | SMS storage class|
 | DFS_SMS_MCLASS | SMS management class|
-| DFS_DS_VOLUME1 | Data set vloume|
+| DFS_DS_VOLUME1 | Data set volume|
 | DFS_DS_VOLUME2 | Data set volume|
 | DFS_IMS_UNIT | Data set device type|
 | DFS_IMS_UNIT2 | Data set device type|
