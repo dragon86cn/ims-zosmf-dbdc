@@ -1,0 +1,1156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Use encoding IBM-1047 if this workflow definition file is to be held in a z/OS dataset and
+     encoding utf-8 if it is to be held in a UNIX file system -->
+
+<!-- Declare external file containing IMS variables referenced in the following steps -->
+<!DOCTYPE workflow [<!ENTITY copyright "Copyright IBM Corp., 2015">
+					<!ENTITY variables SYSTEM "IMSVariables.xml">
+					]> 
+
+<!--                                                      
+<copyright>                                                 
+LICENSED MATERIALS - PROPERTY OF IBM                       
+                                                         
+5635-A04                                                   
+                                                           
+    COPYRIGHT IBM CORP. 2015,2015 ALL RIGHTS RESERVED      
+                                                           
+US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION OR
+DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE CONTRACT WITH    
+IBM CORP. 
+                                                            
+</copyright>                                               
+--> 
+
+	 
+<workflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xsi:noNamespaceSchemaLocation="../workflow_v1.xsd">
+
+	<!-- ********************************************************** -->
+	<!-- Workflow process information section                       -->
+	<!-- ********************************************************** -->
+	<workflowInfo>
+		<workflowID>ProvisionIMS</workflowID>
+		<workflowDescription>Procedure to provision an IMS TM-DB System</workflowDescription>
+		<workflowVersion>0.1</workflowVersion>
+		<vendor>IBM</vendor>
+		<Provisioning>
+            <productID>5635-A04</productID>
+            <productName>IMS</productName>
+            <productVersion>Version 13</productVersion>
+            <softwareType>IMS</softwareType>
+        </Provisioning>
+	</workflowInfo>
+
+
+	<!-- ***************************************************** -->
+	<!--     Include IMS variables used by the following steps -->
+	<!-- ***************************************************** -->
+	&variables;
+
+
+
+	<!-- ********************************************************** -->
+	<!-- ********************************************************** -->
+	<!-- Define the steps of the workflow process                   -->
+	<!-- ********************************************************** -->
+	<!-- ********************************************************** -->
+	
+	<!-- ************************************** -->
+	<!--     Step - Specify IMS Criteria        -->
+	<!-- ************************************** -->
+	<step name="imsCriteria" optional="false">
+		<title>Specify IMS Criteria</title>
+		<description>Specify IMS Criteria.</description>
+		<variableValue name="DFS_ENVIRONMENT" scope="instance" required="true" noPromptIfSet="false"></variableValue>	<!-- Reserved -->  
+		<variableValue name="DFS_IMS_USERID" scope="instance" required="true" noPromptIfSet="false"></variableValue> 	<!-- TSO UserID performing the provisioning process  -->
+		<variableValue name="DFS_IMS_SSID" scope="instance" required="true" noPromptIfSet="false"></variableValue>	    <!-- IMS subsystem ID  -->
+		<variableValue name="DFS_IMS_SECURITY" scope="instance" required="true" noPromptIfSet="false"></variableValue>  <!-- Reserved -->  
+		<variableValue name="DFS_AUTH_LIB_HLQ" required="true" scope="instance" noPromptIfSet="false"/>              	<!-- First High level DSNAME qualifier for IMS data sets --> 
+		<variableValue name="DFS_AUTH_LIB_HLQ1" required="true" scope="instance" noPromptIfSet="false"/> 		     	<!-- First High level DSNAME qualifier for IMS instance data sets -->
+		<variableValue name="DFS_AUTH_LIB_HLQ2" required="true" scope="instance" noPromptIfSet="false"/> 		     	<!-- Second High level DSNAME qualifier for IMS instance data sets -->	
+		<variableValue name="DFS_AUTH_LIB_SYSHLQ2" required="true" scope="instance" noPromptIfSet="false"/> 		   	<!-- Second High level DSNAME qualifier for IMS SMP/E System data sets -->	
+		<variableValue name="DFS_SMS_ENVIRONMENT" required="false" scope="instance" noPromptIfSet="false"/>				<!-- Reserved - optional use of SMS managed data sets-->
+		<variableValue name="DFS_SMS_CLASS" required="false" scope="instance" noPromptIfSet="false"/>					<!-- SMS - Storage Class -->
+		<variableValue name="DFS_SMS_MCLASS" required="false" scope="instance" noPromptIfSet="false"/>					<!-- SMS - Management Class -->
+		<variableValue name="DFS_DS_VOLUME1" required="true" scope="instance" noPromptIfSet="false"/>					<!-- generic volume to store data set in -->
+		<variableValue name="DFS_DS_VOLUME2" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic additional volume to store data set in -->
+		<variableValue name="DFS_IMS_UNIT" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic device type UNIT to store data set in SYSALLDA-->
+		<variableValue name="DFS_IMS_UNIT2" required="true" scope="instance" noPromptIfSet="false"/>       				<!-- generic device type to store data set in **same as IXUTEMPU**  3390 -->
+		<variableValue name="DFS_PORTIDSuf" required="true" scope="instance" noPromptIfSet="false"/>					<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+		<variableValue name="DFS_IMSXCFGroup" scope="instance" noPromptIfSet="false"/>									<!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect) -->
+		<variableValue name="DFS_IMSPlex" required="true" scope="instance" noPromptIfSet="false"/> 						<!-- The IMS PLEX name  -->
+		<variableValue name="DFS_IMS_CRC" required="true" scope="instance" noPromptIfSet="false"/>          			<!-- IMS SYSTEM control recognition character -->
+		<variableValue name="DFS_IMS_LINEGRP" required="true" scope="instance" noPromptIfSet="false"/>     				<!-- IMS LINEGRP macro specs for MTO and SMTO terminals/peripherals -->
+		<!--<variableValue name="DFS_MOUNTPOINT" required="true" noPromptIfSet="false"/>                                    Reserved - Mount point for IMS UNIX files --> 
+		<!--<variableValue name="DFS_FSTYPE" required="true" noPromptIfSet="false"/>                                        Reserved - File System for IMS Unix files-->
+		<variableValue name="DFS_VTAM_NODE_IMSMTO" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- VTAM Node name for IMS Master Terminal for IMS Master Terminal: Default PMASTER1 (IXUVNDP1)-->
+		<variableValue name="DFS_VTAM_NODE_IMSND1" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- VTAM node name for IMS User terminal #1 (IXUVNDU1) -->
+		<variableValue name="DFS_VTAM_NODE_IMSND2" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- VTAM node name for IMS User terminal #2 (IXUVNDU2) -->
+		<!--<variableValue name="DXR_IRLM_SSID" required="true" scope="instance" noPromptIfSet="false"/> 		    			IRLM Subsystem ID   --> 
+		<!--<variableValue name="DXR_IRLM_Procedure" required="true" scope="instance" noPromptIfSet="false"/>         		IRLM Procedure NAME  -->	
+		<variableValue name="IST_VTAM_IMSAPPLID" required="true" scope="instance" noPromptIfSet="false"/>				<!-- VTAM APPLID for IMS -->
+		<variableValue name="IST_VTAM_Procedure" required="true" scope="instance" noPromptIfSet="false"/> 				<!-- VTAM procname used to start zCloud VTAM -->
+		<variableValue name="EZB_TCPIP_LoadLib" required="true" scope="instance" noPromptIfSet="false"/> 				<!-- TCPIP Load Library -->
+		<variableValue name="GIM_IMS_TARGETzone" required="false" scope="instance" noPromptIfSet="false"/> 				<!-- Reserved - IMS SMP/E Target Zone ID -->
+		<variableValue name="GIM_IMS_GLOBALzone_CSI" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- Reserved - IMS SMP/E GLOBAL Zone CSI -->	
+		<variableValue name="zCloud_LERuntime" required="true" scope="instance" noPromptIfSet="false"/> 				<!-- DSN specification for Language Environment Runtime Lib -->
+		<variableValue name="zCloud_MACLIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for MACLIB or SYS1.MACLIB or SYS1.AMACLIB -->
+		<variableValue name="zCloud_LPALIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for LPALIB or SYS1.LPALIB-->
+		<variableValue name="zCloud_PROCLIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for PROCLIB or SYS1.PROCLIB -->
+		<variableValue name="zCloud_MODGEN" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for MACLIB or SYS1.MACLIB or SYS1.AMACLIB -->	
+		<variableValue name="zCloud_CSSLIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for CSSLIB or SYS1.CSSLIB -->	
+		<variableValue name="DFS_useIEFJOBS" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- Option to use IEFJOBS  -->
+		<variableValue name="zCloud_IEFJOBS" required="false" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for SYS1.IEFJOBS -->	
+		<variableValue name="DFS_IXUSTIM1" required="false" scope="instance" noPromptIfSet="false"/>  					<!-- EXEC time parameter for SMP/E, SYSDEF Preprocessor, Stage1 **default 600** -->
+		<variableValue name="DFS_IXUSTIM3" required="false" scope="instance" noPromptIfSet="false"/> 					<!-- EXEC time parameter for MPPs, IFPs, IRLM, VTAM **default 1440** -->	
+		<instructions substitution="true">
+			<p>This step allows you to define the variables that will characterize the system {instance-DFS_IMS_SSID} to be provisioned. In some instances default values are provided.</p>
+
+			Keep in mind that once entered the information will be used by all the subsequent steps.
+			<p>
+			The environment created by this script is intended to be representative of a typical basic IMS TM/DB configuration.<br></br>
+			You might want to verify that the deployment of the new IMS instance was successful after all the steps are completed. </p>
+			<p>
+			The "TM/DB System" is a fully functional environment capable of updates to any IMS database types: Full Function, DEDB, and MSDB.
+			DB/DC restart and recovery functionality is also available along with the utilities pertinent to the environment and as the following characteristics
+			</p>
+			<b>IMS Specific</b>
+			<ul>
+			<li>IMS SYSTEM ID: ${_workflow-softwareServiceInstanceName} </li>
+			<li>IMS Connect: ${_workflow-softwareServiceInstanceName}HWS </li>
+			<li>IMS Connect port defined: 99${instance-DFS_PORTIDSuf},98${instance-DFS_PORTIDSuf},55${instance-DFS_PORTIDSuf}(DB), 88${instance-DFS_PORTIDSuf} (SSL)</li>
+			<li>IMS Control Region Jobname: ${_workflow-softwareServiceInstanceName}CTL </li>    
+			<li>IMS DBRC Region Jobname: ${_workflow-softwareServiceInstanceName}DRC </li>
+			<li>IMS DLI Region  Jobname: ${_workflow-softwareServiceInstanceName}DLI </li>
+			<li>IMS OM  Region  Jobname: ${_workflow-softwareServiceInstanceName}OM </li>
+			<li>IMS SCI Region  Jobname: ${_workflow-softwareServiceInstanceName}SC</li>
+			<li>IMS RM  Region  Jobname: ${_workflow-softwareServiceInstanceName}RM </li>
+			<li>IMS ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li>
+			<li>IMS SYSTEM control recognition character : ${instance-DFS_IMS_CRC} </li>
+			<li>VTAM Node name for IMS Master Terminal: ${instance-DFS_VTAM_NODE_IMSMTO} </li>
+			</ul>
+			
+			<b>Environment</b>
+			<ul>
+			<li>TSO UserId submitting the jobs:  ${instance-DFS_IMS_USERID} </li>
+			<li>High level qualifier for the IMS libraries:  ${instance-DFS_AUTH_LIB_HLQ} </li>
+			<li>First High level qualifier for the target IMS libraries:  ${instance-DFS_AUTH_LIB_HLQ1} </li>
+			<li>Second level qualifier for IMS instance libraries:  ${instance-DFS_AUTH_LIB_HLQ2}</li>
+			<li>Second level qualifier for IMS SMP/E System libraries:  ${instance-DFS_AUTH_LIB_SYSHLQ2}</li>
+			<li>SMS Storage Class :  ${instance-DFS_SMS_CLASS} </li>
+			<li>SMS - Management Class : ${instance-DFS_SMS_MCLASS}</li>
+			<li>DASD used: ${instance-DFS_DS_VOLUME1}</li>
+			<li>Secondary DASD used: ${instance-DFS_DS_VOLUME2} </li>
+			<li>Generic device type (UNIT): ${instance-DFS_IMS_UNIT}</li>
+			<li>Generic device type 2: ${instance-DFS_IMS_UNIT2}</li>
+			<li>The XCF GROUP NAME: ${instance-DFS_IMSXCFGroup}</li>
+			<li>The IMS PLEX name  : ${instance-DFS_IMSPlex} </li>
+			<li>IRLM NAME:  ${instance-DXR_IRLM_SSID}</li>
+			<li>IRLM Proc NAME: ${instance-DXR_IRLM_Procedure} </li>
+			<li>VTAM APPLID for IMS:  ${instance-IST_VTAM_IMSAPPLID} </li>
+			<li>DSN for Language Environment Runtime:  ${instance-zCloud_LERuntime}</li>
+			<li>DSN for SYS1.MACLIB:  ${instance-zCloud_MACLIB} </li>
+			<li>DSN for SYS1.LPALIB:  ${instance-zCloud_LPALIB}</li>
+			<li>DSN for SYS1.PROCLIB: ${instance-zCloud_PROCLIB} </li>
+			<li>DSN for SYS1.MACLIB:  ${instance-zCloud_MODGEN}</li>
+			<li>DSN for the CSSLIB:   ${instance-zCloud_CSSLIB}</li>
+			<li>Is the workflow using the IEFJOBS file?  ${instance-DFS_useIEFJOBS}</li>
+			<li>DSN for SYS1.IEFJOBS: ${instance-zCloud_IEFJOBS} </li>
+			<li>VTAM procname used:   ${instance-IST_VTAM_Procedure}</li>
+			<li>TCPIP Load Library:   ${instance-EZB_TCPIP_LoadLib}</li>
+			<li>UserId for FTP file transfer: ${instance-zCloud_FTPUser} </li>
+			<li>IMS SMP/E GLOBAL Zone CSI: ${instance-GIM_IMS_GLOBALzone_CSI} </li>
+			<li>IMS SMP/E Target Zone: ${instance-GIM_IMS_TARGETzone}</li></ul></instructions>
+		<weight>1</weight>
+		<skills>IMS administration</skills>
+		<autoEnable>true</autoEnable>
+		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
+	</step>
+
+	
+	<step name="Step2"> 						
+		<title>IMS Installation preparation</title>
+		<description>This step presents, in execution sequence, the JOBs and TASKs which comprise the Installation Process. <br></br>
+			The process provides examples for many of the tasks that will be necessary in order to complete the installation of your own system under this IMS release.
+		</description>
+
+		
+		<step name="allocateWorkDs"> 			
+			<title>Allocate work Dataset for zCloud IMS</title>
+			<description>Allocate work Dataset for zCloud IMS</description>
+			<instructions substitution="true"> This step allocates a work data set needed for the workflow.</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSALWRK.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+		
+<!--
+		<step name="mountZFSFiles"> 			
+			<title>Mount ZFS files</title>
+			<description>Mount ZFS files</description>			
+			<instructions substitution="true"></instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+			<inlineTemplate substitution="true">//MOUNT   EXEC PGM=IKJEFT01,DYNAMNBR=20,REGION=4M
+//SYSTSPRT DD  SYSOUT=*
+//SYSUDUMP DD  SYSOUT=*
+//SYSPRINT DD  SYSOUT=*
+//SYSOUT   DD  SYSOUT=*
+//SYSTSIN  DD  *
+ MOUNT FILESYSTEM('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.HFS') -
+  MOUNTPOINT('${instance-DFS_MOUNTPOINT}') -
+  TYPE(${instance-DFS_FSTYPE})</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(MOUNT)</saveAsDataset>
+			</template>
+		</step>
+-->
+		
+		
+<!--  
+		<step name="renameIMSds"> 			<title>Rename libraries</title>
+			<description>Rename IMS installation libraries</description>
+			<instructions substitution="true"> This step installation libraries to adhere to the workflow's naming conventions.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+			<fileTemplate substitution="true">jcl/DFS4RENM.jcl</fileTemplate>
+					<submitAs maxRc="4">JCL</submitAs>
+					<maxLrecl>80</maxLrecl>
+					<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(RENAME)</saveAsDataset>
+			</template> 
+		</step>
+-->
+
+		<step name="allocateSystemDs"> 	     		
+			<title>Allocate IMS System Definitions data sets</title>
+			<description>Allocates system definition dataset</description>			
+			<instructions substitution="true"> 
+				This JOB allocates the data sets needed for IMS system definition, in addition to
+				those allocated for SMP/E processing.
+				ALLOCATE steps:
+				-   0 - Successful completion.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSALSY2.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C101J)</saveAsDataset>
+			</template>
+		</step>
+
+
+<!--  
+			<step name="sysdefReview"> 	       <title>IMS System Definition Review</title>
+			<description>Review/edit the content of the IMS System Definition</description>
+			<instructions substitution="true"> This task is provided so that you may review the content of the System Definition.
+
+If you wish, you may edit the "STAGE1 source deck" used to defined your IMS system.  <br></br>
+One change you may want to consider is whether the conditional assembly listings (compiler output) will be printed.
+The default (ASMPRT=OFF on the IMSGEN macro) will suppress the listings to minimize the size of the Stage2 output
+listing.  If you wish to see the assembly listings, the default must be changed to ASMPRT=ON on the IMSGEN macro.
+<br></br>
+If you wish to add your own DATABASE, APPLCTN, or TRANSACT macros, please modify the previously supplied skeletons:
+<ul>
+<li>    DFSIXSC1 - System macros    </li>
+<li>    DFSIXS40 - IVP Sample Application macros  </li>
+<li>    DFSIXS41 - IMS Sample Application macros </li>
+<li>    DFSIXS42 - Fast Path Sample Application macros </li>
+<li>    DFSIXS43 - Communication macros    </li>
+</ul>
+ <br></br>
+Please do not change any other aspects of the supplied Stage1 unless you are also able to properly propagate the effects of
+your changes throughout the remaining steps.
+     <br></br>
+The IMS EXEC PARM values used by the IMS created within this process is specified in the following ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB members:
+DFSPBIMS - System ${_workflow-softwareServiceInstanceName} (DB/DC). This member is created by a later JOB.
+</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+			<fileTemplate substitution="true">jcl/DFSC201T.jcl</fileTemplate>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C201T)</saveAsDataset>
+			</template>
+		</step>
+-->
+
+		<step name="genPreprocessor"> 			   
+			<title>IMS System Definition Preprocessor Utility</title>
+			<description>Run IMS System Definition Preprocessor Utility</description>
+			<instructions substitution="true">
+				This step executes the IMS System Definition Preprocessor Utility.
+				Normally this utility would only be used for very large system definitions.  It is being run at this time as an example.
+				NOTE:  This JOB has been set up to support LGEN Stage1 processing.  Some adjustments may be necessary depending upon the size of your Stage1.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSGNPRE.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C202J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="Stage1"> 			   
+			<title>Run SYSDEF Stage1</title>
+			<description>Run IMS System Definition STAGE1 process</description>
+			<prereqStep name="genPreprocessor"/>			
+			<instructions substitution="true">
+				This step performs what is called Stage1 of the IMS system definition process. In other words this step will
+				be assembling the source deck which you had the opportunity to view in a previous step: ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C201T).   <br></br>
+				<p>The outputs of this assembly is in two parts:
+				1) An assembly listing, routed to the dataset pointed by the SYSPRINT DD card
+				2) The Stage2 "jobstream" which is placed into ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C301J) as the next item. This will be the input for the next step.
+				The expected RC(s) are:    <br></br>
+				-   0 - Successful completion.     <br></br>
+				-   2 - Successful completion with minor warnings.  <br></br></p>
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFS4STG1.jcl</fileTemplate>
+				<submitAs maxRc="2">JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C203J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="Stage2Submit">  		       
+			<title>Run SYSDEF Stage2</title>
+			<description>Run IMS System Definition Stage2 process</description>
+			<prereqStep name="Stage1"/>
+			<instructions substitution="true">
+				This step performs what is known as the Stage2 processing to finalize the IMS system definition process.
+				You may wish to make some of the following changes before submitting this jobstream:
+				<ul>
+				<li>  Verify that the IMSGENnn JOB statement specify a HELD OUTPUT MSGCLASS (see MSGCLASS= on the JOB statements).  </li>
+				<li>  Globally change all occurrences of SYSOUT=A to SYSOUT=*.</li>
+				<li>  Globally change all occurrences of SOUT=A to SOUT='*'
+				(the single quotes are required).               </li>
+				</ul>
+				<br>
+				The expected RC(s) are:  </br>
+				-   0 - Successful completion.     <br></br>
+				-   2 - Successful completion with minor warnings.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFS4STG2.jcl</fileTemplate>
+				<submitAs maxRc="2">JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+
+
+	<step name="BuildzCloudIMS"> 						
+		<title>Build the zCloud IMS</title>
+		<description>
+			This step presents, in execution sequence, the JOBs and TASKs which comprise the Installation Process. <p>
+			The process provides examples for many of the tasks that will be necessary in order to complete the installation of your own system under this IMS release.
+			</p>
+		</description>
+	
+	
+	    <step name="genSecurityExits"> 		   	
+			<title>RACF Security Exits For IMS</title>
+			<description>ASSEMBLY/BIND RACF SECURITY EXITS</description>
+			<instructions substitution="true"> 
+				This JOB assembles and link-edits the following user exits for establishing the RACF security environment.
+				-   DFSCSGN0 the sign on/off exit.
+				-   DFSCTRN0 the transaction authorization exit.
+				The expected RC(s) are:
+				-   0 - Successful completion.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSC105J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C105J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="apfAuth"> 			        
+			<title>Authorize IMS Datasets to z/OS</title>
+			<description>Authorize IMS dataset</description>
+			<instructions substitution="true">
+				For IMS to be able to run and its functions available, the following datasets must be APF authorized:
+				-   SDXRRESL - Only if the IRLM is being used
+				-   SDFSRESL
+				-   MODBLKS  - Does not need to be authorized if only used for staging
+				-   MODBLKSA
+				-   MODBLKSB
+				-   VTAMLST data sets
+				
+				Please update your IEAAPFxx or PROGxx member of SYS1.PARMLIB, to make these changes permanent
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSETPG.jcl</fileTemplate>				
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3D201T)</saveAsDataset>
+			</template>
+		</step>
+		
+		
+<!--
+		<step name="defineSVCs">  	
+			<title>Define IMS Services to z/OS</title>
+			<description>Incorporate into z/OS the IMS SVC Type-2 Type-4</description>			
+			<instructions substitution="true"> 
+				The IMS Type-2 and Type-4 SVC must be incorporated into the z/OS nucleus.
+				<p>
+				To make the changes introduced by this process permanent (across z/OS  IPL) you might need to perform a z/OS system IPL with CLPA option.
+				for more information refer to <a href="http://www-01.ibm.com/support/knowledgecenter/zosbasics/com.ibm.zos.zsysprog/zsysprogc_initialization.htm"> Starting z/OS: The initialization (IPL) process</a>
+				</p>
+				<p>
+				In alternative to this step process and in order to have the changes permanent across z/OS IPL you can use one of the following ways:
+				<ul>
+				<li>  Bind the Type 2 SVC with the z/OS nucleus.</li>
+				<li>  Load the Type 2 SVC from SYS1.NUCLEUS using the Nucleus Module Loader facilities.</li>
+				<li>  Load the Type 2 SVC from SYS1.NUCLEUS using a SYS1.IPLPARM member, NUCLSTxx.</li>
+				<li>  Load the Type 2 SVC from SYS1.NUCLEUS using a SYS1.PARMLIB member, NUCLSTxx.</li>
+				</ul>
+				</p>
+				<p>
+				SVC are requests for a particular system service. An SVC interrupts the program being executed and passes control to
+				the z/OS component called "supervisor" so that it can perform the service. Programs request these services through
+				macros, such as OPEN (open a file), GETMAIN (obtain storage), or WTO (write a message to the system operator).
+				</p>
+			</instructions>
+			<weight>10</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFS4DSVC.jcl</fileTemplate>
+				<submitAs maxRc="8">JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3D209T)</saveAsDataset>
+			</template>
+		</step>
+-->
+		
+
+		<step name="allocateAllSystemDs"> 		
+			<title>Allocate IMS Datasets</title>
+			<description>Allocate IMS Data Sets </description>			
+			<instructions substitution="true"> 
+				This JOB scratches and reallocates the data sets needed in order to prepare the zCloud IMS system and the
+				sample application (including the IMS Sample Application and the Fast Path Sample Application).
+				<br></br>
+				NOTE:  The allocation and initialization of the sample application data bases and the DBRC RECON is deferred until just before they are used in
+				order to facilitate the ability to re-run the provided test
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSALSY1.jcl</fileTemplate>					
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E101J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="DynamicAlloc"> 		    	
+			<title>Dynamic Allocation of IMS system Datasets</title>
+			<description>Create System data sets Dynamic Allocation Members </description>			
+			<instructions substitution="true">
+				This JOB assembles and binds the dynamic allocation definitions into
+				${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL for zCloud IMS DB Recovery Control (DBRC RECON) and sample Databases.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSDYNAL.jcl</fileTemplate>			
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E301J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="allocateCatalogDB"> 		
+			<title>Create IMS Catalog Database</title>
+			<description>Allocate and Define IMS Catalog Database Resources</description>
+			<instructions substitution="true"> 
+				This JOB allocates the IMS catalog database data sets. It
+				also registers the IMS catalog database to the RECON, and define the default PSB and DBD. The load and image copy of the IMS Catalog database is done in a later step.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSALCAT.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+					<maxLrecl>80</maxLrecl>
+			<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E319J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="prepDBRC"> 					
+			<title>Prepare IMS DB Recovery Control</title> <!--  COPY DBRC SKELETAL JCL TO  IMS.PROCLIB     -->
+			<description>Copy DBRC skeletal into the IMS PROCLIB</description>			
+			<instructions substitution="true">
+				This JOB defines the basic procedures needed by the Data Base Recovery Control (DBRC), initialize its RECON dataset
+				and copies its skeletal JCL used for IMS processing to ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB.
+				<br></br>
+				NOTE:  These DBRC skeletal JCL members have been modified specifically to be used by the default zCloud IMS.  The unmodified versions are distributed in the
+				${instance-DFS_AUTH_LIB_SYSHLQ2}.SDFSISRC library.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE314J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E314J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="addIMSprocs"> 			
+			<title>Ready the IMS Proclib</title>
+			<description>Add IMS System Members to the IMS PROCLIB</description>			
+			<instructions substitution="true">
+				This JOB adds a variety of members and control statement members to IMS.PROCLIB.
+				Refer to comments within the JOB for details on what members are being added
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE302J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E302J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="defineSubcomps"> 			
+			<title>Define IMS Subcomponents</title> <!-- Add SCI/OM/RM Members to IMS.PROCLIB  -->
+			<description>Add SCI/OM/RM parms Members to IMS.PROCLIB </description>			
+			<instructions substitution="true">
+				This JOB adds control statement members to ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB for some of the basic IMS subcomponents:
+				<ul>
+				<li>Common Service Layer (CSL) Managers SCI </li>
+				<li>Operation manager or OM </li>
+				<li>Resource Manager or RM</li>
+				</ul>
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE303J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E303J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="defineCQS"> 				
+			<title>Define IMS Subcomponent CQS</title> <!-- Add CQS Member to IMS.PROCLIB  -->
+			<description>Add CQS Member to IMS.PROCLIB </description>
+			<instructions substitution="true">
+				This JOB adds control statement members to ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB for the Common Queue Server (CQS) needed
+				if you want to implement data sharing among multiple IMS images.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE304J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E304J)</saveAsDataset>
+			</template>
+		</step>
+	
+	
+		<step name="createICON"> 				
+			<title>Create IMS Connect</title> <!-- Add IMS Connect job to the JOBS library  -->
+			<description> Create IMS Connect Job</description>	
+			<instructions substitution="true">
+				This step will Start IMS Connect: ${_workflow-softwareServiceInstanceName}HWS
+			</instructions>
+			<weight>2</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFS4ICON.jcl</fileTemplate> 		
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(${_workflow-softwareServiceInstanceName}HWS1)</saveAsDataset>
+			</template>
+		</step> 
+
+
+		<step name="IMSConfigDefaults"> 		
+			<title>IMS Configuration Defaults</title> <!--  IMS EXEC PARMs. DFSPBxxx -->
+			<description>Define IMS Configuration Defaults</description>
+			<instructions substitution="true">
+				This JOB copies into ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB, the control statement member that
+				specify the default values for this zCloud IMS image(also known as IMS EXEC parameters).   The default name is DFSPBIMS.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE305J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E305J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="copyProcsInIMSProclib"> 	
+			<title>Define IMS Components to z/OS</title> <!--  Copy STC Procedures to SYS1.PROCLIB   -->
+			<description>Copy IMS STC Procedures to SYS1.PROCLIB </description>
+			<instructions substitution="true">
+				This JOB copies the IMS execution procedures to the data set designated as ${instance-zCloud_PROCLIB}.
+				During the copy, the IMS procedure is renamed to the name specified in the previous steps procedure is also copied back to ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB. </instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFS4CPYP.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E312J)</saveAsDataset>
+			</template>
+		</step>
+		
+				<step name="createIEFJOBSMembers" optional="false">
+			<title>Create IEFJOBS Members</title>
+			<description>Create a member of IEFJOBS for each procedure in SYS1.PROCLIB</description>
+			<prereqStep name="Stage2Submit" />
+			<instructions>Run the rexx program to build the IEFJOBS members</instructions>
+			<weight>1</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">rexx/IEFJOBS.rexx</fileTemplate>
+				<submitAs maxRc="0">TSO-REXX-JCL</submitAs>
+				<maxLrecl>1024</maxLrecl>
+			</template>
+		</step>
+		
+	</step>
+
+		<step name="copyProcsToIMSJobsDataset"> 	
+			<title>Define IMS Resources to z/OS</title> <!--  Copy MPP, IFP, and SPOOL Print JOBs to the IMS.JOBS  -->
+			<description>Copy MPP, IFP, and SPOOL Print JOBs in the IMS library</description>
+			<instructions substitution="true">
+				This JOB copies the IMS MPP, IFP, and SPOOL Print JOBs to the ${instance-DFS_AUTH_LIB_HLQ2}.JOBS
+				data set(s).  These JOBs will be submitted to the JESx internal reader by the IMSRDR procedures (IVPnnRDx) as the result of a /START REGION IMS
+				operator command.                                                        </instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE313J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E313J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="copyStagingLib"> 			
+			<title>Copy Staging Libraries</title>
+			<description>Copy the IMS staging libraries MODBLKS, ACBLIB, MATRIX, FORMAT </description>
+			<instructions substitution="true"> Copy the IMS staging libraries MODBLKS, ACBLIB, MATRIX, FORMAT</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSCPYST.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E318J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="PrepareExits"> 				
+			<title>Prepare Exits for Security and Connectivity</title> <!--  Assembles and link-edits the IMS default user exits    -->
+			<description>Assembles and link-edits the IMS default user exits</description>
+			<instructions substitution="true">
+				This JOB assembles and link-edits the following user exits:
+				<ul>
+				<li> DFSRAS00 the resource access security exit </li>
+				<li> DFSCCMD0 the command authorization exit </li>
+				<li> HWSSMPL1 the user message exit for IMS Connect/OTMA for TCP clients</li>
+				<li> HWSUINIT the user initialization exit for IMS Connect     </li>
+				<li> HWSJAVA0 the user message exit for IMS connector for java clients  </li>
+				</ul>
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSE315J.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E315J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="ACBLIB_AppPrep"> 			
+			<title>Prepare ACBLIB for Sample Applications</title>
+			<description>
+				This step presents, in execution sequence, the JOBs and TASKs which comprise the Installation Process. <br></br>
+				The process provides examples for many of the tasks that will be necessary in order to complete the installation of your own system under this IMS release.
+			</description>
+
+		
+			<step name="ACBLIB_AppPrep_substep1"> 			
+				<title>Data Bases Generation </title>
+				<description>Perform Data Base Descriptor (DBD) generation </description>
+				<instructions substitution="true"> 
+					This JOB uses the DBDGEN Utility to create the data base definitions
+					(DBDs) for the data base that can be used for testing of the zCloud IMS.  The assembled DBDs are link-edited into ${instance-DFS_AUTH_LIB_HLQ2}.DBDLIB.
+					They are:
+					<b>DB name        Organization</b>
+					<br>IVPDB1         HIDAM/OSAM </br>
+					<br>IVPDRD1        HDAM/VSAM</br>
+					<br>IVPDB2         HDAM/VSAM</br>
+					<br>IVPDB3         DEDB</br>
+					<br>DBFSAMD3       DEDB</br>
+					<br>IVPDB4         MSDB</br>
+					<br>DBFSAMD1       MSDB</br>
+					<br>DBFSAMD2       MSDB</br>
+					<br>IVPDB5         GSAM/BSAM</br>
+					<br>DI21PART       HISAM/VSAM</br>
+					<br>DFSAUTDB       HDAM/OSAM for JAVA</br>
+					<br>DFSIPODB       PHIDAM/OSAM</br>
+				</instructions>
+				<weight>1</weight>
+				<skills>DB Admin</skills>
+				<autoEnable>true</autoEnable>
+				<template>
+					<fileTemplate substitution="true">jcl/DFSAPPGN.jcl</fileTemplate>			
+					<submitAs>JCL</submitAs>
+					<maxLrecl>80</maxLrecl>
+					<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E201J)</saveAsDataset>
+				</template>
+			</step>
+
+
+			<step name="ACBLIB_AppPrep_substep2"> 			
+				<title>Program Specifications Generation </title>
+				<description>Program Specification Blocks (PSBs) generation </description>
+				<instructions substitution="true"> 
+					This JOB uses the PSBGEN Utility to create the program specification
+					blocks (PSBs) for the application programs that can be used by used to test this zCloud IMS.  The assembled PSBs are link-edited into ${instance-DFS_AUTH_LIB_HLQ2}.PSBLIB.
+				</instructions>
+				<weight>1</weight>
+				<skills>DB Admin</skills>
+				<autoEnable>true</autoEnable>
+				<template>
+					<fileTemplate substitution="true">jcl/DFS4APPG.jcl</fileTemplate>
+					<submitAs>JCL</submitAs>
+					<maxLrecl>80</maxLrecl>
+					<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E203J)</saveAsDataset>
+				</template>
+			</step>
+			
+			
+			<step name="ACBLIB_AppPrep_substep3"> 			
+				<title>Access Control Definitions Generation </title>
+				<description>Access Control block(ACB) Definitions Generation </description>
+				<instructions substitution="true"> 
+					This JOB uses the ACBGEN Utility to create the application control blocks
+					(ACBs) for the DBDs and PSBs that can be used to test teh zCloud IMS.  The ACB  members are link-edited into ${instance-DFS_AUTH_LIB_HLQ2}.ACBLIB.
+				</instructions>
+				<weight>1</weight>
+				<skills>DB Admin</skills>
+				<autoEnable>true</autoEnable>
+				<template>
+					<inlineTemplate substitution="true">//MYLIB JCLLIB ORDER=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB
+//* SKELETON: DFSIXSE3
+//* FUNCTION: PERFORM ACBGEN FOR THE sample PSB'S AND DBD'S
+//************************************************************@SCPYRT**
+//*                                                                   *
+//*  LICENSED MATERIALS - PROPERTY OF IBM                             *
+//*                                                                   *
+//*  5635-A04                                                         *
+//*                                                                   *
+//*      COPYRIGHT IBM CORP. 1989,2015 ALL RIGHTS RESERVED            *
+//*                                                                   *
+//*  US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION OR      *
+//*  DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE CONTRACT WITH          *
+//*  IBM CORP.                                                        *
+//*                                                                   *
+//************************************************************@ECPYRT**
+//ACBGEN   EXEC PROC=ACBGEN,SOUT='*',COMP='POSTCOMP'
+//G.SYSIN  DD *
+  BUILD PSB=ALL
+//*</inlineTemplate>
+					<submitAs>JCL</submitAs>
+					<maxLrecl>80</maxLrecl>
+					<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E203J)</saveAsDataset>
+				</template>
+			</step>			
+
+		</step>
+
+
+		<step name="enableOLC"> 				
+			<title>Enable IMS Local Online Change</title> <!-- Initialize MODSTAT data set and enable Online Change -->
+			<description>Initialize MODSTAT Dataset and Enable Online Change</description>
+			<instructions substitution="true">
+				This JOB initializes the ${instance-DFS_AUTH_LIB_HLQ2}.MODSTAT and ${instance-DFS_AUTH_LIB_HLQ2}.MODSTAT2 data set(s) using the INITMOD procedure.
+
+				Local Online change exists because in many installations it is important that IMS is available during a large portion of the day.
+				The ability to add, delete, and replace IMS™ databases, programs, transactions, and MFS formats online, without the necessity to bring down your
+				IMS system, is a major step toward continuous operations.
+
+				The MODSTAT data set must be initialized before the first IMS cold start or before any other cold start if ${instance-DFS_AUTH_LIB_HLQ2}.MODSTAT does not contain the current
+				ddnames.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSENOLC.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E317J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="estabilishActiveLibs"> 		
+			<title>Establish IMS Active Libraries</title>  <!-- Run Online Change Utility to copy the IMS staging libraries to active libraries-->
+			<description>Run Online Change Utility to declare active libraries</description>
+			<instructions substitution="true">
+				This JOB use the Online Change Utility to copy the IMS staging libraries
+				(MODBLKS, ACBLIB, MATRIX, FORMAT) to their active libraries (the libraries of the same names with an "A" suffix are used initially).
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFS4ACTV.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E318J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="DBRCDefaults"> 				
+			<title>Specify DB Recovery Control Defaults</title> <!-- Specify DBRC default parameter for Batch and Utility Regions -->
+			<description>Specify DBRC default parameter for Batch and Utility Regions </description>
+			<instructions substitution="true">
+				This JOB assembles and binds the DFSIDEF0 module - Installation Defaults
+				Block into the IMS execution library ${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL. The DFSIDEF0 module is used to specify the default value of the DBRC
+				parameter for batch and utility regions.
+
+				The DFSIDEF0 module is not required.  If you do not use the module or if the module cannot be loaded at initialization time, IMS defaults to
+				DBRC=YES. The DFSIDEF0 module is required if you want to specify DBRC=FORCE.      
+			</instructions>
+			<weight>1</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSDFDRC.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E207J)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="loadCatalogDB"> 						
+			<title>Load IMS Catalog Database</title>
+			<description>Load the IMS Catalog Database</description>
+			<instructions substitution="true"> This JOB loads the IMS CATALOG database using DFS3PU00 utility</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSLDCAT.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E319K)</saveAsDataset>
+			</template>
+		</step>
+	</step>
+
+
+	<step name="Start_IMSComponents">      		  		
+		<title>Start IMS Concomitant Address Spaces</title>
+        <description>This step will make available IRLM, SCI, RM, OM to the IMS control region</description>
+		<prereqStep name="BuildzCloudIMS"/>
+		
+
+<!--
+		<step name="Start_IRLM"> 			
+			<title>Start IRLM</title>
+			<description>Start the IRLM address space</description>
+			<instructions substitution="true">This step will Start the IRLM address space: ${instance-DXR_IRLM_Procedure}</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//STARTRLM  EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/S ${instance-DXR_IRLM_Procedure},IRLMNM=${instance-DXR_IRLM_SSID},SCOPE=LOCAL
+LOG
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(STARTRLM)</saveAsDataset>
+			</template>
+		</step>
+-->
+		
+
+<!--
+		<step name="Start_RRS"> 			
+			<title>Start RRS</title>
+			<description>Start the RRS address space</description>
+			<instructions substitution="true">This step will Start the RRS address space: ATRRRS</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//STARTRRS  EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/S ATRRRS,SUB=MSTR
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(STARTRRS)</saveAsDataset>
+			</template>
+		</step>
+-->
+		
+
+		<step name="Start_SCI"> 			
+			<title>Start SCI</title>
+			<description>Start the SCI address space</description>
+			<instructions substitution="true">
+				This step will start the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SC
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//STARTCSL  EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/S ${_workflow-softwareServiceInstanceName}SC
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(STARTSCI)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="Start_OM"> 			
+			<title>Start OM</title>
+			<description>Start the Operation Manager (OM)</description>
+			<instructions substitution="true">
+				This step will start the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//STARTOM      EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/S ${_workflow-softwareServiceInstanceName}OM
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(STARTOM)</saveAsDataset>
+			</template>
+		</step>
+
+
+		<step name="Start_RM"> 			
+			<title>Start RM</title>
+			<description>Start the Resource Manager (RM)</description>
+			<instructions substitution="true">
+				This step will start the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//STARTRM      EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/S ${_workflow-softwareServiceInstanceName}RM
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(STARTRM)</saveAsDataset>
+			</template>
+		</step>
+		
+	</step>
+
+
+	<step name="Start_IMS"> 					
+		<title>Start the IMS Control Region</title>
+		<description>Start the IMS Control Region</description>
+
+		
+		<step name="Start_IMSCTLRegion">
+			<title>Start the IMS Control Reqion address space</title>
+			<description>Start the Control Reqion address space</description>
+			<instructions substitution="true">
+				This step will start the IMS Control Region: ${_workflow-softwareServiceInstanceName}CTL
+			</instructions>
+			<weight>100</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//STARTCTL       EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/S ${_workflow-softwareServiceInstanceName}CTL
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(STARTCTL)</saveAsDataset>
+			</template>
+		</step>
+
+	</step>
+
+
+	<step name="IMSRestart"> 					
+		<title>Perform IMS Restart</title>
+		<description>Select the type of IMS Start: COLD, WARM, Emergency</description>
+
+		 
+		<step name="WaitJob" optional="false">
+			<title>Wait for IMS Ready</title>
+			<description>Wait IMS to be ready for Cold Start</description>
+			<prereqStep name="Start_IMSCTLRegion" />
+			<instructions>Exec the rexx program to wait for the IMS to be ready for restart</instructions>
+			<weight>1</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">rexx/WaitJob.rexx</fileTemplate>
+				<submitAs maxRc="0">TSO-REXX-JCL</submitAs>
+				<maxLrecl>1024</maxLrecl>
+			</template>
+		</step>
+		
+		
+		<step name="IMSColdStart"> 			
+			<title>Cold Start IMS</title>
+			<description>Cold Start IMS</description>
+			<prereqStep name="WaitJob" />
+			<instructions substitution="true">
+				This step will Cold Start IMS: ${_workflow-softwareServiceInstanceName}CTL
+			</instructions>
+			<weight>10</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<inlineTemplate substitution="true">//SPOC      EXEC PGM=CSLUSPOC,
+//  PARM=('IMSPLEX=${instance-DFS_IMSPlex},ROUTE=${_workflow-softwareServiceInstanceName},WAIT=30,F=WRAP')
+//STEPLIB   DD DISP=SHR,DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL
+//SYSPRINT  DD SYSOUT=*
+//SYSIN     DD *
+   /NRE CHECKPOINT 0 FMT ALL.
+/*</inlineTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+	</step>
+
+
+	<step name="ICONStart"> 					
+		<title>Start IMS Connect</title>
+		<description>Start IMS Connect</description>
+		<instructions substitution="true">This step will Start IMS Connect: ${_workflow-softwareServiceInstanceName}HWS</instructions>
+		<weight>2</weight>
+		<skills>System Programmer</skills>
+		<autoEnable>true</autoEnable>
+		<template>
+			<inlineTemplate substitution="true">//************************************************************@SCPYRT**
+//*                                                                   *
+//*  LICENSED MATERIALS - PROPERTY OF IBM                             *
+//*                                                                   *
+//*  5635-A04                                                         *
+//*                                                                   *
+//*      COPYRIGHT IBM CORP. 1989,2015 ALL RIGHTS RESERVED            *
+//*                                                                   *
+//*  US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION OR      *
+//*  DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE CONTRACT WITH          *
+//*  IBM CORP.                                                        *
+//*                                                                   *
+//************************************************************@ECPYRT**
+//ICONSTR         EXEC  PGM=IEBGENER
+//SYSPRINT  DD    SYSOUT=*
+//SYSUT2    DD    SYSOUT=(A,INTRDR)
+//SYSIN     DD    DUMMY
+//SYSUT1    DD    DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(${_workflow-softwareServiceInstanceName}HWS1),DISP=SHR
+</inlineTemplate>			
+			<submitAs>JCL</submitAs>
+			<maxLrecl>80</maxLrecl>
+		</template>
+	</step>
+	
+</workflow>

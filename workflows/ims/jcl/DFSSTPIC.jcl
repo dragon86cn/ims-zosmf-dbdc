@@ -1,0 +1,13 @@
+//STOPOM      EXEC PGM=ISFAFD
+//ISFOUT DD SYSOUT=*
+//ISFIN  DD *
+LOG
+/STOP ${instance-DFS_IMS_SSID}HWS
+/*
+//*//SPOC      EXEC PGM=CSLUSPOC,
+//*//  PARM=('IMSPLEX=${instance-DFS_IMSPlex},ROUTE=${instance-DFS_IMS_SSID}HWS,WAIT=30,F=WRAP')
+//*//STEPLIB   DD DISP=SHR,DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL
+//*//SYSPRINT  DD SYSOUT=*
+//*//SYSIN     DD *
+//*   /CLOSEHWS.
+//*/*

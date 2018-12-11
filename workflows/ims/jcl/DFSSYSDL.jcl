@@ -1,0 +1,50 @@
+//*                                                                   *
+//* FUNCTION: SCRATCH THE DATA SETS CREATED FOR SYSDEF                *
+//************************************************************@SCPYRT**
+//*                                                                   *
+//*  LICENSED MATERIALS - PROPERTY OF IBM                             *
+//*                                                                   *
+//*  5635-A04                                                         *
+//*                                                                   *
+//*      COPYRIGHT IBM CORP. 1989,2015 ALL RIGHTS RESERVED            *
+//*                                                                   *
+//*  US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION OR      *
+//*  DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE CONTRACT WITH          *
+//*  IBM CORP.                                                        *
+//*                                                                   *
+//************************************************************@ECPYRT**
+//*
+//SCRATCH  EXEC PGM=IDCAMS,DYNAMNBR=200
+//AMSDUMP  DD DUMMY
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OBJDSET -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGENIN -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGENOUT -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.FORMAT -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.TFORMAT -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.REFERAL -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSMAC -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OPTIONS -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKS -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ADFSMAC -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ADFSLOAD -
+         NONVSAM SCRATCH
+  DELETE ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ADFSSRC -
+         NONVSAM SCRATCH
+  SET MAXCC=0
+//*

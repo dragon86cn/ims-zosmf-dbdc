@@ -1,0 +1,860 @@
+<!-- IMS Provisioning Variables -->
+
+<!-- ********************************************************** -->
+<!-- ********************************************************** -->
+<!-- Define variables to used by the IMS V13 Provisioning workflow -->
+<!-- ********************************************************** -->
+<!-- ********************************************************** -->
+
+<variable name="DFS_ENVIRONMENT">
+    <label>ENVIRONMENT</label>
+    <abstract>Environment for which the IMS system is to be provisioned/de-provisioned (DEV, TEST, QA, PROD)</abstract>
+    <description>The environment for which the IMS system is to be provisioned/de-provisioned. The log datasets, pools sizes, DBRC RECON and a variety of other datasets size will vary depending on the environment chosen.</description>
+    <category>IMS</category>
+	<string valueMustBeChoice="true">
+     	<choice>DEV</choice>
+		<choice>TEST</choice>
+		<choice>QA</choice>
+		<choice>PROD</choice>
+		<default>DEV</default>
+	</string>
+</variable>
+
+<variable name="DFS_IMS_USERID">
+	<label>IMS_USERID</label>
+	<abstract>TSO user ID for IMS</abstract>
+	<description>The user ID to be used to provision the IMS System.
+	A validation of your TSOUSERID is needed. TSOUSERID maximum length is 7, and it cannot start with a number.
+	</description>
+	<category>IMS</category>
+	<string>
+		<validationType>TSOUSERID</validationType>		
+	</string>
+</variable>
+
+<variable name="DFS_AUTH_LIB_HLQ">
+	<label>Dataset HLQ</label>
+	<abstract>High-level qualifier</abstract>
+	<description>The data set high-level qualifier you wish to use when creating the IMs datasets and saving the generated JCL.</description>
+	<category>IMS DataSet</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>ZCLOUD</default>
+	</string>
+</variable>
+
+<variable name="DFS_AUTH_LIB_SYSHLQ2">     					<!--  High level DSNAME qualifier for IMS System data sets -->
+<label>Second level qualifier for IMS System datasets</label>
+	<abstract>Second level DSNAME qualifier for IMS System (SYS) data sets</abstract>
+	<description>This variable specifies the second level DSNAME qualifier to be used when referencing IMS System data sets.
+This grouping of data sets refers to SMP/E System datasets for IMS that will only 
+be referenced and not written to.
+
+Data sets associated with this qualifier variable belong to the "SYS" group.  If
+this variable is changed, then the qualifier variables for ALL data sets belonging
+to this group will be changed accordingly.
+	</description>
+	<category>IMS DataSet</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>IMSV13</default>
+	</string>
+</variable>
+
+<variable name="DFS_AUTH_LIB_HLQ1">      					<!--  First High level DSNAME qualifier for IMS Instance data sets -->
+<label>First level qualifier for IMS Instance datasets</label>
+	<abstract>First level DSNAME qualifier for IMS Instance data sets to be written to</abstract>
+	<description>This variable specifies the first level DSNAME qualifier to be used when allocating and referencing IMS Instance data sets.
+This grouping of data sets refers to instance-only dataset for a particular instance of IMS.
+
+Data sets associated with this qualifier variable belong to the "SYS" group.  If
+this variable is changed, then the qualifier variables for ALL data sets belonging
+to this group will be changed accordingly.
+	</description>
+	<category>IMS DataSet</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>IMSPROV</default>
+	</string>
+</variable>
+
+<variable name="DFS_AUTH_LIB_HLQ2">      					<!--  High level DSNAME qualifier for IMS Instance data sets -->
+<label>Second level qualifier for IMS Instance datasets</label>
+	<abstract>Second level DSNAME qualifier for IMS Instance data sets to be written to</abstract>
+	<description>This variable specifies the second level DSNAME qualifier to be used when allocating and referencing IMS Instance data sets.
+This grouping of data sets refers to instance-only dataset for a particular instance of IMS.
+
+Data sets associated with this qualifier variable belong to the "SYS" group.  If
+this variable is changed, then the qualifier variables for ALL data sets belonging
+to this group will be changed accordingly.
+	</description>
+	<category>IMS DataSet</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>INSTV13</default>
+	</string>
+</variable>
+
+<variable name="zCloud_FTPUser">
+	<label>Email Address or UserID</label>
+	<abstract>Email Address or UserID</abstract>
+	<description>
+		This field represent the user Email Address or UserID. A validation type of ALPHA allows upper and lower case letters, as well as the national characters (@, #, $).
+		Currently used by the FTP process.
+	</description>
+	<category>UserID</category>
+	<string>
+		<regularExpression>[a-zA-Z0-9 @._-]{1,50}</regularExpression>
+	</string>
+</variable>
+
+<variable name="zCloud_FTPUser_Password">
+	<label>Email Address or UserID Password</label>
+	<abstract>Email Address or UserID Password</abstract>
+	<description>
+		This field represent the user Email Address or UserID password. A validation type of ALPHA allows upper and lower case letters, as well as the national characters (@, #, $).
+		Currently used by the FTP process.
+	</description>
+	<category>UserID</category>
+	<string>
+		<regularExpression>[a-zA-Z0-9 @._-]{1,50}</regularExpression>
+	</string>
+</variable>
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_system: COMMON and GLOBAL                     -->
+<!-- ****************************************************************** -->
+<variable name="zCloud_LERuntime" scope="instance"> <!-- DSN specification of Language Environment Runtime Lib (IXULECRL)-->
+	<label>LE run time</label>
+	<abstract>Language Environment Runtime data set </abstract>
+	<description>
+				Provide a valid Data set name of the authorized Language Environment Library (SCEELKED) to be used by this process.
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>z/OS Environment- L.E.</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>CEE.SCEERUN</default>
+	</string>
+</variable>
+
+<variable name="zCloud_MACLIB" scope="instance">  <!-- z/OS Macro Library **same as IXUSMACL **-->
+	<label>z/OS Macros library</label>
+	<abstract>z/OS Macros library DSN</abstract>
+	<description>
+				Provide a valid data set name of the library containing z/OS macros.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>z/OS System</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS1.AMACLIB</choice>
+		<default>SYS1.MACLIB</default>
+	</string>
+</variable>
+
+<variable name="zCloud_LPALIB" scope="instance">    <!-- z/OS LPA Library (SYS1.LPALIB) -->
+	<label>z/OS LPA library</label>
+	<abstract>z/OS Link Pack Area Library DSN</abstract>
+	<description>
+				Provide a valid data set name of the library containing LPA modules. It is strongly recommended not
+				to change the default value as it is an integral part of the standard zCloud environment.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>z/OS System</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS1.LPALIB</choice>
+		<default>SYS1.LPALIB</default>
+	</string>
+</variable>
+
+<variable name="zCloud_PROCLIB" scope="instance">    <!-- z/OS PROC Library (SYS1.PROCLIB) -->
+	<label>IMS Proc Library</label>
+	<abstract>Dataset to store IMS procedures</abstract>
+	<description>
+				Provide a valid data set name of the library containing all the IMS and IMS related procedures.
+				It is strongly recommended not to change the default as it is an integral part of the standard zCloud environment.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>IMS DataSet</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS2.PROCLIB</choice>
+		<default>SYS1.PROCLIB</default>
+	</string>
+</variable>
+
+<variable name="zCloud_MODGEN" scope="instance">    <!-- z/OS PROC Library (SYS1.MODGEN) -->
+	<label>z/OS Library</label>
+	<abstract>z/OS Procedures Library DSN</abstract>
+	<description>
+				Provide a valid data set name of the library for the MODGEN data set.
+				It is strongly recommended not to change the default as it is an integral part of the standard zCloud environment.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>z/OS System</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS2.MODGEN</choice>
+		<default>SYS1.MODGEN</default>
+	</string>
+</variable>
+
+<variable name="zCloud_CSSLIB" scope="instance">    <!-- z/OS PROC Library (SYS1.CSSLIB) -->
+	<label>z/OS Proc Library</label>
+	<abstract>z/OS Procedures Library DSN</abstract>
+	<description>
+				Specifies the name of the CSSLIB data set. If you specify a library other than SYS1.CSSLIB, you must ensure that SYS1.CSSLIB occurs within the LNKLST concatenation.
+				The system places the CSSLIB data set after the MIGLIB data set in the LNKLST concatenation.
+				Default: If you do not specify CSSLIB, the system uses SYS1.CSSLIB as the CSSLIB data set.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>z/OS System</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS2.CSSLIB</choice>
+		<default>SYS1.CSSLIB</default>
+	</string>
+</variable>
+
+<variable name="DFS_useIEFJOBS"> 	<!-- Use IEFJOBS  -->
+	<label>Use IEFJOBS</label>
+	<abstract>Should the IEFJOBS dataset be used </abstract>
+	<description>
+		A boolean to indicate whether we are using an IEFJOBS dataset.
+	</description>
+	<category>z/OS System</category>
+	<string>
+        <regularExpression>[A-Z]{1,1}</regularExpression>
+		<choice>Y</choice>
+		<choice>N</choice>
+		<default>N</default>
+	</string>
+</variable>
+
+<variable name="zCloud_IEFJOBS" scope="instance">    <!-- z/OS PROC Library (SYS1.IEFJOBS) -->
+	<label>z/OS Proc Library</label>
+	<abstract>z/OS data set that contains job source JCL for started tasks.</abstract>
+	<description>
+				Specifies the name of the IEFJOBS data set, an optional z/OS file.  Each member contains JCL that invokes
+				the procedure of the same name in PROCLIB.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+				<br> </br>
+				If no IEFJOBS dataset will be used, set the boolean DFS_useIEFJOBS to N but leave a default value here.
+	</description>
+	<category>z/OS System</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>SYS1.IEFJOBS</default>
+	</string>
+</variable>
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_TCPIP: COMMON and GLOBAL                 -->
+<!-- ****************************************************************** -->
+<variable name="EZB_TCPIP_LoadLib" scope="instance"> <!-- DSN specification of TCPIP Load Lib -->
+	<label>TCP/IP Load Lib</label>
+	<abstract>>TCP/IP Load Library data set name</abstract>
+	<description>
+				Provide a valid Data set name of the authorized TCP/IP Load Library to be used by this process.
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>z/OS Environment- TCPIP</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<default>SYS1.TCPIP.LINKLIB</default>
+	</string>
+</variable>
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_Subsystems: COMMON and GLOBAL                 -->
+<!-- ****************************************************************** -->
+<variable name="DFS_IMS_SSID"> <!-- Subsystem name for IMS -->
+	<label>IMS Subsystem name</label>
+	<abstract>Subsystem name for the zCloud IMS</abstract>
+	<description>
+		Subsystem name for the zCloud IMS.  The name must be 1-4 characters and unique.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,4}</regularExpression>
+		<choice>IMS1</choice>
+		<choice>IMS2</choice>
+		<choice>IMS3</choice>
+		<choice>IMS4</choice>
+		<choice>IMS5</choice>
+		<choice>IMS6</choice>
+		<choice>IMS7</choice>
+		<choice>IMS8</choice>
+		<choice>IMS9</choice>
+		<default>IMS1</default>
+	</string>
+</variable>
+
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_IRLM                                          -->
+<!-- ****************************************************************** -->
+<variable name="DXR_IRLM_SSID" scope="instance"> <!-- Subsystem name for IRLM -->
+	<label>IRLM Subsystem name</label>
+	<abstract>Subsystem name for the zCloud IRLM</abstract>
+	<description>
+		Subsystem name for the zCloud IRLM
+	A valid IRLM Subsystem name is 1-4 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- IRLM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,4}</regularExpression>
+		<choice>IRLM</choice>
+		<default>IRLM</default>
+	</string>
+</variable>
+
+
+<variable name="DXR_IRLM_Procedure" scope="instance"> <!-- ProcName for  IRLM -->
+	<label>IRLM Proc</label>
+	<abstract>zCloud IRLM Procedure Name</abstract>
+	<description>
+		Subsystem name for the zCloud IRLM
+	A valid IRLM Procedure is 1-8 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- IRLM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>IRLM22B</choice>
+		<default>IRLM23D</default>
+	</string>
+</variable>
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_VTAM (nodes, applications, resources)         -->
+<!-- ****************************************************************** -->
+<variable name="IST_VTAM_Procedure" scope="instance">	 <!-- VTAM procname used to start zCloud VTAM -->
+	<label>VTAM Procedure</label>
+	<abstract>VTAM Procedure name</abstract>
+	<description>
+		VTAM Procedure named to be used in a typical zCloud Environment
+	Valid Procedure name is 1-8 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>VTAM</choice>
+        <choice>IMSVTAM</choice>
+		<default>VTAM</default>
+	</string>
+</variable>
+
+<variable name="zCloud_VTAM_VTAMLST" scope="instance"> 	 <!-- DSN specification for the VTAM data set-->
+	<label>VTAM Definitions data set</label>
+	<abstract>VTAM Definitions data set</abstract>
+	<description>
+				Provide a valid Data set name of the VTAMLIST dataset to be used by this process.
+
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+				<strong>Description</strong>
+				SYS1.VTAMLST is the default name of z/OS Communications Server definition library and it is strongly recommended not
+				to change it as it is an integral part of the standard zCloud environment. It consists of files containing the
+				definitions for network resources and start options. It is a required partitioned data set, and it is recommended to
+				verify its allocation on a direct-access volume (DASD or disk) before you use any product.
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS1.VTAMLST</choice>
+		<default>SYS3.VTAMLST</default>
+	</string>
+</variable>
+
+<variable name="zCloud_VTAM_VTAMLIB" scope="instance">	 <!-- DSN specification for VTAM load library-->
+	<label>VTAM Load Library</label>
+	<abstract>VTAM Load Library </abstract>
+	<description>
+				Provide a valid Data set name of the VTAMLIB dataset to be used by this process.
+
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+
+				SYS1.VTAMLIB is the default name of the z/OS Communications Server load module library, and it is strongly recommended not
+				to change it as it is an integral part of the standard zCloud environment. VTAMLIB consists of files containing the user tables,
+				exit routines, and replaceable constants. <br></br>
+				It is a required partitioned data set. SYS1.VTAMLIB is used to store these user tables:
+				<ul>
+				<li> Class of service (COS) table</li>
+				<li> Communication network management (CNM) routing table</li>
+				<li> Interpret table containing logon descriptions and any installation-coded logon routines in this table</li>
+				<li> Logon mode table</li>
+				<li> Session awareness (SAW) data filter table</li>
+				<li> Unformatted system services table</li>
+				</ul>
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+		<validationType>DSNAME</validationType>
+		<choice>SYS1.VTAMLIB</choice>
+		<default>SYS3.VTAMLIB</default>
+	</string>
+</variable>
+
+<variable name="IST_VTAM_IMSAPPLID" scope="instance">	 <!-- VTAM APPLID for IMS ** same as IXUVAPL1 ** -->
+	<label>VTAM Applid for IMS</label>
+	<abstract>VTAM Applid for IMS</abstract>
+	<description>
+		VTAM Applid for IMS. APPL1 is the default name of the z/OS Communications Server load module library, and it is strongly recommended not
+				to change it as it is an integral part of the standard zCloud environment
+	Valid Applid is 1-8 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>APPL1</choice>
+		<default>APPL1</default>
+	</string>
+</variable>
+
+<variable name="DFS_VTAM_NODE_IMSMTO" scope="instance"> <!-- VTAM Node name for IMS Master Terminal ** same as IXUVNDP1 ** -->
+	<label>VTAM Node for IMS MTO</label>
+	<abstract>VTAM Node name for IMS Master Terminal</abstract>
+	<description>
+		VTAM Node name for IMS Master Terminal.  4-8 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{4,8}</regularExpression>
+		<choice>CTRL</choice>
+		<default>PMASTER1</default>
+	</string>
+</variable>
+
+<variable name="DFS_VTAM_NODE_IMSND1" scope="instance"> <!-- VTAM node name for IMS User terminal #1 ** same as IXUVNDU1 ** -->
+	<label>VTAM Node for IMS Terminal 1</label>
+	<abstract>VTAM Node name for IMS Terminal 1</abstract>
+	<description>
+		VTAM node name for IMS User terminal #1.  8 Characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{8}</regularExpression>
+		<choice>USER0001</choice>
+		<default>USER0001</default>
+	</string>
+</variable>
+
+<variable name="DFS_VTAM_NODE_IMSND2" scope="instance"> <!-- VTAM node name for IMS User terminal #1 ** same as IXUVNDU2 ** -->
+	<label>VTAM Node for IMS Terminal 2</label>
+	<abstract>VTAM Node name for IMS Terminal 2</abstract>
+	<description>
+		VTAM node name for IMS User terminal #2. 8 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- VTAM</category>
+	<string>
+        <regularExpression>[A-Z0-9]{8}</regularExpression>
+		<choice>USER0002</choice>
+		<default>USER0002</default>
+	</string>
+</variable>
+
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_CICS                                          -->
+<!-- ****************************************************************** -->
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud resources (DFSMS, VOLUMES, UNITS)             -->
+<!-- ****************************************************************** -->
+<variable name="DFS_SMS_CLASS" scope="instance"> 			 <!-- SMS - Storage Class -->
+<label>SMS - Storage Class</label>
+	<abstract>SMS - Storage Class</abstract>
+	<description>DFDSSSMS is a policy based storage management system used by IBM mainframes. SMS was designed to make storage more efficient and Automate data management.
+	It allows users to allocate data by service requirements, without needing to know the physical implementation of those requirements
+	These policies are determined by four constructs, the Data Class, Management Class, Storage Class and Storage Group.
+	Storage Class           - Specify Data Set Performance and Availability
+	Storage Class names are 1-8 characters, and must be defined in the active SMS configuration.
+	</description>
+	<category>z/OS Environment</category>
+	<string>
+		<regularExpression>[a-zA-Z0-9]{1,8}</regularExpression>
+		<default>MEDIUM</default>
+	</string>
+</variable>
+
+<variable name="DFS_SMS_MCLASS" scope="instance"> 			 <!-- SMS - Management Class -->
+<label>SMS - Management Class</label>
+	<abstract>SMS - Management Class</abstract>
+	<description>DFDSSSMS is a policy based storage management system used by IBM mainframes. SMS was designed to make storage more efficient and Automate data management.
+	It allows users to allocate data by service requirements, without needing to know the physical implementation of those requirements
+	Management Class        - Specify Data Set Backup and Migration Criteria
+	Management Class names are 1-8 characters.
+	</description>
+	<category>z/OS Environment</category>
+	<string>
+		<regularExpression>[a-zA-Z0-9]{1,8}</regularExpression>
+		<default>NONE</default>
+	</string>
+</variable>
+
+<variable name="zCloud_VTAM_VOL" scope="instance">	 <!-- DASD Volume serial for VTAM data set -->
+	<label>Volume</label>
+	<abstract>DASD Volume serial</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-6 alphanumeric (upper case letters only)characters.
+	</description>
+	<category>z/OS Environment- VTAM</category>
+	<string>
+		<validationType>VOLSER</validationType>
+		<choice>IMSCLS</choice>
+		<default>IMSCLS</default>
+	</string>
+</variable>
+
+<variable name="zCloud_VTAM_DEV" scope="instance"> 	 <!-- Device type for VTAM data sets -->
+	<label>Device Type</label>
+	<abstract>Device type for miscellaneous IMS data sets</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-8 alphanumeric characters (upper case letters only).
+	</description>
+	<category>z/OS Environment</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>SYSALLDA</choice>
+        <choice>SYSDA</choice>
+		<default>SYSALLDA</default>
+	</string>
+</variable>
+
+<variable name="zCloud_IMS_DEV" scope="instance">		 <!-- Device type for IMS data sets -->
+	<label>Device Type</label>
+	<abstract>Device type for miscellaneous IMS data sets</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-8 alphanumeric characters (upper case letters only).
+	</description>
+	<category>z/OS Environment</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>SYSALLDA</choice>
+        <choice>SYSDA</choice>
+		<default>SYSALLDA</default>
+	</string>
+</variable>
+
+
+<!-- ****************************************************************** -->
+<!-- Variables for zCloud_IMS Installation.                             -->
+<!-- ****************************************************************** -->
+<variable name="zCloud_IMSConnect" scope="instance"> 	<!-- The IMS Connect name that identifies it in the IMSplex  (IXUISCPX)-->
+	<label>IMS Connect name</label>
+	<abstract>The IMS Connect name in the IMSplex</abstract>
+	<description>
+		The IMS Connect name that identifies it in the IMSplex of this zCloud IMS.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string>
+        <regularExpression>[A-Z0-9]{3,8}</regularExpression>
+		<choice>HWS2</choice>
+		<default>HWS1</default>
+	</string>
+</variable>
+
+<variable name="DFS_PORTIDSuf"> 	<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+	<label>IMS Connect Port suffix</label>
+	<abstract>The IMS Connect port suffix to be appended to the default ports</abstract>
+	<description>
+		The IMS Connect port suffix to be used to access this zCloud IMS.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string>
+        <regularExpression>[1-9]{2}</regularExpression>
+		<choice>77</choice>
+		<choice>88</choice>
+		<default>99</default>
+	</string>
+</variable> 
+
+
+<variable name="DFS_IMSXCFGroup" scope="instance"> <!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect)  (IXUXCFGN)-->
+	<label>IMS XCF Group Name</label>
+	<abstract>The zCloud IMS Group name (XCF) needed for the IMSPLEX</abstract>
+	<description>
+		The XCF GROUP NAME for the zCloud IMS and its IMSPLEX subcomponent (OTMA, IMSConnect).
+	A valid Group name is 3-8 characters, A-Z, 0-9, #, $, @.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string>
+        <regularExpression>[A-Z0-9#$@]{3,8}</regularExpression>
+		<choice>IVPXCFGN</choice>
+		<default>IMSXCFGN</default>
+	</string>
+</variable>
+
+<variable name="DFS_IMSPlex" scope="instance"> 	<!-- The IMS PLEX name  -->
+	<label>IMS Plex Name</label>
+	<abstract>IMSPLEX name for this zCloud IMS </abstract>
+	<description>
+		IMSPLEX name for this zCloud IMS.  A Valid Plex Name is 3-8 characters, A-Z, 0-9.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string>
+        <regularExpression>[A-Z0-9]{3,8}</regularExpression>
+		<choice>PLEX1</choice>
+		<default>PLEX1</default>
+	</string>
+</variable>
+
+<variable name="DFS_useRRS"> 	<!-- Use RRS  -->
+	<label>Use RRS</label>
+	<abstract>Should RRS be used </abstract>
+	<description>
+		A boolean to indicate whether RRS should be set to Y or N.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string>
+        <regularExpression>[A-Z]{1,1}</regularExpression>
+		<choice>Y</choice>
+		<choice>N</choice>
+		<default>N</default>
+	</string>
+</variable>
+
+<variable name="DFS_IXUSTIM1"> 		<!-- EXEC time parameter for SMP/E, SYSDEF Preprocessor, Stage1 -->
+<label>EXEC time parameter</label>
+	<abstract>EXEC time parameter for SMP/E, SYSDEF Preprocessor, Stage1</abstract>
+	<description>EXEC time parameter for SMP/E, SYSDEF Preprocessor, Stage1
+	Valid values are 1-1440</description>
+	<category>Jobs</category>
+	<integer>
+		<minValue>1</minValue>
+		<maxValue>1440</maxValue>
+		<default>300</default>
+	</integer>
+</variable>
+
+<variable name="DFS_IXUSTIM3">     	<!-- EXEC time parameter for MPPs, IFPs, IRLM, VTAM -->
+<label>EXEC time parameter</label>
+	<abstract>EXEC time parameter for MPPs, IFPs, IRLM, VTAM</abstract>
+	<description>EXEC time parameter for MPPs, IFPs, IRLM, VTAM
+	Valid values are 1-1440</description>
+	<category>Jobs</category>
+	<integer>
+		<minValue>1</minValue>
+		<maxValue>1440</maxValue>
+		<default>1440</default>
+	</integer>
+</variable>
+
+  <variable name="DFS_IMS_SECURITY">
+    <label>IMS_SECURITY</label>
+    <abstract>IMS_Security</abstract>
+    <description>Enable IMS Security ?</description>
+    <category>z/OS Environment- IMS</category>
+	<boolean>
+	</boolean>
+  </variable>
+
+  <variable name="DFS_SMS_ENVIRONMENT">
+    <label>DFSMS Environment</label>
+    <abstract>DFSMS Environment Specification</abstract>
+    <description>Use SMS managed DASD for IMS libraries ?</description>
+    <category>z/OS Environment- IMS</category>
+	<boolean>
+	</boolean>
+  </variable>
+
+<variable name="DFS_DS_VOLUME1" scope="instance"> 		<!-- DASD Volume serial for IMS data sets -->
+	<label>Volume #1</label>
+	<abstract>DASD Volume serial</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-6 alphanumeric (upper case letters only)characters.
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+		<validationType>VOLSER</validationType>
+		<choice>W68001</choice>
+		<choice>W68002</choice>
+		<default>W68001</default>
+	</string>
+</variable>
+
+<variable name="DFS_DS_VOLUME2" scope="instance"> 	<!-- DASD Volume serial for IMS misc data set -->
+	<label>Volume #2</label>
+	<abstract>DASD Volume serial</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-6 alphanumeric (upper case letters only)characters.
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+		<validationType>VOLSER</validationType>
+		<choice>W68001</choice>
+		<choice>W68002</choice>
+		<default>W68002</default>
+	</string>
+</variable>
+
+<variable name="DFS_IMS_UNIT" scope="instance"> 		<!-- Device type for miscellaneous IMS data sets (UNIT) SYSALLDA -->
+	<label>Device Type #1</label>
+	<abstract>Device type for miscellaneous IMS data sets</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-8 alphanumeric characters (upper case letters only).
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>SYSALLDA</choice>
+        <choice>SYSDA</choice>
+		<default>SYSALLDA</default>
+	</string>
+</variable>
+
+<variable name="DFS_IMS_UNIT2" scope="instance"> 	<!-- Device type for miscellaneous IMS data sets (UNIT): 3390 -->
+	<label>Device Type #2</label>
+	<abstract>Device type for miscellaneous IMS data sets</abstract>
+	<description>
+		A validation type of VOLSER allows for 1-8 alphanumeric characters (upper case letters only).
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+        <regularExpression>[A-Z0-9]{1,8}</regularExpression>
+		<choice>3380</choice>
+        <choice>3390</choice>
+		<default>3390</default>
+	</string>
+</variable>
+
+<variable name="DFS_IMS_CRC" scope="instance"> 	<!-- IMS Command Recognition Character Default : / -->
+	<label>IMS CRC</label>
+	<abstract>IMS Command Recognition Character (CRC)</abstract>
+	<description>
+		A validation type character allows for 1 special character.
+	The following characters are valid: a-z  A-Z  0-9  !@#/\|}{$%^*?-_
+	Invalid characters include "," (comma) ">" (greater-than)  "&lt;" (less-than)
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+        <regularExpression>[a-zA-Z0-9!@#/\|}{$%^*?_]{1}</regularExpression>
+		<choice>/</choice>
+		<choice>$</choice>
+        <choice>#</choice>
+		<default>/</default>
+	</string>
+</variable>
+
+<variable name="DFS_IMS_LINEGRP" scope="instance"> <!-- IMS line group Macro specs for IMS MTO and SMTO -->
+	<label>DC Terminal Unit type</label>
+	<abstract>Telecommunications system Unit type</abstract>
+	<description>The LINEGRP macro defines the beginning of a set of macro instructions that describe your telecommunications system.<br></br>
+The LINEGRP macro statement is the first in a series of macros. The IMS macros that can be part of a LINEGRP macro set are LINE, TERMINAL, and NAME.
+Valid input is 1-10 characters, a-z, A-Z, 0-9.
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+        <regularExpression>[a-zA-Z0-9]{1,10}</regularExpression>
+		<choice>SPOOL</choice>
+        <choice>PUNCH</choice>
+		<choice>PRINTER</choice>
+		<choice>READER</choice>
+		<choice>TAPE</choice>
+		<default>SPOOL</default>
+	</string>
+</variable>
+
+<variable name="DFS_MOUNTPOINT">
+	<label>Mount Point for Unix files</label>
+	<abstract>Mount Point for Unix files</abstract>
+	<description>
+		This field represent the Mount Point for Unix files
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+		<regularExpression>[a-zA-Z0-9 /.,!?']{1,50}</regularExpression>
+		<choice>/usr/lpp/ims/imsjava</choice>
+		<default>/usr/lpp/ims/ims13/imsjava</default>
+	</string>
+</variable>
+
+<variable name="DFS_FSTYPE">
+	<label>File System for Unix files</label>
+	<abstract>File System for Unix files</abstract>
+	<description>
+		File System for Unix files
+	</description>
+	<category>z/OS Environment- IMS</category>
+	<string>
+		<regularExpression>[A-Z]{3}</regularExpression>
+		<choice>HFS</choice>
+        <choice>ZFS</choice>
+		<default>HFS</default>
+	</string>
+</variable>
+
+<!-- ****************************************************************** -->
+<!-- Variables for SMPE                                                 -->
+<!-- ****************************************************************** -->
+<variable name="GIM_IMS_GLOBALzone_CSI" scope="instance"> <!-- IMS SMP/E Global CSI -->
+<label>IMS SMP/E Global CSI</label>
+	<abstract>IMS SMP/E Global Zone CSI</abstract>
+	<description>Fully Qualified DSNAME - IMS SMP/E Global Zone CSI</description>
+	<category>z/OS Environment- SMPE</category>
+	<string>
+		<validationType>DSQUAL</validationType>
+		<default>IMSCLOUD</default>
+	</string>
+</variable>
+
+<variable name="GIM_IMS_TARGETzone" scope="instance"> <!-- IMS SMP/E target Zone -->
+<label>IMS SMP/E Target Zone ID </label>
+	<abstract>IMS SMP/E Target Zone ID </abstract>
+	<description>IMS SMP/E Target Zone ID</description>
+	<category>z/OS Environment- SMPE</category>
+	<string>
+		<validationType>DSQUAL</validationType>
+		<default>IMSTZ13</default>
+	</string>
+</variable>
+
+<variable name="cobolcomp" scope="instance">
+	<label>Cobol compiler library</label>
+	<abstract>Data set name used to compile all COBOL programs</abstract>
+	<description>
+				Provide a valid data set name of the object library to be used by this package.
+				<br> </br>
+				A validation type of DSNAME allows a maximum of 44 alphanumeric (upper case letters only) characters,
+				including the national characters, as well as "-". However, the name must start with a letter or national.
+				The name consists of 1-8 character qualifiers separated by a period.
+	</description>
+	<category>Compiler related</category>
+	<string>
+		<validationType>DSNAME</validationType>
+	</string>
+</variable>

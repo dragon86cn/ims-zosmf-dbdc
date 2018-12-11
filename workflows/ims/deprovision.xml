@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Use encoding IBM-1047 if this workflow definition file is to be held in a z/OS dataset and
+     encoding utf-8 if it is to be held in a UNIX file system -->
+
+<!-- Declare external file containing IMS variables referenced in the following steps -->
+<!DOCTYPE workflow [<!ENTITY copyright "Copyright IBM Corp., 2015">
+					<!ENTITY variables SYSTEM "IMSVariables.xml"> 
+					]> 
+
+<!--                                                       
+<copyright>                                                 
+LICENSED MATERIALS - PROPERTY OF IBM                       
+                                                   
+												   
+5635-A04                                                   
+                                                           
+    COPYRIGHT IBM CORP. 2015,2015 ALL RIGHTS RESERVED      
+                                                           
+US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION OR
+DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE CONTRACT WITH    
+IBM CORP.
+                                                            
+</copyright>                                               
+--> 
+	 
+<workflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xsi:noNamespaceSchemaLocation="../workflow_v1.xsd">
+
+	<!-- ********************************************************** -->
+	<!-- Workflow process information section                       -->
+	<!-- ********************************************************** -->
+	<workflowInfo>
+		<workflowID>DeprovisionIMS</workflowID>
+		<workflowDescription>Procedure to Deprovision an IMS TM-DB System</workflowDescription>
+		<workflowVersion>0.1</workflowVersion>
+		<vendor>IBM</vendor>
+		<Provisioning>
+            <productID>5635-A04</productID>
+            <productName>IMS</productName>
+            <productVersion>Version 13</productVersion>
+            <softwareType>IMS</softwareType>
+        </Provisioning>
+	</workflowInfo>
+
+
+	<!-- ***************************************************** -->
+	<!--     Include IMS variables used by the following steps -->
+	<!-- ***************************************************** -->
+	&variables;
+
+
+
+	<!-- ********************************************************** -->
+	<!-- ********************************************************** -->
+	<!-- Define the steps of the workflow process                   -->
+	<!-- ********************************************************** -->
+	<!-- ********************************************************** -->
+
+
+	<step name="imsCriteria" optional="false">
+		<title>Specify IMS Criteria</title>
+		<description>Specify IMS Criteria</description>
+		<variableValue name="DFS_ENVIRONMENT" scope="instance" required="true" noPromptIfSet="false"></variableValue>	<!-- Reserved -->  
+		<variableValue name="DFS_IMS_USERID" scope="instance" required="true" noPromptIfSet="false"></variableValue> 	<!-- TSO UserID performing the provisioning process  -->
+		<variableValue name="DFS_IMS_SSID" scope="instance" required="true" noPromptIfSet="false"></variableValue>	    <!-- IMS subsystem ID  -->
+		<variableValue name="DFS_IMS_SECURITY" scope="instance" required="true" noPromptIfSet="false"></variableValue>  <!-- Reserved -->  
+		<variableValue name="DFS_AUTH_LIB_HLQ" required="true" scope="instance" noPromptIfSet="false"/>              	<!-- First High level DSNAME qualifier for IMS data sets --> 
+		<variableValue name="DFS_AUTH_LIB_HLQ1" required="true" scope="instance" noPromptIfSet="false"/> 		     	<!-- First High level DSNAME qualifier for IMS instance data sets -->
+		<variableValue name="DFS_AUTH_LIB_HLQ2" required="true" scope="instance" noPromptIfSet="false"/> 		     	<!-- Second High level DSNAME qualifier for IMS instance data sets -->	
+		<variableValue name="DFS_AUTH_LIB_SYSHLQ2" required="true" scope="instance" noPromptIfSet="false"/> 		   	<!-- Second High level DSNAME qualifier for IMS SMP/E System data sets -->			<variableValue name="DFS_SMS_ENVIRONMENT" required="false" scope="instance" noPromptIfSet="false"/>				<!-- Reserved - optional use of SMS managed data sets-->
+		<variableValue name="DFS_SMS_CLASS" required="false" scope="instance" noPromptIfSet="false"/>					<!-- SMS - Storage Class -->
+		<variableValue name="DFS_SMS_MCLASS" required="false" scope="instance" noPromptIfSet="false"/>				 	<!-- SMS - Management Class -->
+		<variableValue name="DFS_DS_VOLUME1" required="true" scope="instance" noPromptIfSet="false"/>					<!-- generic volume to store data set in -->
+		<variableValue name="DFS_DS_VOLUME2" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic additional volume to store data set in -->
+		<variableValue name="DFS_IMS_UNIT" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic device type UNIT to store data set in SYSALLDA-->
+		<variableValue name="DFS_IMS_UNIT2" required="true" scope="instance" noPromptIfSet="false"/>       				<!-- generic device type to store data set in **same as IXUTEMPU**  3390 -->
+		<variableValue name="DFS_PORTIDSuf" required="true" scope="instance" noPromptIfSet="false"/>					<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+		<variableValue name="DFS_IMSXCFGroup" scope="instance" noPromptIfSet="false"/>									<!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect) -->
+		<variableValue name="DFS_IMSPlex" required="true" scope="instance" noPromptIfSet="false"/> 						<!-- The IMS PLEX name  -->
+		<variableValue name="DFS_IMS_CRC" required="true" scope="instance" noPromptIfSet="false"/>          			<!-- IMS SYSTEM control recognition character -->
+		<variableValue name="DFS_IMS_LINEGRP" required="true" scope="instance" noPromptIfSet="false"/>     				<!-- IMS LINEGRP macro specs for MTO and SMTO terminals/peripherals -->
+		<variableValue name="DFS_MOUNTPOINT" required="true" noPromptIfSet="false"/>                                    <!-- Reserved - Mount point for IMS UNIX files --> 
+		<variableValue name="DFS_FSTYPE" required="true" noPromptIfSet="false"/>                                        <!-- Reserved - File System for IMS Unix files-->
+		<variableValue name="DFS_VTAM_NODE_IMSMTO" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- VTAM Node name for IMS Master Terminal for IMS Master Terminal: Default PMASTER1 (IXUVNDP1)-->
+		<variableValue name="DFS_VTAM_NODE_IMSND1" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- VTAM node name for IMS User terminal #1 (IXUVNDU1) -->
+		<variableValue name="DFS_VTAM_NODE_IMSND2" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- VTAM node name for IMS User terminal #2 (IXUVNDU2) -->
+		<variableValue name="DXR_IRLM_SSID" required="true" scope="instance" noPromptIfSet="false"/> 		    		<!-- IRLM Subsystem ID   --> 
+		<variableValue name="DXR_IRLM_Procedure" required="true" scope="instance" noPromptIfSet="false"/>         		<!-- IRLM Procedure NAME  -->	
+		<variableValue name="IST_VTAM_IMSAPPLID" required="true" scope="instance" noPromptIfSet="false"/>				<!-- VTAM APPLID for IMS -->
+		<variableValue name="IST_VTAM_Procedure" required="true" scope="instance" noPromptIfSet="false"/> 				<!-- VTAM procname used to start zCloud VTAM -->
+		<variableValue name="EZB_TCPIP_LoadLib" required="true" scope="instance" noPromptIfSet="false"/> 				<!-- TCPIP Load Library -->
+		<variableValue name="GIM_IMS_TARGETzone" required="false" scope="instance" noPromptIfSet="false"/> 				<!-- Reserved - IMS SMP/E Target Zone ID -->
+		<variableValue name="GIM_IMS_GLOBALzone_CSI" required="false" scope="instance" noPromptIfSet="false"/> 			<!-- Reserved - IMS SMP/E GLOBAL Zone CSI -->	
+		<variableValue name="zCloud_LERuntime" required="true" scope="instance" noPromptIfSet="false"/> 				<!-- DSN specification for Language Environment Runtime Lib -->
+		<variableValue name="zCloud_MACLIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for MACLIB or SYS1.MACLIB or SYS1.AMACLIB -->
+		<variableValue name="zCloud_LPALIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for LPALIB or SYS1.LPALIB-->
+		<variableValue name="zCloud_PROCLIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for PROCLIB or SYS1.PROCLIB -->
+		<variableValue name="DFS_useIEFJOBS" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- Option to use IEFJOBS  -->
+		<variableValue name="zCloud_IEFJOBS" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for SYS1.IEFJOBS -->
+		<variableValue name="zCloud_MODGEN" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for MACLIB or SYS1.MACLIB or SYS1.AMACLIB -->	
+		<variableValue name="zCloud_CSSLIB" required="true" scope="instance" noPromptIfSet="false"/> 					<!-- DSN specification for CSSLIB or SYS1.CSSLIB -->	
+		<variableValue name="DFS_IXUSTIM1" required="false" scope="instance" noPromptIfSet="false"/>  					<!-- EXEC time parameter for SMP/E, SYSDEF Preprocessor, Stage1 **default 600** -->
+		<variableValue name="DFS_IXUSTIM3" required="false" scope="instance" noPromptIfSet="false"/> 					<!-- EXEC time parameter for MPPs, IFPs, IRLM, VTAM **default 1440** -->	
+		<instructions substitution="true">
+			<p>This step allows you to define the variables that will deprovision the system {instance-DFS_IMS_SSID}. </p>
+			<p>
+			You might want to verify that the complete destruction of the IMS instance after all the steps are completed. </p>
+			<b>IMS Deprovision Specific steps</b>
+			<ul>
+			<li>Shutdown IMS, DBRC, and DLI for SYSTEM ID: ${_workflow-softwareServiceInstanceName} </li>
+			<li>Shutdown IMS Connect: ${_workflow-softwareServiceInstanceName}HWS </li>
+			<li>Shutdown IMS OM Region Jobname: ${_workflow-softwareServiceInstanceName}OM </li>
+			<li>Shutdown IMS SCI Region  Jobname: ${_workflow-softwareServiceInstanceName}SC</li>
+			<li>Shutdown IMS RM  Region  Jobname: ${_workflow-softwareServiceInstanceName}RM </li>
+			<li>Shutdown ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li>
+			<li> Delete all the IMS Libraries</li>
+			</ul>
+			** note the IMS Installation libraries will not be afffected by this process.
+		</instructions>
+		<weight>1</weight>
+		<skills>IMS administration</skills>
+		<autoEnable>true</autoEnable>
+		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
+	</step>
+
+	
+	<step name="performIMSShutdown"> 				
+		<title>Perform IMS Shutdown</title>
+		<description>Performs Immediate IMS Shutdown</description>
+
+
+		<step name="stopResources"> 					
+			<title>Stop all IMS Resources</title>
+			<description>Stop DC, PGM and DB</description>
+			<instructions substitution="true">
+				This step will Stop IMS resources (DBs, PGMs, TRANs, DC) for: ${_workflow-softwareServiceInstanceName}
+			</instructions>
+			<weight>5</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPRS.jcl</fileTemplate>
+				<submitAs maxRc="8">JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+
+		<step name="immediateShutdown"> 					
+			<title>Immediate IMS Shutdown</title>
+			<description>Immediate IMS Shutdown (FREEZE)</description>
+			<instructions substitution="true">
+				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${_workflow-softwareServiceInstanceName}CTL
+			</instructions>
+			<weight>10</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSISHUT.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+	</step>
+	
+
+	<step name="stopIMSAS">      	   	   
+		<title>STOP IMS Concomitant Address Spaces</title>
+        <description>This step will make stop (CANCEL) SCI, RM, OM.</description>
+
+		
+		<step name="stopICON"> 			
+			<title>Stop IMS Connect</title>
+			<description>Stop IMS Connect</description>
+			<instructions substitution="true">
+				This step will Stop IMS Connect: ${_workflow-softwareServiceInstanceName}HWS
+			</instructions>
+			<weight>2</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPIC.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+
+		<step name="stopOM"> 			
+			<title>Stop OM</title>
+			<description>Stop the Operation Manager (OM)</description>	
+			<instructions substitution="true">
+				This step will Stop (CANCEL) the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPOM.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>				
+			</template>
+		</step>
+
+
+		<step name="stopRM"> 			
+			<title>Stop RM</title>
+			<description>Stop the Resource Manager (RM)</description>
+			<instructions substitution="true">
+				This step will Stop (CANCEL) the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPRM.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>				
+			</template>
+		</step>
+
+
+		<step name="stopCSL"> 			
+			<title>Stop CSL</title>
+			<description>Stop the Common Service Layer (CSL) address space</description>			
+			<instructions substitution="true">
+				This step will Stop (CANCEL) the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SCI
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPAS.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+	</step>
+
+
+	<step name="unMountZFSFiles"> 			
+		<title>Unmount ZFS files</title>
+		<description>Unmount ZFS files</description>			
+		<instructions substitution="true"></instructions>
+		<weight>10</weight>
+		<skills>System Admin</skills>
+		<autoEnable>true</autoEnable>
+		<template>
+			<fileTemplate substitution="true">jcl/DFSUNMNT.jcl</fileTemplate>
+			<!-- <submitAs>JCL</submitAs>-->	
+			<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(UNMOUNT)</saveAsDataset>
+		</template>
+	</step>
+
+
+	<step name="deleteIMSLibs"> 				   
+		<title>Delete IMS System Libraries</title>
+		<description>
+			This step performs the deletion of the system data sets created by the zCLoud IMS Provisioning Process. 
+		</description>
+
+		
+		<step name="deleteSYSDEFLibs"> 	    	
+			<title>Delete IMS System Definitions data sets</title>
+			<description>Scratches system definition dataset</description>			
+			<instructions substitution="true"> This JOB scratches the data sets used for IMS system definition</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSYSDL.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>					
+			</template>
+		</step>
+
+	</step>
+
+
+	<step name="destroyIMSEnv"> 				   
+		<title>Destroy the zCloud IMS Environment</title>
+		<description>
+			This step presents, in execution sequence, the JOBs and TASKs which comprise the deprovisioning process.
+		</description>
+
+
+		<step name="deleteIMSruntimeLibs"> 			
+			<title>Delete IMS Datasets</title>
+			<description>Delete IMS Data Sets </description>
+			<instructions substitution="true"> 
+				This JOB scratches the data sets used to create the zCloud IMS system.
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSDELLB.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>					
+			</template>
+		</step>
+
+
+		<step name="deleteIMSCatalog"> 			
+			<title>Delete IMS Catalog Database</title>
+			<description>Delete the IMS Catalog Database</description>
+			<instructions substitution="true"> This JOB scratches the IMS catalog database data sets. </instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSDCTLG.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>	
+
+	</step>
+
+
+	<step name="deletezOSComp">					  
+		<title>Delete z/OS components</title>
+		<description>Configure Review and Update z/OS components</description>
+	
+	
+		<step name="unauthIMSLibs"> 			
+			<title>Unauthorize Datasets to z/OS</title>
+			<description>Remove APF authorization for IMS dataset</description>			
+			<instructions substitution="true">
+				The following datasets will be deleted from the APF authorization:  SDXRRESL, SDFSRESL, MODBLKS, MODBLKSA,  MODBLKSB.
+				Please update your IEAAPFxx or PROGxx member of SYS1.PARMLIB, if these changes were made permanent
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSDLAPF.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>					
+			</template>
+		</step>
+
+
+		<step name="deleteIMSSVC">  			
+			<title>Delete IMS Services from z/OS</title>
+			<description>Delete IMS SVC Type-2 Type-4 from z/OS</description>
+			<instructions substitution="true"> 
+				The IMS Type-2 and Type-4 SVC must be disassociated with the z/OS nucleus.
+				<p>
+				To make the changes introduced by this process permanent (across z/OS  IPL) you might need to perform a z/OS system IPL with CLPA option.
+				for more information refer to <a href="http://www-01.ibm.com/support/knowledgecenter/zosbasics/com.ibm.zos.zsysprog/zsysprogc_initialization.htm"> Starting z/OS: The initialization (IPL) process</a>
+				</p>
+			</instructions>
+			<weight>10</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>			
+		</step>
+		
+		<step name="deleteIEFJOBSMembers" optional="false">
+			<title>Delete IEFJOBS Members</title>
+			<description>Delete members of IEFJOBS created by provisioning</description>
+			<instructions>Run the rexx program to delete the IEFJOBS members</instructions>
+			<weight>1</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">rexx/IEFJOBSX.rexx</fileTemplate>
+				<submitAs maxRc="0">TSO-REXX-JCL</submitAs>
+				<maxLrecl>1024</maxLrecl>
+			</template>
+		</step>
+
+		
+        <step name="cleanupProcLib"> 			
+			<title>Delete IMS Components from z/OS</title> 		<!--  delete STC Procedures to SYS1.PROCLIB   -->
+			<description>Delete IMS Components from SYS1.PROCLIB </description>
+			<instructions substitution="true">
+				This step deletes the IMS execution procedures from ${instance-zCloud_PROCLIB}: 	
+				${_workflow-softwareServiceInstanceName}CTL, ${_workflow-softwareServiceInstanceName}DLI, ${_workflow-softwareServiceInstanceName}RD1, ${_workflow-softwareServiceInstanceName}OM, ${_workflow-softwareServiceInstanceName}SCI
+			</instructions>
+			<weight>10</weight>
+			<skills>System Admin</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSDLMBR.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>			
+			</template>
+		</step>  
+		
+	</step>
+
+</workflow>
