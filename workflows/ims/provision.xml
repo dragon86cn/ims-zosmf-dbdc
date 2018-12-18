@@ -77,7 +77,12 @@ IBM CORP.
 		<variableValue name="DFS_DS_VOLUME2" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic additional volume to store data set in -->
 		<variableValue name="DFS_IMS_UNIT" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic device type UNIT to store data set in SYSALLDA-->
 		<variableValue name="DFS_IMS_UNIT2" required="true" scope="instance" noPromptIfSet="false"/>       				<!-- generic device type to store data set in **same as IXUTEMPU**  3390 -->
-		<variableValue name="DFS_PORTIDSuf" required="true" scope="instance" noPromptIfSet="false"/>					<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+		<variableValue name="DFS_PORTID" required="true" scope="instance" noPromptIfSet="false"/>
+		<variableValue name="DFS_SSLPORTID" required="true" scope="instance" noPromptIfSet="false"/>
+		<variableValue name="DFS_REGION_TCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/>
+		<variableValue name="DFS_REGION_SSLTCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/>
+
+		<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
 		<variableValue name="DFS_IMSXCFGroup" scope="instance" noPromptIfSet="false"/>									<!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect) -->
 		<variableValue name="DFS_IMSPlex" required="true" scope="instance" noPromptIfSet="false"/> 						<!-- The IMS PLEX name  -->
 		<variableValue name="DFS_IMS_CRC" required="true" scope="instance" noPromptIfSet="false"/>          			<!-- IMS SYSTEM control recognition character -->
@@ -119,14 +124,14 @@ IBM CORP.
 			<ul>
 			<li>IMS SYSTEM ID: ${_workflow-softwareServiceInstanceName} </li>
 			<li>IMS Connect: ${_workflow-softwareServiceInstanceName}HWS </li>
-			<li>IMS Connect port defined: 99${instance-DFS_PORTIDSuf},98${instance-DFS_PORTIDSuf},55${instance-DFS_PORTIDSuf}(DB), 88${instance-DFS_PORTIDSuf} (SSL)</li>
+			<li>IMS Connect port defined: ${instance-DFS_PORTID}</li><!--,98${instance-DFS_PORTIDSuf},55${instance-DFS_PORTIDSuf}(DB), 88${instance-DFS_PORTIDSuf} (SSL)</li-->
 			<li>IMS Control Region Jobname: ${_workflow-softwareServiceInstanceName}CTL </li>    
 			<li>IMS DBRC Region Jobname: ${_workflow-softwareServiceInstanceName}DRC </li>
 			<li>IMS DLI Region  Jobname: ${_workflow-softwareServiceInstanceName}DLI </li>
 			<li>IMS OM  Region  Jobname: ${_workflow-softwareServiceInstanceName}OM </li>
 			<li>IMS SCI Region  Jobname: ${_workflow-softwareServiceInstanceName}SC</li>
 			<li>IMS RM  Region  Jobname: ${_workflow-softwareServiceInstanceName}RM </li>
-			<li>IMS ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li>
+			<!--li>IMS ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li-->
 			<li>IMS SYSTEM control recognition character : ${instance-DFS_IMS_CRC} </li>
 			<li>VTAM Node name for IMS Master Terminal: ${instance-DFS_VTAM_NODE_IMSMTO} </li>
 			</ul>
@@ -168,6 +173,10 @@ IBM CORP.
 		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
 		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
 		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
+		<setVariable name="DFS_PORTID" scope="instance" substitution="true">${instance-DFS_PORTID}</setVariable>
+		<setVariable name="DFS_SSLPORTID" scope="instance" substitution="true">${instance-DFS_SSLPORTID}</setVariable>
+		<setVariable name="DFS_REGION_TCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_TCPIPPORT}</setVariable>
+		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable>
 	</step>
 
 	
@@ -545,7 +554,72 @@ DFSPBIMS - System ${_workflow-softwareServiceInstanceName} (DB/DC). This member 
 			</template>
 		</step>
 
+		<step name="getTCPIPDynamicPort">
+            <title>Allocating TCPIP port</title>
+            <description>&lt;p&gt;This step makes a RESTful call into z/OSMF to obtain a port that can be used by the provisioned region to listen for inbound Web user interface requests. The port is obtained from a pool of available ports.&lt;/p&gt;&lt;p&gt;If the step fails, the response from the RESTful call into z/OSMF contains information about the failure. To view the response data, locate the failing workflow in z/OSMF, then expand the step titled &lt;b&gt;Allocating dynamic ports&lt;/b&gt; and select the failed step. Next, select the &lt;b&gt;Status&lt;/b&gt; tab to show the JSON request and response information. Refer to the &lt;b&gt;Response&lt;/b&gt; tab to understand why the step failed.&lt;/p&gt;&lt;p&gt;To view the &lt;b&gt;Status&lt;/b&gt; tab, your userid must be the step owner. If you are a domain administrator, you can set your userid to be the step owner by performing the following actions. Find the failing workflow in the &lt;b&gt;Workflows&lt;/b&gt; table and modify the workflow owner to be your userid, by ticking the checkbox next to the workflow, then selecting &lt;b&gt;Actions -> Modify&lt;/b&gt; and specifying your userid as the owner. To take ownership of the workflow step, click on the name of the workflow to view its steps, then tick the checkbox next to the failing workflow step in the &lt;b&gt;Workflow Steps&lt;/b&gt; table. Select &lt;b&gt;Actions -> Assignment and Ownership -> Take Ownership&lt;/b&gt;. You should then be able to view the Status of the failing step.&lt;/p&gt;&lt;p&gt;Alternatively, refer to the z/OSMF log for information about the failure. The default log location is /var/zosmf/data/logs/IZUG0.log&lt;/p&gt;</description>
+            <instructions substitution="false">
+            Execute step to retrieve a Port from z/OS Communications Server.
+            </instructions>
+            <weight>10</weight>
+            <skills>REST</skills>
+            <autoEnable>true</autoEnable>
+            <rest>
+                <httpMethod>POST</httpMethod>
+                <uriPath substitution="true">/zosmf/resource-mgmt/rest/1.0/rdp/network/port/actions/obtain</uriPath>
+                <requestBody substitution="true">
+                    {
+                      "template-uuid" : "${_workflow-templateID}",
+                      "template-name" : "${_workflow-templateName}",
+                      "tenant-id" : "${_workflow-tenantID}",
+                      "network-parms" :
+                            {
+                               "name" : "${_workflow-templateName}",
+                               "deployment-id" : "${_workflow-registryID}",
+                               "job-name" : "${_workflow-softwareServiceInstanceName}",
+                               "system-name" : "${_workflow-systemName}"
+                            }
+                    }
+                </requestBody>
+                <expectedStatusCode>200</expectedStatusCode>
+                <propertyMapping mapTo="DFS_REGION_TCPIPPORT">["port"]</propertyMapping>
+                <propertyMapping mapTo="DFS_PORTID">["id"]</propertyMapping>
+            </rest>
+        </step>
 
+        
+        <step name="getSSLTCPIPDynamicPort">
+            <title>Allocating SSL TCPIP port</title>
+            <description>&lt;p&gt;This step makes a RESTful call into z/OSMF to obtain a port that can be used by the provisioned region to listen for inbound Web user interface requests. The port is obtained from a pool of available ports.&lt;/p&gt;&lt;p&gt;If the step fails, the response from the RESTful call into z/OSMF contains information about the failure. To view the response data, locate the failing workflow in z/OSMF, then expand the step titled &lt;b&gt;Allocating dynamic ports&lt;/b&gt; and select the failed step. Next, select the &lt;b&gt;Status&lt;/b&gt; tab to show the JSON request and response information. Refer to the &lt;b&gt;Response&lt;/b&gt; tab to understand why the step failed.&lt;/p&gt;&lt;p&gt;To view the &lt;b&gt;Status&lt;/b&gt; tab, your userid must be the step owner. If you are a domain administrator, you can set your userid to be the step owner by performing the following actions. Find the failing workflow in the &lt;b&gt;Workflows&lt;/b&gt; table and modify the workflow owner to be your userid, by ticking the checkbox next to the workflow, then selecting &lt;b&gt;Actions -> Modify&lt;/b&gt; and specifying your userid as the owner. To take ownership of the workflow step, click on the name of the workflow to view its steps, then tick the checkbox next to the failing workflow step in the &lt;b&gt;Workflow Steps&lt;/b&gt; table. Select &lt;b&gt;Actions -> Assignment and Ownership -> Take Ownership&lt;/b&gt;. You should then be able to view the Status of the failing step.&lt;/p&gt;&lt;p&gt;Alternatively, refer to the z/OSMF log for information about the failure. The default log location is /var/zosmf/data/logs/IZUG0.log&lt;/p&gt;</description>
+            <instructions substitution="false">
+            Execute step to retrieve a Port from z/OS Communications Server.
+            </instructions>
+            <weight>10</weight>
+            <skills>REST</skills>
+            <autoEnable>true</autoEnable>
+            <rest>
+                <httpMethod>POST</httpMethod>
+                <uriPath substitution="true">/zosmf/resource-mgmt/rest/1.0/rdp/network/port/actions/obtain</uriPath>
+                <requestBody substitution="true">
+                    {
+                      "template-uuid" : "${_workflow-templateID}",
+                      "template-name" : "${_workflow-templateName}",
+                      "tenant-id" : "${_workflow-tenantID}",
+                      "network-parms" :
+                            {
+                               "name" : "${_workflow-templateName}",
+                               "deployment-id" : "${_workflow-registryID}",
+                               "job-name" : "${_workflow-softwareServiceInstanceName}",
+                               "system-name" : "${_workflow-systemName}"
+                            }
+                    }
+                </requestBody>
+                <expectedStatusCode>200</expectedStatusCode>
+                <propertyMapping mapTo="DFS_REGION_SSLTCPIPPORT">["port"]</propertyMapping>
+                <propertyMapping mapTo="DFS_SSLPORTID">["id"]</propertyMapping>
+            </rest>
+        </step>
+        
+		
 		<step name="addIMSprocs"> 			
 			<title>Ready the IMS Proclib</title>
 			<description>Add IMS System Members to the IMS PROCLIB</description>			

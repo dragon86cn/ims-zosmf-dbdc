@@ -74,7 +74,10 @@ IBM CORP.
 		<variableValue name="DFS_DS_VOLUME2" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic additional volume to store data set in -->
 		<variableValue name="DFS_IMS_UNIT" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic device type UNIT to store data set in SYSALLDA-->
 		<variableValue name="DFS_IMS_UNIT2" required="true" scope="instance" noPromptIfSet="false"/>       				<!-- generic device type to store data set in **same as IXUTEMPU**  3390 -->
-		<variableValue name="DFS_PORTIDSuf" required="true" scope="instance" noPromptIfSet="false"/>					<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+		<variableValue name="DFS_PORTID" required="true" scope="instance" noPromptIfSet="false"/>
+		<variableValue name="DFS_SSLPORTID" required="true" scope="instance" noPromptIfSet="false"/>					<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+		<!--variableValue name="DFS_REGION_TCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/-->
+		<!--variableValue name="DFS_REGION_SSLTCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/-->
 		<variableValue name="DFS_IMSXCFGroup" scope="instance" noPromptIfSet="false"/>									<!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect) -->
 		<variableValue name="DFS_IMSPlex" required="true" scope="instance" noPromptIfSet="false"/> 						<!-- The IMS PLEX name  -->
 		<variableValue name="DFS_IMS_CRC" required="true" scope="instance" noPromptIfSet="false"/>          			<!-- IMS SYSTEM control recognition character -->
@@ -112,7 +115,7 @@ IBM CORP.
 			<li>Shutdown IMS OM Region Jobname: ${_workflow-softwareServiceInstanceName}OM </li>
 			<li>Shutdown IMS SCI Region  Jobname: ${_workflow-softwareServiceInstanceName}SC</li>
 			<li>Shutdown IMS RM  Region  Jobname: ${_workflow-softwareServiceInstanceName}RM </li>
-			<li>Shutdown ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li>
+			<!--li>Shutdown ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li-->
 			<li> Delete all the IMS Libraries</li>
 			</ul>
 			** note the IMS Installation libraries will not be afffected by this process.
@@ -123,6 +126,8 @@ IBM CORP.
 		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
 		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
 		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
+		<setVariable name="DFS_REGION_TCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_TCPIPPORT}</setVariable>
+		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable>
 	</step>
 
 	
@@ -391,7 +396,91 @@ IBM CORP.
 				<maxLrecl>80</maxLrecl>			
 			</template>
 		</step>  
+		</step>
 		
+		<step name="returnIMSConnectPorts">
+        <title>Returning IMSConnectports</title>
+        <description>This step contains a number of sub-steps each of which returns a port to the pool of available ports in z/OSMF.</description>
+
+        <step name="returnIMSConnectPort">
+            <title>Returning IMSConnect port</title>
+            <description>This step makes a RESTful call into z/OSMF to return a port that was obtained for accepting CMCI connections by the provisioned region. The port is returned to a pool of available ports and can then be re-used by other provisioned environments.</description>
+            <condition>
+                <expression><![CDATA["1" == "1"]]></expression>
+                <description>Should the step be executed based on if a port was allocated</description>
+                <targetStateSet>
+                    <description>Only return if a port was allocated</description>
+                    <extendStateExpression>
+                        <description>Only run if DFS_PORTID has a value</description>
+                        <expression><![CDATA[ ${instance-DFS_PORTID} == undefined || ${instance-DFS_PORTID} == ""]]></expression>
+                        <targetState>Skipped</targetState>
+                    </extendStateExpression>
+                </targetStateSet>
+            </condition>
+            <instructions substitution="false">
+            Execute step to return the Port back to z/OS Communications Server.
+            </instructions>
+            <weight>10</weight>
+            <skills>REST</skills>
+            <autoEnable>true</autoEnable>
+            <rest>
+               <httpMethod>POST</httpMethod>
+               <uriPath substitution="true">/zosmf/resource-mgmt/rest/1.0/rdp/network/port/actions/release</uriPath>
+               <requestBody substitution="true">
+                   {
+                     "template-uuid" : "${_workflow-templateID}",
+                     "template-name" : "${_workflow-templateName}",
+                     "tenant-id" : "${_workflow-tenantID}",
+                     "network-parms" :
+                           {
+                              "port-id" : "${instance-DFS_PORTID}"
+                           }
+                    }
+               </requestBody>
+               <expectedStatusCode>204</expectedStatusCode>
+            </rest>
+           <setVariable name="DFS_PORTID" scope="instance"></setVariable>
+        </step>
+		
+        <step name="returnIMSSSLConnectPort">
+            <title>Returning IMSSSLConnect port</title>
+            <description>This step makes a RESTful call into z/OSMF to return a port that was obtained for accepting CMCI connections by the provisioned region. The port is returned to a pool of available ports and can then be re-used by other provisioned environments.</description>
+            <condition>
+                <expression><![CDATA["1" == "1"]]></expression>
+                <description>Should the step be executed based on if a port was allocated</description>
+                <targetStateSet>
+                    <description>Only return if a port was allocated</description>
+                    <extendStateExpression>
+                        <description>Only run if DFS_SSLPORTID has a value</description>
+                        <expression><![CDATA[ ${instance-DFS_SSLPORTID} == undefined || ${instance-DFS_SSLPORTID} == ""]]></expression>
+                        <targetState>Skipped</targetState>
+                    </extendStateExpression>
+                </targetStateSet>
+            </condition>
+            <instructions substitution="false">
+            Execute step to return the Port back to z/OS Communications Server.
+            </instructions>
+            <weight>10</weight>
+            <skills>REST</skills>
+            <autoEnable>true</autoEnable>
+            <rest>
+               <httpMethod>POST</httpMethod>
+               <uriPath substitution="true">/zosmf/resource-mgmt/rest/1.0/rdp/network/port/actions/release</uriPath>
+               <requestBody substitution="true">
+                   {
+                     "template-uuid" : "${_workflow-templateID}",
+                     "template-name" : "${_workflow-templateName}",
+                     "tenant-id" : "${_workflow-tenantID}",
+                     "network-parms" :
+                           {
+                              "port-id" : "${instance-DFS_SSLPORTID}"
+                           }
+                    }
+               </requestBody>
+               <expectedStatusCode>204</expectedStatusCode>
+            </rest>
+           <setVariable name="DFS_SSLPORTID" scope="instance"></setVariable>
+        </step>
 	</step>
 
 </workflow>

@@ -588,21 +588,41 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="DFS_PORTIDSuf"> 	<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
-	<label>IMS Connect Port suffix</label>
-	<abstract>The IMS Connect port suffix to be appended to the default ports</abstract>
+<variable name="DFS_PORTID" scope="instance" visibility="public"> 	<!-- The IMS Connect portID-->
+	<label>IMS Connect Port ID</label>
+	<abstract>The IMS Connect port ID</abstract>
+	<description>
+		The IMS Connect port ID to be used to access this zCloud IMS.
+	</description>
+	<category>z/OS Subsystems- IMS</category>
+	<string/>
+</variable>
+
+<variable name="DFS_REGION_TCPIPPORT" scope="instance" visibility="public">
+        <label>DFS_REGION_TCPIPPORT</label>
+        <abstract>DFS_REGION_TCPIPPORT</abstract>
+        <description>Dynamically assigne TCPIP Port number to be used for TCPIP connections.</description>
+        <category>z/OS Subsystems- IMS</category>
+        <string/>
+</variable>
+
+<variable name="DFS_SSLPORTID" scope="instance" visibility="public"> 	<!-- The IMS Connect SSL portID-->
+	<label>IMS Connect SSL Port ID </label>
+	<abstract>The IMS Connect SSL port ID</abstract>
 	<description>
 		The IMS Connect port suffix to be used to access this zCloud IMS.
 	</description>
 	<category>z/OS Subsystems- IMS</category>
-	<string>
-        <regularExpression>[1-9]{2}</regularExpression>
-		<choice>77</choice>
-		<choice>88</choice>
-		<default>99</default>
-	</string>
-</variable> 
+	<string/>
+</variable>
 
+<variable name="DFS_REGION_SSLTCPIPPORT" scope="instance" visibility="public">
+        <label>DFS_REGION_TCPIPPORT</label>
+        <abstract>DFS_REGION_TCPIPPORT</abstract>
+        <description>Dynamically assigne TCPIP Port number to be used for TCPIP connections.</description>
+        <category>z/OS Subsystems- IMS</category>
+        <string/>
+</variable>
 
 <variable name="DFS_IMSXCFGroup" scope="instance"> <!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect)  (IXUXCFGN)-->
 	<label>IMS XCF Group Name</label>
