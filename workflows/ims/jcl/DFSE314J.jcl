@@ -99,7 +99,9 @@
 //DFSSLOGP  DD DSN=${instance-DFS_AUTH_LIB_HLQ}.SLDSP.%SSID.D%ARDATE.T%ARTIME.V%ARVERS,
 //             DISP=(NEW,CATLG),
 //             UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             SPACE=(CYL,(1,1))
 //*DFSSLOGS  DD DSN=${instance-DFS_AUTH_LIB_HLQ}.SLDSS.%SSID.D%ARDATE.T%ARTIME.V%ARVERS,
 //*             DISP=(NEW,CATLG),
@@ -109,7 +111,9 @@
 //RLDSDD1   DD DSN=${instance-DFS_AUTH_LIB_HLQ}.RLDSP.%SSID.D%ARDATE.T%ARTIME.V%ARVERS,
 //             DISP=(NEW,CATLG),
 //             UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             SPACE=(CYL,(1,1))
 //*RLDSDD2   DD DSN=${instance-DFS_AUTH_LIB_HLQ}.RLDSS.%SSID.D%ARDATE.T%ARTIME.V%ARVERS,
 //*             DISP=(NEW,CATLG),
@@ -184,7 +188,9 @@ $$
 //DFSUCUMN  DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.CA.%CAGRP.CA%TIME,
 //             DISP=(NEW,CATLG),
 //             UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             SPACE=(CYL,(1,1))
 %SELECT  RLDS((%CAGRP),(FROM(%DSLLGTM)))
 //DFSULOG   DD DSN=%LOGDSN,

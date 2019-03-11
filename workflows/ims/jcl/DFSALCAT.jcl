@@ -36,7 +36,9 @@
        DSORG(PS)                   -
        NEW CATALOG                 -
        SPACE(50,10) CYL -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME2})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
    ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSCD000.A00001') -
@@ -47,7 +49,9 @@
       DSORG(PS)                  -
       NEW CATALOG                -
       SPACE(20,20) CYLINDERS     -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOLUME(${instance-DFS_DS_VOLUME2})          -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
    ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSCD000.B00001') -
@@ -58,7 +62,9 @@
       DSORG(PS)                  -
       NEW CATALOG                -
       SPACE(20,20) CYLINDERS     -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOLUME(${instance-DFS_DS_VOLUME2})          -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
    ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSCD000.C00001') -
@@ -69,7 +75,9 @@
       DSORG(PS)                  -
       NEW CATALOG                -
       SPACE(20,20) CYLINDERS     -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOLUME(${instance-DFS_DS_VOLUME2})          -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
    ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSCD000.D00001') -
@@ -80,7 +88,9 @@
       DSORG(PS)                  -
       NEW CATALOG                -
       SPACE(20,20) CYLINDERS     -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOLUME(${instance-DFS_DS_VOLUME2})          -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
   DEFINE CLUSTER(                                 -
                  NAME(${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSCD000.X00001) -
@@ -92,7 +102,9 @@
                  RECORDSIZE(22 22)                -
                  SHAREOPTIONS(3 3)                -
                  SPEED                            -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)                 
                  VOLUMES(${instance-DFS_DS_VOLUME2})               -
+#end
                 )                                 -
             DATA(CONTROLINTERVALSIZE(4096))
   DEFINE CLUSTER(                                 -
@@ -102,7 +114,9 @@
                  FREESPACE(80 10)                 -
                  SHAREOPTIONS(3 3)                -
                  SPEED                            -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
                  VOLUMES(${instance-DFS_DS_VOLUME2})               -
+#end
                 )                                 -
             DATA(                                   -
                  NAME(${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSCD000.L00001.D) -
@@ -124,7 +138,9 @@
                  RECORDSIZE(82 82)                      -
                  SHAREOPTIONS(3 3)                      -
                  SPEED                                  -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
                  VOLUMES(${instance-DFS_DS_VOLUME2})                     -
+#end
                 )                                       -
             DATA(CONTROLINTERVALSIZE(4096))
 /*
@@ -135,7 +151,9 @@
 //HWSRCDR  DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.HWSRCDR,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME2},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528),
 //             SPACE=(CYL,(50),,CONTIG)
 //*

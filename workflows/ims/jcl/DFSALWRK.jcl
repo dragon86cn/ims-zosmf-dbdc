@@ -37,5 +37,7 @@
       NEW CATALOG                 -
       SPACE(5,2) CYL              -
       DIR(46)                     -
-      VOL(${instance-DFS_DS_VOLUME1})                 -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})

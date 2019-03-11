@@ -65,7 +65,9 @@
       NEW CATALOG                 -
       SPACE(5,2) CYL              -
       DIR(200)                     -
-      VOL(${instance-DFS_DS_VOLUME1})                 -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OBJDSET')  -
@@ -78,7 +80,9 @@
       NEW CATALOG                 -
       SPACE(10,3) CYL             -
       DIR(120)                    -
-      VOL(${instance-DFS_DS_VOLUME1})          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGENIN')   -
@@ -91,7 +95,9 @@
       NEW CATALOG                 -
       SPACE(8,3) CYL              -
       DIR(92)                     -
-      VOL(${instance-DFS_DS_VOLUME1})          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end 
       UNIT(${instance-DFS_IMS_UNIT})
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGENOUT')  -
@@ -104,7 +110,9 @@
       NEW CATALOG                 -
       SPACE(5,3) CYL              -
       DIR(92)                     -
-      VOL(${instance-DFS_DS_VOLUME1})          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end 
       UNIT(${instance-DFS_IMS_UNIT})
    ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.FORMAT') -
@@ -116,7 +124,9 @@
       NEW CATALOG                 -
       SPACE(2,2) CYL              -
       DIR(92)                     -
-      VOL(${instance-DFS_DS_VOLUME1})          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end 
       UNIT(${instance-DFS_IMS_UNIT})
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.TFORMAT') -
@@ -128,7 +138,9 @@
       NEW CATALOG                 -
       SPACE(2) CYL                -
       DIR(46)                     -
-      VOL(${instance-DFS_DS_VOLUME1})          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end 
       UNIT(${instance-DFS_IMS_UNIT})
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.REFERAL')  -
@@ -141,7 +153,9 @@
       NEW CATALOG                 -
       SPACE(2,2) CYL              -
       DIR(92)                     -
-      VOL(${instance-DFS_DS_VOLUME1})          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})
 /*
 //*
@@ -149,7 +163,9 @@
 //STEP1B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL,DISP=(NEW,CATLG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.SDFSRESL),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(CYL,(83,10,850))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.SDFSRESL,DISP=SHR
@@ -163,7 +179,10 @@
 //STEP2B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSMAC,DISP=(NEW,CATLG),
-//             VOL=SER=${instance-DFS_DS_VOLUME1},DSNTYPE=LIBRARY,
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+//             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
+//             DSNTYPE=LIBRARY,
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.SDFSMAC),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(TRK,(2776,4000))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.SDFSMAC,DISP=SHR
@@ -177,7 +196,9 @@
 //STEP3B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OPTIONS,DISP=(NEW,CATLG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.OPTIONS),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(TRK,(1,1,2))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.OPTIONS,DISP=SHR
@@ -191,7 +212,9 @@
 //STEP4B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKS,DISP=(NEW,CATLG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.MODBLKS),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(TRK,(22,15,50))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.MODBLKS,DISP=SHR
@@ -205,7 +228,10 @@
 //STEP5B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ADFSMAC,DISP=(NEW,CATLG),
-//             VOL=SER=${instance-DFS_DS_VOLUME1},DSNTYPE=LIBRARY,
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+//             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
+//             DSNTYPE=LIBRARY,
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.ADFSMAC),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(TRK,(1848,270))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.ADFSMAC,DISP=SHR
@@ -219,7 +245,10 @@
 //STEP6B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ADFSLOAD,DISP=(NEW,CATLG),
-//             VOL=SER=${instance-DFS_DS_VOLUME1},DSNTYPE=LIBRARY,
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+//             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
+//             DSNTYPE=LIBRARY,
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.ADFSLOAD),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(TRK,(1840,250))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.ADFSLOAD,DISP=SHR
@@ -233,7 +262,10 @@
 //STEP7B    EXEC PGM=IEBCOPY
 //SYSPRINT DD  SYSOUT=A
 //OUTDSN    DD DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ADFSSRC,DISP=(NEW,CATLG),
-//             VOL=SER=${instance-DFS_DS_VOLUME1},DSNTYPE=LIBRARY,
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+//             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
+//             DSNTYPE=LIBRARY,
 //             DCB=(${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.ADFSSRC),
 //             UNIT=${instance-DFS_IMS_UNIT},SPACE=(TRK,(3535,500))
 //INDSN    DD  DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.ADFSSRC,DISP=SHR

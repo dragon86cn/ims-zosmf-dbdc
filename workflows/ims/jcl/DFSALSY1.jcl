@@ -134,7 +134,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PGMLIB') -
       FILE(PGMLIB)                -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -146,7 +148,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PSBLIB') -
       FILE(PSBLIB)                -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -158,7 +162,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ACBLIB') -
       FILE(ACBLIB)                -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -170,7 +176,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.IMSMON') -
       FILE(IMSMON)                -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(V,B)                  -
       LRECL(6140)            -
@@ -181,7 +189,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DBDLIB') -
       FILE(DBDLIB)                -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -193,7 +203,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ACBLIBA') -
       FILE(ACBLIBA)               -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -205,7 +217,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.ACBLIBB') -
       FILE(ACBLIBB)               -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -217,7 +231,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKSA') -
       FILE(MODBLKSA)              -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -229,7 +245,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKSB') -
       FILE(MODBLKSB)              -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -241,7 +259,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODSTAT') -
       FILE(MODSTAT)               -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(F)                    -
       LRECL(80)                   -
@@ -252,7 +272,9 @@
   ALLOCATE -
      DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS') -
      FILE(JOBS)                  -
-     VOL(${instance-DFS_DS_VOLUME1})              -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+      VOL(${instance-DFS_DS_VOLUME1})              -
+#end
      UNIT(${instance-DFS_IMS_UNIT})             -
      RECFM(F,B)                  -
      LRECL(80)                   -
@@ -265,7 +287,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.FORMATA') -
       FILE(FORMATA)               -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -277,7 +301,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.FORMATB') -
       FILE(FORMATB)               -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -289,7 +315,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.TCFSLIB') -
       FILE(TCFSLIB)               -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(F,B)                  -
       LRECL(80)                   -
@@ -318,7 +346,9 @@
                  SPEED                           -
                  UNORDERED                       -
                  RECORDSIZE(4086 32600)          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
                  VOLUMES(${instance-DFS_DS_VOLUME1})                 -
+#end
                  UNIQUE                          -
                 )
   DEFINE CLUSTER(                                -
@@ -334,7 +364,9 @@
                  SPEED                           -
                  UNORDERED                       -
                  RECORDSIZE(4086 32600)          -
-                 VOLUMES(${instance-DFS_DS_VOLUME1})                 -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)                  
+                 VOLUMES(${instance-DFS_DS_VOLUME1})                 - 
+#end
                  UNIQUE                          -
                 )
   DEFINE CLUSTER(                                -
@@ -350,7 +382,9 @@
                  SPEED                           -
                  UNORDERED                       -
                  RECORDSIZE(4086 32600)          -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
                  VOLUMES(${instance-DFS_DS_VOLUME1})                 -
+#end
                  UNIQUE                          -
                 )
 //*
@@ -385,7 +419,9 @@
 //DFSOLP00 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP00,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -393,7 +429,9 @@
 //DFSOLS00 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS00,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -401,7 +439,9 @@
 //DFSOLP01 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP01,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -409,7 +449,9 @@
 //DFSOLS01 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS01,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -417,7 +459,9 @@
 //DFSOLP02 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP02,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -425,7 +469,9 @@
 //DFSOLS02 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS02,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(2),,CONTIG)
@@ -433,7 +479,9 @@
 //DFSOLP03 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP03,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -441,7 +489,9 @@
 //DFSOLS03 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS03,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -449,7 +499,9 @@
 //DFSOLP04 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP04,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -457,7 +509,9 @@
 //DFSOLS04 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS04,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -465,7 +519,9 @@
 //DFSOLP05 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP05,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -473,7 +529,9 @@
 //DFSOLS05 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS05,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -481,7 +539,9 @@
 //DFSOLP99 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLP99,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -489,7 +549,9 @@
 //DFSOLS99 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.OLS99,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=VB,LRECL=22524,BLKSIZE=22528,
 //             DSORG=PS),
 //             SPACE=(CYL,(22),,CONTIG)
@@ -497,28 +559,36 @@
 //DFSWADS0 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.WADS0,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=F,LRECL=4096,BLKSIZE=4096),
 //             SPACE=(TRK,(60),,CONTIG)
 //*
 //DFSWADS1 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.WADS1,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=F,LRECL=4096,BLKSIZE=4096),
 //             SPACE=(TRK,(60),,CONTIG)
 //*
 //DFSWADS8 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.WADS8,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=F,LRECL=4096,BLKSIZE=4096),
 //             SPACE=(TRK,(60),,CONTIG)
 //*
 //DFSWADS9 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.WADS9,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=F,LRECL=4096,BLKSIZE=4096),
 //             SPACE=(TRK,(60),,CONTIG)
 //*
@@ -527,7 +597,9 @@
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(10),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //DFSTRA01 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSTRA01,
@@ -535,7 +607,9 @@
 //             DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //DFSTRA02 DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSTRA02,
@@ -543,68 +617,88 @@
 //             DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //QBLKS    DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.QBLKS,
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(12),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //SHMSG    DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SHMSG,
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //SHMSG1   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SHMSG1,
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //LGMSG    DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGMSG,
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //LGMSG1   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGMSG1,
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //LGMSG2   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.LGMSG2,
 //             DCB=(DSORG=PS),
 //             DISP=(NEW,CATLG,DELETE),
 //             SPACE=(CYL,(22),,CONTIG),
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             UNIT=${instance-DFS_IMS_UNIT2}
 //*
 //MSDBCP1  DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MSDBCP1,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             SPACE=(CYL,(3),,CONTIG)
 //*
 //*
 //MSDBCP2  DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MSDBCP2,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             SPACE=(CYL,(23),,CONTIG)
 //*
 //MSDBDUMP DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MSDBDUMP,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             SPACE=(CYL,(23),,CONTIG)
 //*
 //*
@@ -619,7 +713,9 @@
 //SYSUT2   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SYSO1,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=UM,LRECL=140,BLKSIZE=150,DSORG=PS),
 //             SPACE=(CYL,(12),,CONTIG)
 //*
@@ -631,7 +727,9 @@
 //SYSUT2   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SYSO2,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=UM,LRECL=140,BLKSIZE=150,DSORG=PS),
 //             SPACE=(CYL,(12),,CONTIG)
 //*
@@ -643,7 +741,9 @@
 //SYSUT2   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SYSO3,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=UM,LRECL=140,BLKSIZE=150,DSORG=PS),
 //             SPACE=(CYL,(12),,CONTIG)
 //*
@@ -655,7 +755,9 @@
 //SYSUT2   DD  DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SYSO4,
 //             DISP=(NEW,CATLG,DELETE),
 //             UNIT=${instance-DFS_IMS_UNIT2},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //             VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //             DCB=(RECFM=UM,LRECL=140,BLKSIZE=150,DSORG=PS),
 //             SPACE=(CYL,(12),,CONTIG)
 //*
@@ -667,7 +769,9 @@
   ALLOCATE -
       DSNAME('${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.EXITLIB') -
       FILE(PGMLIB)                -
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
       VOL(${instance-DFS_DS_VOLUME1})              -
+#end
       UNIT(${instance-DFS_IMS_UNIT})             -
       RECFM(U)                    -
       BLKSIZE(32760)          -
@@ -684,7 +788,9 @@
 //SYSUT2 DD   DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.RDDS1,
 //            DCB=(RECFM=VB,LRECL=32756,BLKSIZE=32760),
 //            UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //            VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //            DISP=(,CATLG),
 //            SPACE=(CYL,(5,5))
 //SYSPRINT DD SYSOUT=*
@@ -695,7 +801,9 @@
 //SYSUT2 DD   DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.RDDS2,
 //            DCB=(RECFM=VB,LRECL=32756,BLKSIZE=32760),
 //            UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //            VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //            DISP=(,CATLG),
 //            SPACE=(CYL,(5,5))
 //SYSPRINT DD SYSOUT=*
@@ -706,7 +814,9 @@
 //SYSUT2 DD   DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.RDDS3,
 //            DCB=(RECFM=VB,LRECL=32756,BLKSIZE=32760),
 //            UNIT=${instance-DFS_IMS_UNIT},
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
 //            VOL=SER=${instance-DFS_DS_VOLUME1},
+#end
 //            DISP=(,CATLG),
 //            SPACE=(CYL,(5,5))
 //SYSPRINT DD SYSOUT=*
