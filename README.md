@@ -119,7 +119,7 @@ others.
 | DFS_IXUSTIM1 | EXEC time parameter for SMP/E, SYSDEF STAGE1|
 | DFS_IXUSTIM3 | EXEC time parameter for MPPs, IFPs, IRLM, VTAM|
 | GIM_IMS_GLOBALzone_CSI | IMS SMP/E target zone ID|
-| GIM_IMS_TARGETzone | IMS SMP/E global zone CSI|
+| GIM_IMS_TARGETzone | IMS SMP/E g      lobal zone CSI|
 | DFS_MOUNTPOINT | Mount point for unix files|
 | DFS_FSTYPE | File system for unix files|
 | DFS_IMS_SECURITY | True or false value to use SMS-managed DASD for IMS libraries|
@@ -142,12 +142,14 @@ To run the workflow, you need the following authority:
 The repository includes the following files:
 * provision.xml
   * This workflow XML provisions an IMS Fast Path DEDB database. Do not modify this file.
-* deprovision.xml
+* deprovision.xml   
   * This workflow XML de-provisions an IMS Fast Path DEDB database. Do not modify this file.
 * IMSVariables.xml
   * This file defines the variables referenced by the steps in the workflow.
 * workflow_variables.properties
-  * This properties file contains values for the variables referenced in the provision_IMS_DEDB.xml and deprovision_IMS_DEDB.xml workflows. Edit the workflow_variables.properties file to specify your system specific information for the variables in the file.
+  * This properties file contains values for the variables referenced in the provision.xml and deprovision.xml workflows. Edit the workflow_variables.properties file to specify your system specific information for the variables in the file.
+* actions.xml
+  * This file defines the actions that can be taken on the instance of the template. Actions like deprovision, start, stop. Do not modify this file.  
 
 ## Installation 
 * Use FTP to transfer the provision.xml, deprovision.xml, and the workflow_variables.properties files to USS on the z/OS host in binary mode.
@@ -176,6 +178,72 @@ The repository includes the following files:
 1. Right-click the first action and select **Perform**.
 
 For more information about running a workflow see [Creating a workflow](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zosmfworkflows.help.doc/izuWFhpCreateWorkflowDialog.html) in the IBM Knowledge Center.
+
+## Creating a Software Services Template using the software services in Cloud Provisioning in z/OSMF 
+1. Select **Cloud Provisioning** from the left menu.
+1. Select the **Software Services** drop down menu.
+1. From **Templates** tab, Select **Add Template(Standard)**.
+1. In the Add Standard Template UI, specify the following information:
+    *   Template name
+    *   Workflow definition file
+    *   Workflow variable input file
+    *   Actions file 
+1. Select **Ok**.
+1. Template is created and can be seen in template table.
+1. Associate Tenant 
+    *   Select the above template created and go to Actions -> Associate Tenant. 
+    *   A dialog with pop-up window will display for Associate Tenant. 
+    *   To start with Domain is default and Tenant also default.   
+    *   Resource pool selection: Select **Create a dedicated resource pool** and Select **Ok**.  
+    *   A new UI - **Add Template and Resource Pool for Tenant: default** will open up with Instance Details tab.  
+    *   Specify general name prefix:
+        *   2 letter prefix eg. IM  
+        This is the prefix for the template instance where every new instance you run, it will dynamically name itself like IM00, IM01 depending on the number of software service instances the user defines for that template.
+    *   Maximum number of software services instances (1-1296): 
+        *   User defined number that limits the no. of instances
+    *   Next, go to Resource Management tab form the left   
+    *   In Resources for template: Select **Create network resource pool**
+    *   Select **Ok**.
+    *   Following message will be seen in the pop-up window : 
+        ```
+        A resource pool for the template will be created with no workload management resources. 
+        It will be created with network resources only. The network administrator must complete 
+        the network resource pool definition in the Configuration Assistant task.
+        ``` 
+    *   Select **Ok**. 
+
+For more information about running a workflow as a Software Services template see [Preparing to use Cloud Provisioning](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.izua300/izuconfig_CloudProvSecuritySetup.htm) in the IBM Knowledge Center.
+
+## Dynamic Port Allocation 
+**Before completing this task, see [Configuring Cloud Policy](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/cloud/CloudPolicyCfgOverview.html) to setup Configuration Assistant and [Using the Systems Tab](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/cloud/SystemsMainTabUsing.html) to create a new TCP/IP stack.**
+1. Configuration -> Configuration Assistant on the left panel of the z/OSMF UI. 
+1. Select option: **Manage z/OS Cloud configuration** and Select **Proceed**.
+1. Select the Cloud Domain: **default** and Select **Proceed**.
+1. A table is displayed in Network Resource Pools tab with different fields like template name, has provisioned resources, completion status, etc. To provision or run the template instance, completion status for the template has to be complete.
+     * Select the template - Go to Actions -> Modify, in Attributes tab - Select **Is Complete** status.
+1. In Port Allocation tab, if there is no previously defined Port Ranges name in the table then create one or just select one from the table.
+1. To Create Port ranges, select Actions -> New 
+    *   Specify the name, uncheck the **Is Quiesced** status
+    *   Select the row and Specify the port range(eg. 10000 - 10100) and uncheck the **Is Quiesced**.  
+    *   Select **Save** and Continue.
+
+## Run the software service template 
+1. Cloud Provisioning -> Software Services: from the Templates tab, select the check box for the template you created and select Actions -> Test run.
+1. The following message will be displayed - 
+    ```
+    The software services instance (name of the instance dynamically created) has been started.
+    ```
+1. Go to the instances tab to see the status of the new service instance. 
+1. If the provisioning of the software service instance is 100% successful, the state will show **Provisioned** in green. 
+1. Using the same software services template, a user can provision multiple software service instances.
+
+
+## Actions on the software service instance 
+1. To perform actions against the software instance, select the instance that was provisioned and click on the desired Action -> Perform -> deprovision or stop or start.
+1. Deprovision will stop all IMS resources, the IMS control region, IMS Connect, delete all of the allocated datasets, clean up the environment that was provisioned, and release the allocated ports to make them available for reuse.
+1. Stop will stop all IMS resources, the IMS Control region, and IMS Connect.
+1. Start will start all IMS resources, the IMS Control region, and IMS Connect.
+
 
 ## Troubleshooting
 * IZUWF0105E   Workflow property file file-name is either not found or cannot be accessed
