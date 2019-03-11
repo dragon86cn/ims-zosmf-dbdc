@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Use encoding IBM-1047 if this workflow definition file is to be held in a z/OS dataset and
+     encoding utf-8 if it is to be held in a UNIX file system -->
+
+<!-- Declare external file containing IMS variables referenced in the following steps -->
+<!DOCTYPE workflow [<!ENTITY copyright "Copyright IBM Corp., 2015">
+					<!ENTITY variables SYSTEM "IMSVariables.xml"> 
+					]> 
+
+<!--                                                       
+<copyright>                                                 
+LICENSED MATERIALS - PROPERTY OF IBM                       
+                                                   
+												   
+5635-A04                                                   
+                                                           
+    COPYRIGHT IBM CORP. 2015,2015 ALL RIGHTS RESERVED      
+                                                           
+US GOVERNMENT USERS RESTRICTED RIGHTS - USE, DUPLICATION OR
+DISCLOSURE RESTRICTED BY GSA ADP SCHEDULE CONTRACT WITH    
+IBM CORP.
+                                                            
+</copyright>                                               
+--> 
+	 
+<workflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          xsi:noNamespaceSchemaLocation="../workflow_v1.xsd">
+
+	<!-- ********************************************************** -->
+	<!-- Workflow process information section                       -->
+	<!-- ********************************************************** -->
+	<workflowInfo>
+		<workflowID>StopIMS</workflowID>
+		<workflowDescription>Procedure to Stop an IMS TM-DB System</workflowDescription>
+		<workflowVersion>0.1</workflowVersion>
+		<vendor>IBM</vendor>
+		<Provisioning>
+            <productID>5635-A04</productID>
+            <productName>IMS</productName>
+            <productVersion>Version 13</productVersion>
+            <softwareType>IMS</softwareType>
+        </Provisioning>
+	</workflowInfo>
+
+
+	<!-- ***************************************************** -->
+	<!--     Include IMS variables used by the following steps -->
+	<!-- ***************************************************** -->
+	&variables;
+
+
+
+	<!-- ********************************************************** -->
+	<!-- ********************************************************** -->
+	<!-- Define the steps of the workflow process                   -->
+	<!-- ********************************************************** -->
+	<!-- ********************************************************** -->
+
+
+	<step name="imsCriteria" optional="false">
+		<title>Specify IMS Criteria</title>
+		<description>Specify IMS Criteria</description>
+		<variableValue name="DFS_ENVIRONMENT" scope="instance" required="true" noPromptIfSet="false"></variableValue>	<!-- Reserved -->  
+		<variableValue name="DFS_IMS_USERID" scope="instance" required="true" noPromptIfSet="false"></variableValue> 	<!-- TSO UserID performing the provisioning process  -->
+		<variableValue name="DFS_IMS_SSID" scope="instance" required="true" noPromptIfSet="false"></variableValue>	    <!-- IMS subsystem ID  -->
+		<variableValue name="DFS_IMS_SECURITY" scope="instance" required="true" noPromptIfSet="false"></variableValue>  <!-- Reserved -->  
+		<variableValue name="DFS_AUTH_LIB_HLQ" required="true" scope="instance" noPromptIfSet="false"/>              	<!-- First High level DSNAME qualifier for IMS data sets --> 
+		<variableValue name="DFS_AUTH_LIB_HLQ2" required="true" scope="instance" noPromptIfSet="false"/> 		     	<!-- Second High level DSNAME qualifier for IMS instance data sets -->	
+		<variableValue name="DFS_AUTH_LIB_SYSHLQ2" required="true" scope="instance" noPromptIfSet="false"/> 		   	<!-- Second High level DSNAME qualifier for IMS SMP/E System data sets -->			<variableValue name="DFS_SMS_ENVIRONMENT" required="false" scope="instance" noPromptIfSet="false"/>				<!-- Reserved - optional use of SMS managed data sets-->
+		<variableValue name="DFS_SMS_CLASS" required="false" scope="instance" noPromptIfSet="false"/>					<!-- SMS - Storage Class -->
+		<variableValue name="DFS_SMS_MCLASS" required="false" scope="instance" noPromptIfSet="false"/>				 	<!-- SMS - Management Class -->
+		<variableValue name="DFS_DS_VOLUME1" required="true" scope="instance" noPromptIfSet="false"/>					<!-- generic volume to store data set in -->
+		<variableValue name="DFS_DS_VOLUME2" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic additional volume to store data set in -->
+		<variableValue name="DFS_IMS_UNIT" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic device type UNIT to store data set in SYSALLDA-->
+		<variableValue name="DFS_IMS_UNIT2" required="true" scope="instance" noPromptIfSet="false"/>       				<!-- generic device type to store data set in **same as IXUTEMPU**  3390 -->
+		<variableValue name="DFS_PORTID" required="true" scope="instance" noPromptIfSet="false"/>
+		<!--variableValue name="DFS_SSLPORTID" required="true" scope="instance" noPromptIfSet="false"/-->					<!-- The IMS Connect portID suffix for supporting multiple ICON instances in the same LPAR-->
+		<!--variableValue name="DFS_REGION_TCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/-->
+		<!--variableValue name="DFS_REGION_SSLTCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/-->
+		<variableValue name="DFS_IMSXCFGroup" scope="instance" noPromptIfSet="false"/>									<!-- The XCF GROUP NAME for the zCloud IMS and its subcomponent (OTMA, IMSConnect) -->
+		<variableValue name="DFS_IMSPlex" required="true" scope="instance" noPromptIfSet="false"/> 						<!-- The IMS PLEX name  -->
+		<instructions substitution="true">
+			<p>This step allows you to define the variables that will stop the system resources{instance-DFS_IMS_SSID}. </p>
+			<p>
+			You might want to verify that the complete destruction of the IMS instance after all the steps are completed. </p>
+			<b>IMS Deprovision Specific steps</b>
+			<ul>
+			<li>Shutdown IMS, DBRC, and DLI for SYSTEM ID: ${_workflow-softwareServiceInstanceName} </li>
+			<li>Shutdown IMS Connect: ${_workflow-softwareServiceInstanceName}HWS </li>
+			<li>Shutdown IMS OM Region Jobname: ${_workflow-softwareServiceInstanceName}OM1 </li>
+			<li>Shutdown IMS SCI Region  Jobname: ${_workflow-softwareServiceInstanceName}SC</li>
+			<li>Shutdown IMS RM  Region  Jobname: ${_workflow-softwareServiceInstanceName}RM </li>
+			<!--li>Shutdown ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li-->
+			<li> Delete all the IMS Libraries</li>
+			</ul>
+			** note the IMS Installation libraries will not be afffected by this process.
+		</instructions>
+		<weight>1</weight>
+		<skills>IMS administration</skills>
+		<autoEnable>true</autoEnable>
+		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
+		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_REGION_TCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_TCPIPPORT}</setVariable>
+		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable>
+	</step>
+
+	
+	<step name="performIMSShutdown"> 				
+		<title>Perform IMS Shutdown</title>
+		<description>Performs Immediate IMS Shutdown</description>
+
+
+		<step name="immediateShutdown"> 					
+			<title>Immediate IMS Shutdown</title>
+			<description>Immediate IMS Shutdown (FREEZE)</description>
+			<instructions substitution="true">
+				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${_workflow-softwareServiceInstanceName}CTL
+			</instructions>
+			<weight>10</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSISHUT.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+	</step>
+	
+
+	<step name="stopIMSAS">      	   	   
+		<title>STOP IMS Concomitant Address Spaces</title>
+        <description>This step will make stop (CANCEL) SCI, RM, OM.</description>
+
+		
+		<step name="stopICON"> 			
+			<title>Stop IMS Connect</title>
+			<description>Stop IMS Connect</description>
+			<instructions substitution="true">
+				This step will Stop IMS Connect: ${_workflow-softwareServiceInstanceName}HWS
+			</instructions>
+			<weight>2</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPIC.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+
+		<step name="stopOM"> 			
+			<title>Stop OM</title>
+			<description>Stop the Operation Manager (OM)</description>	
+			<instructions substitution="true">
+				This step will Stop (CANCEL) the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM1
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPOM.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>				
+			</template>
+		</step>
+
+
+		<step name="stopRM"> 			
+			<title>Stop RM</title>
+			<description>Stop the Resource Manager (RM)</description>
+			<instructions substitution="true">
+				This step will Stop (CANCEL) the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM1
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPRM.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>				
+			</template>
+		</step>
+
+
+		<step name="stopCSL"> 			
+			<title>Stop CSL</title>
+			<description>Stop the Common Service Layer (CSL) address space</description>			
+			<instructions substitution="true">
+				This step will Stop (CANCEL) the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SCI
+			</instructions>
+			<weight>25</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPAS.jcl</fileTemplate>
+				<submitAs>JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
+
+	</step>
+		
+</workflow>

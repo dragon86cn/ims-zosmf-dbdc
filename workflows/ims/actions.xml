@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <actionList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			xsi:noNamespaceSchemaLocation="./actions_v1.xsd">
-	<action name="deprovision">
-		<workflow>
-			<wfDefFile>./deprovision.xml</wfDefFile>
-			<wfVarInFile>./workflow_variables.properties</wfVarInFile>
-		</workflow>
-	</action>
+    xsi:noNamespaceSchemaLocation="./actions_v1.xsd">
+    <action name="deprovision">
+        <workflow>
+            <wfDefFile>./deprovision.xml</wfDefFile>
+            <wfVarInFile>./workflow_variables.properties</wfVarInFile>
+            <wfVar name="DFS_PORTID" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+            <wfVar name="DFS_SSLPORTID" updateRegistry="false">$!{DFS_SSLPORTID}</wfVar>
+            <wfVar name="DFS_REGION_TCPIPPORT" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+            <wfVar name="DFS_REGION_SSLTCPIPPORT" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+        </workflow>
+    </action>
+    <action name="start">
+        <workflow>
+            <wfDefFile>./StartIMS.xml</wfDefFile>
+            <wfVarInFile>./workflow_variables.properties</wfVarInFile>
+            <wfVar name="DFS_PORTID" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+            <wfVar name="DFS_SSLPORTID" updateRegistry="false">$!{DFS_SSLPORTID}</wfVar>
+            <wfVar name="DFS_REGION_TCPIPPORT" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+            <wfVar name="DFS_REGION_SSLTCPIPPORT" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+        </workflow>
+    </action>
+    <action name="stop">
+        <workflow>
+            <wfDefFile>./StopIMS.xml</wfDefFile>
+            <wfVarInFile>./workflow_variables.properties</wfVarInFile>
+            <wfVar name="DFS_PORTID" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+            <wfVar name="DFS_SSLPORTID" updateRegistry="false">$!{DFS_SSLPORTID}</wfVar>
+            <wfVar name="DFS_REGION_TCPIPPORT" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+            <wfVar name="DFS_REGION_SSLTCPIPPORT" updateRegistry="false">$!{DFS_PORTID}</wfVar>
+        </workflow>
+    </action>
 </actionList>
