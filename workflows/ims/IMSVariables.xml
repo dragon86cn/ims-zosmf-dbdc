@@ -32,6 +32,14 @@
 	</string>
 </variable>
 
+<variable name="DFH_STANDALONE_WORKFLOW" scope="instance" visibility="private">
+        <label>STANDALONE_WORKFLOW</label>
+        <abstract>Is the workflow part of a template</abstract>
+        <description>Is the workflow being run as part of a cloud provisioning template?</description>
+        <category>IMS</category>
+        <string/>
+</variable>
+
 <variable name="DFS_AUTH_LIB_HLQ">
 	<label>Dataset HLQ</label>
 	<abstract>High-level qualifier</abstract>
@@ -601,7 +609,7 @@ to this group will be changed accordingly.
 <variable name="DFS_REGION_TCPIPPORT" scope="instance" visibility="public">
         <label>DFS_REGION_TCPIPPORT</label>
         <abstract>DFS_REGION_TCPIPPORT</abstract>
-        <description>Dynamically assigne TCPIP Port number to be used for TCPIP connections.</description>
+        <description>Dynamically assign TCPIP Port number to be used for TCPIP connections.</description>
         <category>z/OS Subsystems- IMS</category>
         <string/>
 </variable>
@@ -617,9 +625,9 @@ to this group will be changed accordingly.
 </variable>
 
 <variable name="DFS_REGION_SSLTCPIPPORT" scope="instance" visibility="public">
-        <label>DFS_REGION_TCPIPPORT</label>
-        <abstract>DFS_REGION_TCPIPPORT</abstract>
-        <description>Dynamically assigne TCPIP Port number to be used for TCPIP connections.</description>
+        <label>DFS_REGION_SSLTCPIPPORT</label>
+        <abstract>DFS_REGION_SSLTCPIPPORT</abstract>
+        <description>Dynamically assign TCPIP Port number to be used for TCPIP connections.</description>
         <category>z/OS Subsystems- IMS</category>
         <string/>
 </variable>

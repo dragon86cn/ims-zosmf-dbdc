@@ -56,6 +56,45 @@ IBM CORP.
 	<!-- ********************************************************** -->
 	<!-- ********************************************************** -->
 	
+	<step name="Step0_setVariable">
+		<title>Step0_setVariable</title>
+		<description>Step0_setVariable</description>
+		<variableValue name="DFH_STANDALONE_WORKFLOW" required="true" scope="instance" noPromptIfSet="false"/>  
+		<instructions substitution="false">Step0_setVariable</instructions>
+		<weight>1</weight>
+		<skills>IMS Administrator</skills>
+		<autoEnable>true</autoEnable>
+		<canMarkAsFailed>false</canMarkAsFailed>
+		<setVariable name="DFH_STANDALONE_WORKFLOW" scope="instance" substitution="true">$!{_workflow-softwareServiceInstanceName}</setVariable>
+	</step>
+	
+	<step name="Step1_setVariables_for_Provisioning" optional="false">
+       <title>Step0_setVariables_for_Provisioning</title>
+       <description>Step0_setVariables_for_Provisioning</description>
+       
+       <condition>
+           <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+           <description></description>
+           <targetStateSet>
+               <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+           </targetStateSet>
+       </condition>
+  		<instructions substitution="false">Step0_setVariables_for_Provisioning</instructions>
+		<weight>1</weight>
+		<skills>IMS Administrator</skills>
+		<autoEnable>true</autoEnable>
+		<canMarkAsFailed>false</canMarkAsFailed>
+		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
+		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_PORTID" scope="instance" substitution="true">${instance-DFS_PORTID}</setVariable>
+		<setVariable name="DFS_SSLPORTID" scope="instance" substitution="true">${instance-DFS_SSLPORTID}</setVariable>
+		<setVariable name="DFS_REGION_TCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_TCPIPPORT}</setVariable>
+		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable>
+	</step>
+	
+	
+	
 	<!-- ************************************** -->
 	<!--     Step - Specify IMS Criteria        -->
 	<!-- ************************************** -->
@@ -77,7 +116,7 @@ IBM CORP.
 		<variableValue name="DFS_DS_VOLUME2" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic additional volume to store data set in -->
 		<variableValue name="DFS_IMS_UNIT" required="true" scope="instance" noPromptIfSet="false"/> 		 			<!-- generic device type UNIT to store data set in SYSALLDA-->
 		<variableValue name="DFS_IMS_UNIT2" required="true" scope="instance" noPromptIfSet="false"/>       				<!-- generic device type to store data set in **same as IXUTEMPU**  3390 -->
-		<variableValue name="DFS_PORTID" required="true" scope="instance" noPromptIfSet="false"/>
+        <variableValue name="DFS_PORTID" required="true" scope="instance" noPromptIfSet="false"/>
 		<variableValue name="DFS_SSLPORTID" required="true" scope="instance" noPromptIfSet="false"/>
 		<variableValue name="DFS_REGION_TCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/>
 		<variableValue name="DFS_REGION_SSLTCPIPPORT" required="true" scope="instance" noPromptIfSet="false"/>
@@ -122,16 +161,16 @@ IBM CORP.
 			</p>
 			<b>IMS Specific</b>
 			<ul>
-			<li>IMS SYSTEM ID: ${_workflow-softwareServiceInstanceName} </li>
-			<li>IMS Connect: ${_workflow-softwareServiceInstanceName}HWS </li>
-			<li>IMS Connect port defined: ${instance-DFS_PORTID}</li><!--,98${instance-DFS_PORTIDSuf},55${instance-DFS_PORTIDSuf}(DB), 88${instance-DFS_PORTIDSuf} (SSL)</li-->
-			<li>IMS Control Region Jobname: ${_workflow-softwareServiceInstanceName}CTL </li>    
-			<li>IMS DBRC Region Jobname: ${_workflow-softwareServiceInstanceName}DRC </li>
-			<li>IMS DLI Region  Jobname: ${_workflow-softwareServiceInstanceName}DLI </li>
-			<li>IMS OM  Region  Jobname: ${_workflow-softwareServiceInstanceName}OM </li>
-			<li>IMS SCI Region  Jobname: ${_workflow-softwareServiceInstanceName}SC</li>
-			<li>IMS RM  Region  Jobname: ${_workflow-softwareServiceInstanceName}RM </li>
-			<!--li>IMS ODBM name (for DB Open Access): ${_workflow-softwareServiceInstanceName}DB${instance-DFS_PORTIDSuf}  </li-->
+			<li>IMS SYSTEM ID: ${instance-DFS_IMS_SSID} </li>
+			<li>IMS Connect: ${instance-DFS_IMS_SSID}HWS </li>
+			<li>IMS Connect port defined: ${instance-DFS_PORTID}</li><!--98${instance-DFS_PORTIDSuf},55${instance-DFS_PORTIDSuf}(DB), 88${instance-DFS_PORTIDSuf} (SSL)</li-->
+			<li>IMS Control Region Jobname: ${instance-DFS_IMS_SSID}CTL </li>    
+			<li>IMS DBRC Region Jobname: ${instance-DFS_IMS_SSID}DRC </li>
+			<li>IMS DLI Region  Jobname: ${instance-DFS_IMS_SSID}DLI </li>
+			<li>IMS OM  Region  Jobname: ${instance-DFS_IMS_SSID}OM </li>
+			<li>IMS SCI Region  Jobname: ${instance-DFS_IMS_SSID}SC</li>
+			<li>IMS RM  Region  Jobname: ${instance-DFS_IMS_SSID}RM </li>
+			<!--li>IMS ODBM name (for DB Open Access): ${instance-DFS_IMS_SSID}DB${instance-DFS_PORTIDSuf}  </li-->
 			<li>IMS SYSTEM control recognition character : ${instance-DFS_IMS_CRC} </li>
 			<li>VTAM Node name for IMS Master Terminal: ${instance-DFS_VTAM_NODE_IMSMTO} </li>
 			</ul>
@@ -170,13 +209,6 @@ IBM CORP.
 		<weight>1</weight>
 		<skills>IMS administration</skills>
 		<autoEnable>true</autoEnable>
-		<setVariable name="DFS_IMS_SSID" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}</setVariable>
-		<setVariable name="DFS_AUTH_LIB_HLQ2" scope="instance" substitution="true">${instance-DFS_AUTH_LIB_HLQ2}.${_workflow-softwareServiceInstanceName}</setVariable>
-		<setVariable name="DFS_IMSPlex" scope="instance" substitution="true">${_workflow-softwareServiceInstanceName}P</setVariable>
-		<setVariable name="DFS_PORTID" scope="instance" substitution="true">${instance-DFS_PORTID}</setVariable>
-		<setVariable name="DFS_SSLPORTID" scope="instance" substitution="true">${instance-DFS_SSLPORTID}</setVariable>
-		<setVariable name="DFS_REGION_TCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_TCPIPPORT}</setVariable>
-		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable>
 	</step>
 
 	
@@ -289,7 +321,7 @@ Please do not change any other aspects of the supplied Stage1 unless you are als
 your changes throughout the remaining steps.
      <br></br>
 The IMS EXEC PARM values used by the IMS created within this process is specified in the following ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB members:
-DFSPBIMS - System ${_workflow-softwareServiceInstanceName} (DB/DC). This member is created by a later JOB.
+DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 </instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -557,6 +589,13 @@ DFSPBIMS - System ${_workflow-softwareServiceInstanceName} (DB/DC). This member 
 		<step name="getTCPIPDynamicPort">
             <title>Allocating TCPIP port</title>
             <description>&lt;p&gt;This step makes a RESTful call into z/OSMF to obtain a port that can be used by the provisioned region to listen for inbound Web user interface requests. The port is obtained from a pool of available ports.&lt;/p&gt;&lt;p&gt;If the step fails, the response from the RESTful call into z/OSMF contains information about the failure. To view the response data, locate the failing workflow in z/OSMF, then expand the step titled &lt;b&gt;Allocating dynamic ports&lt;/b&gt; and select the failed step. Next, select the &lt;b&gt;Status&lt;/b&gt; tab to show the JSON request and response information. Refer to the &lt;b&gt;Response&lt;/b&gt; tab to understand why the step failed.&lt;/p&gt;&lt;p&gt;To view the &lt;b&gt;Status&lt;/b&gt; tab, your userid must be the step owner. If you are a domain administrator, you can set your userid to be the step owner by performing the following actions. Find the failing workflow in the &lt;b&gt;Workflows&lt;/b&gt; table and modify the workflow owner to be your userid, by ticking the checkbox next to the workflow, then selecting &lt;b&gt;Actions -> Modify&lt;/b&gt; and specifying your userid as the owner. To take ownership of the workflow step, click on the name of the workflow to view its steps, then tick the checkbox next to the failing workflow step in the &lt;b&gt;Workflow Steps&lt;/b&gt; table. Select &lt;b&gt;Actions -> Assignment and Ownership -> Take Ownership&lt;/b&gt;. You should then be able to view the Status of the failing step.&lt;/p&gt;&lt;p&gt;Alternatively, refer to the z/OSMF log for information about the failure. The default log location is /var/zosmf/data/logs/IZUG0.log&lt;/p&gt;</description>
+            <condition>
+                <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+                <description></description>
+                <targetStateSet>
+                    <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+                </targetStateSet>
+            </condition>
             <instructions substitution="false">
             Execute step to retrieve a Port from z/OS Communications Server.
             </instructions>
@@ -590,6 +629,13 @@ DFSPBIMS - System ${_workflow-softwareServiceInstanceName} (DB/DC). This member 
         <step name="getSSLTCPIPDynamicPort">
             <title>Allocating SSL TCPIP port</title>
             <description>&lt;p&gt;This step makes a RESTful call into z/OSMF to obtain a port that can be used by the provisioned region to listen for inbound Web user interface requests. The port is obtained from a pool of available ports.&lt;/p&gt;&lt;p&gt;If the step fails, the response from the RESTful call into z/OSMF contains information about the failure. To view the response data, locate the failing workflow in z/OSMF, then expand the step titled &lt;b&gt;Allocating dynamic ports&lt;/b&gt; and select the failed step. Next, select the &lt;b&gt;Status&lt;/b&gt; tab to show the JSON request and response information. Refer to the &lt;b&gt;Response&lt;/b&gt; tab to understand why the step failed.&lt;/p&gt;&lt;p&gt;To view the &lt;b&gt;Status&lt;/b&gt; tab, your userid must be the step owner. If you are a domain administrator, you can set your userid to be the step owner by performing the following actions. Find the failing workflow in the &lt;b&gt;Workflows&lt;/b&gt; table and modify the workflow owner to be your userid, by ticking the checkbox next to the workflow, then selecting &lt;b&gt;Actions -> Modify&lt;/b&gt; and specifying your userid as the owner. To take ownership of the workflow step, click on the name of the workflow to view its steps, then tick the checkbox next to the failing workflow step in the &lt;b&gt;Workflow Steps&lt;/b&gt; table. Select &lt;b&gt;Actions -> Assignment and Ownership -> Take Ownership&lt;/b&gt;. You should then be able to view the Status of the failing step.&lt;/p&gt;&lt;p&gt;Alternatively, refer to the z/OSMF log for information about the failure. The default log location is /var/zosmf/data/logs/IZUG0.log&lt;/p&gt;</description>
+            <condition>
+                <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+                <description></description>
+                <targetStateSet>
+                    <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+                </targetStateSet>
+            </condition>
             <instructions substitution="false">
             Execute step to retrieve a Port from z/OS Communications Server.
             </instructions>
@@ -685,14 +731,14 @@ DFSPBIMS - System ${_workflow-softwareServiceInstanceName} (DB/DC). This member 
 			<title>Create IMS Connect</title> <!-- Add IMS Connect job to the JOBS library  -->
 			<description> Create IMS Connect Job</description>	
 			<instructions substitution="true">
-				This step will Start IMS Connect: ${_workflow-softwareServiceInstanceName}HWS
+				This step will Start IMS Connect: ${instance-DFS_IMS_SSID}HWS
 			</instructions>
 			<weight>2</weight>
 			<skills>System Programmer</skills>
 			<autoEnable>true</autoEnable>
 			<template>
 				<fileTemplate substitution="true">jcl/DFS4ICON.jcl</fileTemplate> 		
-				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(${_workflow-softwareServiceInstanceName}HWS1)</saveAsDataset>
+				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(${instance-DFS_IMS_SSID}HWS1)</saveAsDataset>
 			</template>
 		</step> 
 
@@ -1051,7 +1097,7 @@ LOG
 			<title>Start SCI</title>
 			<description>Start the SCI address space</description>
 			<instructions substitution="true">
-				This step will start the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SC
+				This step will start the Common Service Layer (CSL) address space: ${instance-DFS_IMS_SSID}SC
 			</instructions>
 			<weight>25</weight>
 			<skills>System Programmer</skills>
@@ -1061,7 +1107,7 @@ LOG
 //ISFOUT DD SYSOUT=*
 //ISFIN  DD *
 LOG
-/S ${_workflow-softwareServiceInstanceName}SC
+/S ${instance-DFS_IMS_SSID}SC
 /*</inlineTemplate>
 				<submitAs>JCL</submitAs>
 				<maxLrecl>80</maxLrecl>
@@ -1074,7 +1120,7 @@ LOG
 			<title>Start OM</title>
 			<description>Start the Operation Manager (OM)</description>
 			<instructions substitution="true">
-				This step will start the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM
+				This step will start the Operation Manager (OM): ${instance-DFS_IMS_SSID}OM
 			</instructions>
 			<weight>25</weight>
 			<skills>System Programmer</skills>
@@ -1084,7 +1130,7 @@ LOG
 //ISFOUT DD SYSOUT=*
 //ISFIN  DD *
 LOG
-/S ${_workflow-softwareServiceInstanceName}OM
+/S ${instance-DFS_IMS_SSID}OM
 /*</inlineTemplate>
 				<submitAs>JCL</submitAs>
 				<maxLrecl>80</maxLrecl>
@@ -1097,7 +1143,7 @@ LOG
 			<title>Start RM</title>
 			<description>Start the Resource Manager (RM)</description>
 			<instructions substitution="true">
-				This step will start the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM
+				This step will start the Resource Manager (RM): ${instance-DFS_IMS_SSID}RM
 			</instructions>
 			<weight>25</weight>
 			<skills>System Programmer</skills>
@@ -1107,7 +1153,7 @@ LOG
 //ISFOUT DD SYSOUT=*
 //ISFIN  DD *
 LOG
-/S ${_workflow-softwareServiceInstanceName}RM
+/S ${instance-DFS_IMS_SSID}RM
 /*</inlineTemplate>
 				<submitAs>JCL</submitAs>
 				<maxLrecl>80</maxLrecl>
@@ -1127,7 +1173,7 @@ LOG
 			<title>Start the IMS Control Reqion address space</title>
 			<description>Start the Control Reqion address space</description>
 			<instructions substitution="true">
-				This step will start the IMS Control Region: ${_workflow-softwareServiceInstanceName}CTL
+				This step will start the IMS Control Region: ${instance-DFS_IMS_SSID}CTL
 			</instructions>
 			<weight>100</weight>
 			<skills>System Programmer</skills>
@@ -1137,7 +1183,7 @@ LOG
 //ISFOUT DD SYSOUT=*
 //ISFIN  DD *
 LOG
-/S ${_workflow-softwareServiceInstanceName}CTL
+/S ${instance-DFS_IMS_SSID}CTL
 /*</inlineTemplate>
 				<submitAs>JCL</submitAs>
 				<maxLrecl>80</maxLrecl>
@@ -1174,14 +1220,14 @@ LOG
 			<description>Cold Start IMS</description>
 			<prereqStep name="WaitJob" />
 			<instructions substitution="true">
-				This step will Cold Start IMS: ${_workflow-softwareServiceInstanceName}CTL
+				This step will Cold Start IMS: ${instance-DFS_IMS_SSID}CTL
 			</instructions>
 			<weight>10</weight>
 			<skills>System Programmer</skills>
 			<autoEnable>true</autoEnable>
 			<template>
 				<inlineTemplate substitution="true">//SPOC      EXEC PGM=CSLUSPOC,
-//  PARM=('IMSPLEX=${instance-DFS_IMSPlex},ROUTE=${_workflow-softwareServiceInstanceName},WAIT=30,F=WRAP')
+//  PARM=('IMSPLEX=${instance-DFS_IMSPlex},ROUTE=${instance-DFS_IMS_SSID},WAIT=30,F=WRAP')
 //STEPLIB   DD DISP=SHR,DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL
 //SYSPRINT  DD SYSOUT=*
 //SYSIN     DD *
@@ -1198,7 +1244,7 @@ LOG
 	<step name="ICONStart"> 					
 		<title>Start IMS Connect</title>
 		<description>Start IMS Connect</description>
-		<instructions substitution="true">This step will Start IMS Connect: ${_workflow-softwareServiceInstanceName}HWS</instructions>
+		<instructions substitution="true">This step will Start IMS Connect: ${instance-DFS_IMS_SSID}HWS</instructions>
 		<weight>2</weight>
 		<skills>System Programmer</skills>
 		<autoEnable>true</autoEnable>
@@ -1220,7 +1266,7 @@ LOG
 //SYSPRINT  DD    SYSOUT=*
 //SYSUT2    DD    SYSOUT=(A,INTRDR)
 //SYSIN     DD    DUMMY
-//SYSUT1    DD    DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(${_workflow-softwareServiceInstanceName}HWS1),DISP=SHR
+//SYSUT1    DD    DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.JOBS(${instance-DFS_IMS_SSID}HWS1),DISP=SHR
 </inlineTemplate>			
 			<submitAs>JCL</submitAs>
 			<maxLrecl>80</maxLrecl>
