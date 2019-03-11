@@ -219,29 +219,51 @@ LOG
 		</step>
 	</step>
 
-	<step name="IMSWarmStart">          
-            <title>Warm Start IMS</title>
-            <description>Warm Start IMS</description>
-            <!--prereqStep name="imsCriteria" /-->
-            <instructions substitution="true">
-                This step will Cold Start IMS: ${instance-DFS_IMS_SSID}CTL
-            </instructions>
-            <weight>10</weight>
-            <skills>System Programmer</skills>
-            <autoEnable>true</autoEnable>
-            <template>
-                <inlineTemplate substitution="true">//SPOC      EXEC PGM=CSLUSPOC,
+
+	<step name="IMSRestart"> 					
+		<title>Perform IMS Restart</title>
+		<description>Perform IMS Warm restart</description>
+
+		 
+		<step name="WaitJob" optional="false">
+			<title>Wait for IMS Ready</title>
+			<description>Wait IMS to be ready for Warm Start</description>
+			<prereqStep name="Start_IMSCTLRegion" />
+			<instructions>Exec the rexx program to wait for the IMS to be ready for restart</instructions>
+			<weight>1</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">rexx/WaitJob.rexx</fileTemplate>
+				<submitAs maxRc="0">TSO-REXX-JCL</submitAs>
+				<maxLrecl>1024</maxLrecl>
+			</template>
+		</step>
+		
+			<step name="IMSWarmStart">          
+					<title>Warm Start IMS</title>
+					<description>Warm Start IMS</description>
+					<!--prereqStep name="imsCriteria" /-->
+					<instructions substitution="true">
+						This step will Warm Start IMS: ${instance-DFS_IMS_SSID}CTL
+					</instructions>
+					<weight>10</weight>
+					<skills>System Programmer</skills>
+					<autoEnable>true</autoEnable>
+					<template>
+						<inlineTemplate substitution="true">//SPOC      EXEC PGM=CSLUSPOC,
 //  PARM=('IMSPLEX=${instance-DFS_IMSPlex},ROUTE=${instance-DFS_IMS_SSID},WAIT=30,F=WRAP')
 //STEPLIB   DD DISP=SHR,DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL
 //SYSPRINT  DD SYSOUT=*
 //SYSIN     DD *
    /ERE OVERRIDE
 /*
-</inlineTemplate>
-                <submitAs>JCL</submitAs>
-                <maxLrecl>80</maxLrecl>
-            </template>
-    </step>
+		</inlineTemplate>
+						<submitAs>JCL</submitAs>
+						<maxLrecl>80</maxLrecl>
+					</template>
+			</step>
+		</step>
 
 
 	<step name="ICONStart"> 					
