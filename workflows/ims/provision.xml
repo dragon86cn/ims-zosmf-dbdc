@@ -56,30 +56,35 @@ IBM CORP.
 	<!-- ********************************************************** -->
 	<!-- ********************************************************** -->
 	
-	<step name="Step0_setVariable">
-		<title>Step0_setVariable</title>
-		<description>Step0_setVariable</description>
-		<variableValue name="DFH_STANDALONE_WORKFLOW" required="true" scope="instance" noPromptIfSet="false"/>  
-		<instructions substitution="false">Step0_setVariable</instructions>
+	<step name="setWorkflowVariable">
+		<title>Set the Workflow Variable</title>
+		<description>Set the Workflow Variable</description>
+		<instructions substitution="false">
+            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. This value will be used by all the subsequent steps. </p>
+        </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
 		<autoEnable>true</autoEnable>
 		<canMarkAsFailed>false</canMarkAsFailed>
-		<setVariable name="DFH_STANDALONE_WORKFLOW" scope="instance" substitution="true">$!{_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_STANDALONE_WORKFLOW" scope="instance" substitution="true">$!{_workflow-softwareServiceInstanceName}</setVariable>
 	</step>
 	
-	<step name="Step1_setVariables_for_Provisioning" optional="false">
-       <title>Step0_setVariables_for_Provisioning</title>
-       <description>Step0_setVariables_for_Provisioning</description>
+	<step name="assignDynamicProvisioningVariables" optional="false">
+       <title>Assign Dynamic Provisioning Variables</title>
+       <description>Assign dynamic provisioning variables based on if the current step is being invoked from a workflow or a template instance.</description>
        
        <condition>
-           <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+           <expression>${instance-DFS_STANDALONE_WORKFLOW} != null</expression>
            <description></description>
            <targetStateSet>
-               <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+               <stateExpression state="skipped">${instance-DFS_STANDALONE_WORKFLOW} == ""</stateExpression>
            </targetStateSet>
        </condition>
-  		<instructions substitution="false">Step0_setVariables_for_Provisioning</instructions>
+  		<instructions substitution="false">
+            <p>This is a conditional step to check if the workflow is running as a standalone workflow or a template instance.</p>
+            <p>If it is running as a standalone workflow, this step should be skipped. Do not perform this step.</p>
+            <p>If it is running as a template instance, all the required variables for the instance will be set dynamically.</p>
+        </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
 		<autoEnable>true</autoEnable>
@@ -590,10 +595,10 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
             <title>Allocating TCPIP port</title>
             <description>&lt;p&gt;This step makes a RESTful call into z/OSMF to obtain a port that can be used by the provisioned region to listen for inbound Web user interface requests. The port is obtained from a pool of available ports.&lt;/p&gt;&lt;p&gt;If the step fails, the response from the RESTful call into z/OSMF contains information about the failure. To view the response data, locate the failing workflow in z/OSMF, then expand the step titled &lt;b&gt;Allocating dynamic ports&lt;/b&gt; and select the failed step. Next, select the &lt;b&gt;Status&lt;/b&gt; tab to show the JSON request and response information. Refer to the &lt;b&gt;Response&lt;/b&gt; tab to understand why the step failed.&lt;/p&gt;&lt;p&gt;To view the &lt;b&gt;Status&lt;/b&gt; tab, your userid must be the step owner. If you are a domain administrator, you can set your userid to be the step owner by performing the following actions. Find the failing workflow in the &lt;b&gt;Workflows&lt;/b&gt; table and modify the workflow owner to be your userid, by ticking the checkbox next to the workflow, then selecting &lt;b&gt;Actions -> Modify&lt;/b&gt; and specifying your userid as the owner. To take ownership of the workflow step, click on the name of the workflow to view its steps, then tick the checkbox next to the failing workflow step in the &lt;b&gt;Workflow Steps&lt;/b&gt; table. Select &lt;b&gt;Actions -> Assignment and Ownership -> Take Ownership&lt;/b&gt;. You should then be able to view the Status of the failing step.&lt;/p&gt;&lt;p&gt;Alternatively, refer to the z/OSMF log for information about the failure. The default log location is /var/zosmf/data/logs/IZUG0.log&lt;/p&gt;</description>
             <condition>
-                <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+                <expression>${instance-DFS_STANDALONE_WORKFLOW} != null</expression>
                 <description></description>
                 <targetStateSet>
-                    <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+                    <stateExpression state="skipped">${instance-DFS_STANDALONE_WORKFLOW} == ""</stateExpression>
                 </targetStateSet>
             </condition>
             <instructions substitution="false">
@@ -630,10 +635,10 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
             <title>Allocating SSL TCPIP port</title>
             <description>&lt;p&gt;This step makes a RESTful call into z/OSMF to obtain a port that can be used by the provisioned region to listen for inbound Web user interface requests. The port is obtained from a pool of available ports.&lt;/p&gt;&lt;p&gt;If the step fails, the response from the RESTful call into z/OSMF contains information about the failure. To view the response data, locate the failing workflow in z/OSMF, then expand the step titled &lt;b&gt;Allocating dynamic ports&lt;/b&gt; and select the failed step. Next, select the &lt;b&gt;Status&lt;/b&gt; tab to show the JSON request and response information. Refer to the &lt;b&gt;Response&lt;/b&gt; tab to understand why the step failed.&lt;/p&gt;&lt;p&gt;To view the &lt;b&gt;Status&lt;/b&gt; tab, your userid must be the step owner. If you are a domain administrator, you can set your userid to be the step owner by performing the following actions. Find the failing workflow in the &lt;b&gt;Workflows&lt;/b&gt; table and modify the workflow owner to be your userid, by ticking the checkbox next to the workflow, then selecting &lt;b&gt;Actions -> Modify&lt;/b&gt; and specifying your userid as the owner. To take ownership of the workflow step, click on the name of the workflow to view its steps, then tick the checkbox next to the failing workflow step in the &lt;b&gt;Workflow Steps&lt;/b&gt; table. Select &lt;b&gt;Actions -> Assignment and Ownership -> Take Ownership&lt;/b&gt;. You should then be able to view the Status of the failing step.&lt;/p&gt;&lt;p&gt;Alternatively, refer to the z/OSMF log for information about the failure. The default log location is /var/zosmf/data/logs/IZUG0.log&lt;/p&gt;</description>
             <condition>
-                <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+                <expression>${instance-DFS_STANDALONE_WORKFLOW} != null</expression>
                 <description></description>
                 <targetStateSet>
-                    <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+                    <stateExpression state="skipped">${instance-DFS_STANDALONE_WORKFLOW} == ""</stateExpression>
                 </targetStateSet>
             </condition>
             <instructions substitution="false">
@@ -1167,7 +1172,6 @@ LOG
 	<step name="Start_IMS"> 					
 		<title>Start the IMS Control Region</title>
 		<description>Start the IMS Control Region</description>
-
 		
 		<step name="Start_IMSCTLRegion">
 			<title>Start the IMS Control Reqion address space</title>
@@ -1198,7 +1202,6 @@ LOG
 		<title>Perform IMS Restart</title>
 		<description>Select the type of IMS Start: COLD, WARM, Emergency</description>
 
-		 
 		<step name="WaitJob" optional="false">
 			<title>Wait for IMS Ready</title>
 			<description>Wait IMS to be ready for Cold Start</description>

@@ -32,7 +32,7 @@
 	</string>
 </variable>
 
-<variable name="DFH_STANDALONE_WORKFLOW" scope="instance" visibility="private">
+<variable name="DFS_STANDALONE_WORKFLOW" scope="instance" visibility="private">
         <label>STANDALONE_WORKFLOW</label>
         <abstract>Is the workflow part of a template</abstract>
         <description>Is the workflow being run as part of a cloud provisioning template?</description>

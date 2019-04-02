@@ -55,29 +55,35 @@ IBM CORP.
 	<!-- Define the steps of the workflow process                   -->
 	<!-- ********************************************************** -->
 	<!-- ********************************************************** -->
-	<step name="Step0_setVariable">
-		<title>Step0_setVariable</title>
-		<description>Step0_setVariable</description>
-		<instructions substitution="false">Step0_setVariable</instructions>
+	<step name="setWorkflowVariable">
+		<title>Set the Workflow Variable</title>
+		<description>Set the Workflow Variable</description>
+		<instructions substitution="false">
+            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. This value will be used by all the subsequent steps. </p>
+        </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
 		<autoEnable>true</autoEnable>
 		<canMarkAsFailed>false</canMarkAsFailed>
-		<setVariable name="DFH_STANDALONE_WORKFLOW" scope="instance" substitution="true">$!{_workflow-softwareServiceInstanceName}</setVariable>
+		<setVariable name="DFS_STANDALONE_WORKFLOW" scope="instance" substitution="true">$!{_workflow-softwareServiceInstanceName}</setVariable>
 	</step>
 	
-	<step name="Step1_setVariables_for_Provisioning" optional="false">
-       <title>Step0_setVariables_for_Provisioning</title>
-       <description>Step0_setVariables_for_Provisioning</description>
+	<step name="assignDynamicProvisioningVariables" optional="false">
+       <title>Assign Dynamic Provisioning Variables</title>
+       <description>Assign dynamic provisioning variables based on if the current step is being invoked from a workflow or a template instance.</description>
        
        <condition>
-           <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+           <expression>${instance-DFS_STANDALONE_WORKFLOW} != null</expression>
            <description></description>
            <targetStateSet>
-               <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+               <stateExpression state="skipped">${instance-DFS_STANDALONE_WORKFLOW} == ""</stateExpression>
            </targetStateSet>
        </condition>
-  		<instructions substitution="false">Step0_setVariables_for_Provisioning</instructions>
+  		<instructions substitution="false">
+            <p>This is conditional step to check if the workflow is running as a standalone workflow or a template instance.</p>
+            <p>If it is running as a standalone workflow, this step should be skipped. Do not perform this step.</p>
+            <p>If it is running as a template instance, all the required variables for the instance will be set dynamically.</p>
+        </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
 		<autoEnable>true</autoEnable>
@@ -164,7 +170,21 @@ IBM CORP.
 		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable-->
 	</step>
 
-	
+    <step name="WaitJob" optional="false">
+        <title>Wait for IMS Ready</title>
+        <description>Wait IMS to be ready for Warm Start</description>
+        <!--prereqStep name="Start_IMSCTLRegion" /-->
+        <instructions>Exec the rexx program to wait for the IMS to be ready for restart</instructions>
+        <weight>1</weight>
+        <skills>System Programmer</skills>
+        <autoEnable>true</autoEnable>
+        <template>
+            <fileTemplate substitution="true">rexx/WaitJob.rexx</fileTemplate>
+            <submitAs maxRc="0">TSO-REXX-JCL</submitAs>
+            <maxLrecl>1024</maxLrecl>
+        </template>
+    </step>
+    
 	<step name="performIMSShutdown"> 				
 		<title>Perform IMS Shutdown</title>
 		<description>Performs Immediate IMS Shutdown</description>
@@ -190,7 +210,14 @@ IBM CORP.
 		<step name="immediateShutdown"> 					
 			<title>Immediate IMS Shutdown</title>
 			<description>Immediate IMS Shutdown (FREEZE)</description>
-			<instructions substitution="true">
+            <condition>
+                <expression>${WaitJob.returnCode} == "0000"</expression>
+                <description></description>
+                <targetStateSet>
+                    <stateExpression state="skipped">${WaitJob.returnCode} != "0000"</stateExpression>
+                </targetStateSet>
+            </condition>
+            <instructions substitution="true">
 				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${instance-DFS_IMS_SSID}CTL
 			</instructions>
 			<weight>10</weight>
@@ -440,11 +467,10 @@ IBM CORP.
             <title>Returning IMSConnect port</title>
             <description>This step makes a RESTful call into z/OSMF to return a port that was obtained for accepting CMCI connections by the provisioned region. The port is returned to a pool of available ports and can then be re-used by other provisioned environments.</description>
             <condition>
-                <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+                <expression>${instance-DFS_STANDALONE_WORKFLOW} != null</expression>
                 <description></description>
                 <targetStateSet>
-                    <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
-                    <!--stateExpression state="skipped">${instance-DFS_PORTID} == undefined || ${instance-DFS_PORTID} == ""</stateExpression-->
+                    <stateExpression state="skipped">${instance-DFS_STANDALONE_WORKFLOW} == ""</stateExpression>
                 </targetStateSet>
             </condition>
             <instructions substitution="false">
@@ -476,10 +502,10 @@ IBM CORP.
             <title>Returning IMSSSLConnect port</title>
             <description>This step makes a RESTful call into z/OSMF to return a port that was obtained for accepting CMCI connections by the provisioned region. The port is returned to a pool of available ports and can then be re-used by other provisioned environments.</description>
             <condition>
-                <expression>${instance-DFH_STANDALONE_WORKFLOW} != null</expression>
+                <expression>${instance-DFS_STANDALONE_WORKFLOW} != null</expression>
                 <description></description>
                 <targetStateSet>
-                    <stateExpression state="skipped">${instance-DFH_STANDALONE_WORKFLOW} == ""</stateExpression>
+                    <stateExpression state="skipped">${instance-DFS_STANDALONE_WORKFLOW} == ""</stateExpression>
                 </targetStateSet>
             </condition>
             <instructions substitution="false">
