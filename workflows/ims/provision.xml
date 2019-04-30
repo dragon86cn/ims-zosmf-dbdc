@@ -60,7 +60,8 @@ IBM CORP.
 		<title>Set the Workflow Variable</title>
 		<description>Set the Workflow Variable</description>
 		<instructions substitution="false">
-            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. This value will be used by all the subsequent steps. </p>
+            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. </p>
+            <p>the value will be used by all the subsequent steps. </p>
         </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
