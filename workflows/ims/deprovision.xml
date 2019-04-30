@@ -59,7 +59,8 @@ IBM CORP.
 		<title>Set the Workflow Variable</title>
 		<description>Set the Workflow Variable</description>
 		<instructions substitution="false">
-            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. This value will be used by all the subsequent steps. </p>
+            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. </p>
+            <p>the value will be used by all the subsequent steps. </p>
         </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
@@ -180,7 +181,7 @@ IBM CORP.
         <autoEnable>true</autoEnable>
         <template>
             <fileTemplate substitution="true">rexx/WaitJob.rexx</fileTemplate>
-            <submitAs maxRc="0">TSO-REXX-JCL</submitAs>
+            <submitAs maxRc="20">TSO-REXX-JCL</submitAs>
             <maxLrecl>1024</maxLrecl>
         </template>
     </step>
@@ -193,6 +194,13 @@ IBM CORP.
 		<step name="stopResources"> 					
 			<title>Stop all IMS Resources</title>
 			<description>Stop DC, PGM and DB</description>
+            <condition>
+                <expression>${WaitJob.returnCode} != null </expression>
+                <description></description>
+                <targetStateSet>
+                    <stateExpression state="skipped">${WaitJob.returnCode} != "0000"</stateExpression>
+                </targetStateSet>
+            </condition>
 			<instructions substitution="true">
 				This step will Stop IMS resources (DBs, PGMs, TRANs, DC) for: ${instance-DFS_IMS_SSID}
 			</instructions>
@@ -207,28 +215,28 @@ IBM CORP.
 		</step>
 
 
-		<step name="immediateShutdown"> 					
-			<title>Immediate IMS Shutdown</title>
-			<description>Immediate IMS Shutdown (FREEZE)</description>
+        <step name="immediateShutdown">
+            <title>Immediate IMS Shutdown</title>
+            <description>Immediate IMS Shutdown (FREEZE)</description>
             <condition>
-                <expression>${WaitJob.returnCode} == "0000"</expression>
+                <expression>${WaitJob.returnCode} != null</expression>
                 <description></description>
                 <targetStateSet>
                     <stateExpression state="skipped">${WaitJob.returnCode} != "0000"</stateExpression>
                 </targetStateSet>
             </condition>
             <instructions substitution="true">
-				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${instance-DFS_IMS_SSID}CTL
-			</instructions>
-			<weight>10</weight>
-			<skills>System Programmer</skills>
-			<autoEnable>true</autoEnable>
-			<template>
-				<fileTemplate substitution="true">jcl/DFSISHUT.jcl</fileTemplate>
-				<submitAs>JCL</submitAs>
-				<maxLrecl>80</maxLrecl>
-			</template>
-		</step>
+                This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${instance-DFS_IMS_SSID}CTL
+            </instructions>
+            <weight>10</weight>
+            <skills>System Programmer</skills>
+            <autoEnable>true</autoEnable>
+            <template>
+                <fileTemplate substitution="true">jcl/DFSISHUT.jcl</fileTemplate>
+                <submitAs>JCL</submitAs>
+                <maxLrecl>80</maxLrecl>
+            </template>
+        </step>
 
 	</step>
 	
@@ -310,7 +318,14 @@ IBM CORP.
 
 	<step name="unMountZFSFiles"> 			
 		<title>Unmount ZFS files</title>
-		<description>Unmount ZFS files</description>			
+		<description>Unmount ZFS files</description>
+        <condition>
+            <expression>${WaitJob.returnCode} != null </expression>
+            <description></description>
+            <targetStateSet>
+                <stateExpression state="skipped">${WaitJob.returnCode} != "0000"</stateExpression>
+            </targetStateSet>
+        </condition>
 		<instructions substitution="true"></instructions>
 		<weight>10</weight>
 		<skills>System Admin</skills>
