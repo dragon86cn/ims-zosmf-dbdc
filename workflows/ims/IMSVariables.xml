@@ -130,6 +130,28 @@ to this group will be changed accordingly.
 </variable>
 
 
+<variable name="zCloud_admin">
+	<label>Admin userid</label>
+	<abstract>Admin userid</abstract>
+	<description>
+		Admin userid
+	</description>
+	<category>UserID</category>
+	<string/>
+</variable>
+
+<variable name="zCloud_approver">
+	<label>Approver userid</label>
+	<abstract>Approver userid</abstract>
+	<description>
+		Approver userid
+	</description>
+	<category>UserID</category>
+	<string/>
+</variable>
+
+
+
 <!-- ****************************************************************** -->
 <!-- Variables for zCloud_system: COMMON and GLOBAL                     -->
 <!-- ****************************************************************** -->
@@ -576,6 +598,30 @@ to this group will be changed accordingly.
         <choice>SYSDA</choice>
 		<default>SYSALLDA</default>
 	</string>
+</variable>
+
+<variable name="zCloud_IMS_SVC_Type2">
+	<label>IMS Type 2 SVC</label>
+	<abstract>IMS Type 2 SVC</abstract>
+	<description>IMS Type 2 SVC</description>
+	<category>Jobs</category>
+	<integer>
+		<minValue>200</minValue>
+		<maxValue>255</maxValue>
+		<default>254</default>
+	</integer>
+</variable>
+
+<variable name="zCloud_IMS_SVC_Type4">
+	<label>IMS Type 4 SVC</label>
+	<abstract>IMS Type 4 SVC</abstract>
+	<description>IMS Type 4 SVC</description>
+	<category>Jobs</category>
+	<integer>
+		<minValue>200</minValue>
+		<maxValue>255</maxValue>
+		<default>255</default>
+	</integer>
 </variable>
 
 

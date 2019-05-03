@@ -114,6 +114,8 @@ IBM CORP.
 		<step name="immediateShutdown"> 					
 			<title>Immediate IMS Shutdown</title>
 			<description>Immediate IMS Shutdown (FREEZE)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${_workflow-softwareServiceInstanceName}CTL
 			</instructions>
@@ -138,6 +140,8 @@ IBM CORP.
 		<step name="stopICON"> 			
 			<title>Stop IMS Connect</title>
 			<description>Stop IMS Connect</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will Stop IMS Connect: ${_workflow-softwareServiceInstanceName}HWS
 			</instructions>
@@ -155,6 +159,8 @@ IBM CORP.
 		<step name="stopOM"> 			
 			<title>Stop OM</title>
 			<description>Stop the Operation Manager (OM)</description>	
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will Stop (CANCEL) the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM1
 			</instructions>
@@ -172,6 +178,8 @@ IBM CORP.
 		<step name="stopRM"> 			
 			<title>Stop RM</title>
 			<description>Stop the Resource Manager (RM)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will Stop (CANCEL) the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM1
 			</instructions>
@@ -188,7 +196,9 @@ IBM CORP.
 
 		<step name="stopCSL"> 			
 			<title>Stop CSL</title>
-			<description>Stop the Common Service Layer (CSL) address space</description>			
+			<description>Stop the Common Service Layer (CSL) address space</description>		
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will Stop (CANCEL) the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SCI
 			</instructions>
