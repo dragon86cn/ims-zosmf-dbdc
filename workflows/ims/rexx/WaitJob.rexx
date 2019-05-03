@@ -26,14 +26,14 @@
  * Change History:                                                      *
  *                                                                      *
  ************************************************************************/
-/* REXX */                                     
-rc=isfcalls('ON')                              
-isffind = '${msg}'                          
-isffindlim = 9999999                           
-isfscrolltype = 'FINDNEXT'                       
-isflinelim = 1                            
-ISFCOLS = 'JNAME'   
-/*isfprefix="IMS1*"*/
+/* REXX */
+rc=isfcalls('ON')
+isffind = '${msg}'
+isffindlim = 9999999
+isfscrolltype = 'FINDNEXT'
+isflinelim = 1
+ISFCOLS = 'JNAME'
+isfprefix="${imsid}*"
 imsname='${imsid}CTL'
 
 
