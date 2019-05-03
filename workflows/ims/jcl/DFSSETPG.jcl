@@ -11,26 +11,19 @@
 //*  IBM CORP.                                                          *
 //*                                                                     *
 //**************************************************************@ECPYRT**
+#if(${instance-DFS_SMS_ENVIRONMENT} == false)
+#set ($volume = "VOL=${instance-DFS_DS_VOLUME2}")
+#else
+#set ($volume = "SMS")
+#end
 //* FUNCTION: Authorize IMS Data sets
 //***********************************************************************
 //STEP01   EXEC PGM=IEFBR14
 //SYSPRINT DD SYSOUT=*
 // SETPROG APF,FORMAT=DYNAMIC
-// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDXRRESL#if(${instance-DFS_SMS_ENVIRONMENT} == false),VOL=${instance-DFS_DS_VOLUME2}
-#else,SMS
-#end
-// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL#if(${instance-DFS_SMS_ENVIRONMENT} == false),VOL=${instance-DFS_DS_VOLUME2}
-#else,SMS
-#end
-// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKS#if(${instance-DFS_SMS_ENVIRONMENT} == false),VOL=${instance-DFS_DS_VOLUME2}
-#else,SMS
-#end
-// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKSA#if(${instance-DFS_SMS_ENVIRONMENT} == false),VOL=${instance-DFS_DS_VOLUME2}
-#else,SMS
-#end
-// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKSB#if(${instance-DFS_SMS_ENVIRONMENT} == false),VOL=${instance-DFS_DS_VOLUME2}
-#else,SMS
-#end
-// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.EXITLIB#if(${instance-DFS_SMS_ENVIRONMENT} == false),VOL=${instance-DFS_DS_VOLUME2}
-#else,SMS
-#end
+// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDXRRESL,${volume}
+// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL,${volume}
+// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKS,${volume}
+// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKSA,${volume}
+// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.MODBLKSB,${volume}
+// SETPROG APF,ADD,DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.EXITLIB,${volume}
