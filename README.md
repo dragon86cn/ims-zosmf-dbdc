@@ -45,7 +45,7 @@ The provision workflow will provision an IMS™ DB/TM subsystem with these steps
 | 4.12 | Establish IMS active libraries| DFS4ACTV.jcl|
 | 4.13 | Specify DB recovery control defaults| DFSDFDRC.jcl|
 | 4.14 | Load IMS catalog database| DFSLDCAT.jcl|
-| 4.15 Allocate Database Dataset for transaction IVTNO | DFSALIVT.jcl |
+| 4.15 | Allocate Database Dataset for transaction IVTNO | DFSALIVT.jcl |
 | 4.16 | Load contacts list database for transaction IVTNO | DFSLDIVT.jcl |
 | 4.17 | Load MFS (Message Format Service) Libraries | DFSLDMFS.jcl |
 | 4.18 | Compile and link IMS IVP Application | DFSCLIVT.jcl |
