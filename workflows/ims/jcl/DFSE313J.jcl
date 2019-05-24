@@ -465,4 +465,21 @@ ZZ
 //*
 //HWS01    EXEC ${instance-DFS_IMS_SSID}HWS
 //*
-//*---------------------------------------------------------
+ZZ
+//CP2PROCL PROC MBR=TEMPNAME
+//*
+//CM       EXEC PGM=IEBGENER
+//SYSPRINT DD SYSOUT=*
+//SYSUT2   DD DISP=SHR,
+//            DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB(&MBR)
+//SYSIN    DD DUMMY
+//        PEND
+//*********************************************************************
+//*
+//MPP0 EXEC PROC=CP2PROCL,MBR=IMSMSG
+//CM.SYSUT1 DD DATA,DLM=ZZ
+//MESSAGE  JOB 1,IMS,MSGLEVEL=1,PRTY=11,CLASS=A,MSGCLASS=H,REGION=512K
+//PROCS JCLLIB ORDER=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB
+//       EXEC DFSMPR,
+//            IMSID=
+ZZ

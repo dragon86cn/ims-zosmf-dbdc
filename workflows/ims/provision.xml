@@ -1099,6 +1099,97 @@ DFSPBIMS - System ${instance-DFS_IMS_SSID} (DB/DC). This member is created by a 
 				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E319K)</saveAsDataset>
 			</template>
 		</step>
+
+	<!-- ***************************************************** -->
+	<!--     IMS IVP Steps for contact list application                                     -->
+	<!-- ***************************************************** -->
+     <step name="Allocate_IVP_DB_Dataset" optional="false">
+         <title>Allocate Database Dataset for transaction IVTNO</title>
+         <description>Allocate Database Dataset for transaction IVTNO for 
+use with contacts list database</description>
+         <instructions substitution="false">Generated instruction text for step: Allocate_IVP_DB_Dataset
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSALIVT.jcl</fileTemplate>
+            <submitAs maxRc="8">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSALIVT)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Load_DB_VTNO" optional="false">
+         <title>Load contacts list database for transaction IVTNO</title>
+         <description>Load the database  of contacts (names and phone numbers) into IMS 
+that can be access by transaction IVTNO.</description>
+         <instructions substitution="false">Generated instruction text for step: Load_DB_VTNO
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSLDIVT.jcl</fileTemplate>
+            <submitAs maxRc="0">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSLDIVT)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Load_MFS_Libraries" optional="false">
+         <title>Load MFS (Message Format Service) Libraries</title>
+         <description>Message Format Service (MFS) is an IMS facility that formats messages to and from terminals.</description>
+         <instructions substitution="false">Generated instruction text for step: Load_MFS_Libraries
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSLDMFS.jcl</fileTemplate>
+            <submitAs maxRc="4">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSLDMFS)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Compile_Link_IMS_IVP" optional="false">
+         <title>Compile and Link IMS IVP Application</title>
+         <description>Compile and Link IMS IVP Application that accesses the contacts list database.</description>
+         <instructions substitution="false">Generated instruction text for step: Compile_Link_IMS_IVP
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSCLIVT.jcl</fileTemplate>
+            <submitAs maxRc="0">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSCLIVT)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Register_Recon_IVP_Database" optional="false">
+         <title>Register contacts list database with RECON dataset</title>
+         <description>Register contacts list database with RECON dataset 
+to control database recovery.</description>
+         <instructions substitution="false">Generated instruction text for step: Register_Recon_Database
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSRCIVT.jcl</fileTemplate>
+            <submitAs maxRc="0">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSRCIVT)</saveAsDataset>
+         </template>
+      </step>
 	</step>
 
 
@@ -1349,4 +1440,24 @@ LOG
 		</template>
 	</step>
 	
+	<!-- ***************************************************** -->
+	<!--     IMS  -->
+	<!-- ***************************************************** -->
+	   <step name="Start_IMS_MPP_Region" optional="false">
+      <title>Start the IMS MPP (Message Processing Program) Region</title>
+      <description>Starting the MPP Region so that an application program can execute within the MPP virtual storage.</description>
+      <instructions substitution="false">Generated instruction text for step: Start_IMS_MPP_Region
+Update this field with your own text</instructions>
+      <weight>10</weight>
+      <skills>System Admin</skills>
+      <autoEnable>true</autoEnable>
+      <canMarkAsFailed>false</canMarkAsFailed>
+      <template>
+         <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSSTREG.jcl</fileTemplate>
+         <submitAs maxRc="0">JCL</submitAs>
+         <maxLrecl>80</maxLrecl>
+         <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IMS1MPP1)</saveAsDataset>
+      </template>
+   </step>
+   
 </workflow>
