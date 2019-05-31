@@ -87,6 +87,7 @@ The de-provision workflow will de-provision an IMS™ DB/TM subsystem with these
 | 9 | Destroy the zCloud IMS environment| |
 | 9.1 | Delete IMS data sets| DFSDELLB.jcl|
 | 9.2 | Delete IMS catalog database| DFSDCTLG.jcl|
+| 9.3 | Delete IVP Datasets | DFSDIVPD.jcl|
 | 10 | Delete z/OS components| |
 | 10.1 | Unauthorize data sets to z/OS| DFSDLAPF.jcl|
 | 10.2 | Delete IMS services from z/OS| |
