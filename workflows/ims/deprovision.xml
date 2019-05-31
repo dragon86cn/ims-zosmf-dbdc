@@ -418,6 +418,21 @@ IBM CORP.
 			</template>
 		</step>	
 
+		<step name="deleteIvpDatasets" optional="false">
+   			<title>Delete IVP Datasets</title>
+   			<description>Delete IMS verification (IVP) datasets</description>
+   			<instructions substitution="false">This JOB purges the IMS IVP data sets.</instructions>
+   			<weight>10</weight>
+   			<skills>System Admin</skills>
+   			<autoEnable>true</autoEnable>
+   			<canMarkAsFailed>false</canMarkAsFailed>
+   			<template>
+      			<fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSDIVPD.jcl</fileTemplate>
+      			<submitAs maxRc="0">JCL</submitAs>
+      			<maxLrecl>80</maxLrecl>
+   			</template>
+		</step>
+
 	</step>
 
 
