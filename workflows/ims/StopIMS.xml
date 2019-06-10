@@ -105,19 +105,62 @@ IBM CORP.
 		<setVariable name="DFS_REGION_SSLTCPIPPORT" scope="instance" substitution="true">${instance-DFS_REGION_SSLTCPIPPORT}</setVariable>
 	</step>
 
+	<step name="WaitJob" optional="false">
+        <title>Wait for IMS Ready</title>
+        <description>Wait IMS to be ready for Warm Start</description>
+        <!--prereqStep name="Start_IMSCTLRegion" /-->
+        <instructions>Exec the rexx program to wait for the IMS to be ready for restart</instructions>
+        <weight>1</weight>
+        <skills>System Programmer</skills>
+        <autoEnable>true</autoEnable>
+        <template>
+            <fileTemplate substitution="true">rexx/WaitJob.rexx</fileTemplate>
+            <submitAs maxRc="20">TSO-REXX-JCL</submitAs>
+            <maxLrecl>1024</maxLrecl>
+        </template>
+    </step>
 	
 	<step name="performIMSShutdown"> 				
 		<title>Perform IMS Shutdown</title>
 		<description>Performs Immediate IMS Shutdown</description>
 
+		<step name="stopResources"> 					
+			<title>Stop all IMS Resources</title>
+			<description>Stop DC, PGM and DB</description>
+            <condition>
+                <expression>${WaitJob.returnCode} != null </expression>
+                <description></description>
+                <targetStateSet>
+                    <stateExpression state="skipped">${WaitJob.returnCode} != "0000"</stateExpression>
+                </targetStateSet>
+            </condition>
+			<instructions substitution="true">
+				This step will Stop IMS resources (DBs, PGMs, TRANs, DC) for: ${instance-DFS_IMS_SSID}
+			</instructions>
+			<weight>5</weight>
+			<skills>System Programmer</skills>
+			<autoEnable>true</autoEnable>
+			<template>
+				<fileTemplate substitution="true">jcl/DFSSTPRS.jcl</fileTemplate>
+				<submitAs maxRc="8">JCL</submitAs>
+				<maxLrecl>80</maxLrecl>
+			</template>
+		</step>
 
 		<step name="immediateShutdown"> 					
 			<title>Immediate IMS Shutdown</title>
 			<description>Immediate IMS Shutdown (FREEZE)</description>
 			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
             <approver substitution="true">$!{instance-zCloud_approver}</approver>
-			<instructions substitution="true">
-				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${_workflow-softwareServiceInstanceName}CTL
+			<condition>
+                <expression>${WaitJob.returnCode} != null</expression>
+                <description></description>
+                <targetStateSet>
+                    <stateExpression state="skipped">${WaitJob.returnCode} != "0000"</stateExpression>
+                </targetStateSet>
+            </condition>
+            <instructions substitution="true">
+				This step will perform an immediate IMS control region shutdown after current input/output message are processed: ${instance-DFS_IMS_SSID}CTL
 			</instructions>
 			<weight>10</weight>
 			<skills>System Programmer</skills>
@@ -143,7 +186,7 @@ IBM CORP.
 			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
             <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
-				This step will Stop IMS Connect: ${_workflow-softwareServiceInstanceName}HWS
+				This step will Stop IMS Connect: ${instance-DFS_IMS_SSID}HWS
 			</instructions>
 			<weight>2</weight>
 			<skills>System Programmer</skills>
@@ -162,7 +205,7 @@ IBM CORP.
 			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
             <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
-				This step will Stop (CANCEL) the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM1
+				This step will Stop (CANCEL) the Operation Manager (OM): ${instance-DFS_IMS_SSID}OM1
 			</instructions>
 			<weight>25</weight>
 			<skills>System Programmer</skills>
@@ -181,7 +224,7 @@ IBM CORP.
 			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
             <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
-				This step will Stop (CANCEL) the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM1
+				This step will Stop (CANCEL) the Resource Manager (RM): ${instance-DFS_IMS_SSID}RM1
 			</instructions>
 			<weight>25</weight>
 			<skills>System Programmer</skills>
@@ -200,7 +243,7 @@ IBM CORP.
 			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
             <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
-				This step will Stop (CANCEL) the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SCI
+				This step will Stop (CANCEL) the Common Service Layer (CSL) address space: ${instance-DFS_IMS_SSID}SCI
 			</instructions>
 			<weight>25</weight>
 			<skills>System Programmer</skills>
