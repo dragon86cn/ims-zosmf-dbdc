@@ -71,6 +71,21 @@
   DFSMDA TYPE=CATDBDEF,                                                X
                DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.CATDEF
 *
+* IVP DATA BASES
+*
+* HIDAM/OSAM
+*
+  DFSMDA TYPE=DATABASE,DBNAME=IVPDB1
+  DFSMDA TYPE=DATASET,DDNAME=DFSIVD1,                                  X
+               DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSIVD1
+*
+* HIDAM/OSAM INDEX
+*
+  DFSMDA TYPE=DATABASE,DBNAME=IVPDB1I
+  DFSMDA TYPE=DATASET,DDNAME=DFSIVD1I,                                 X
+               DSNAME=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSIVD1I
+*
+*
 * END
 *
   DFSMDA TYPE=FINAL

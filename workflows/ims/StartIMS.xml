@@ -125,6 +125,8 @@ IBM CORP.
 		<step name="Start_SCI"> 			
 			<title>Start SCI</title>
 			<description>Start the SCI address space</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will start the Common Service Layer (CSL) address space: ${_workflow-softwareServiceInstanceName}SC
 			</instructions>
@@ -148,6 +150,8 @@ LOG
 		<step name="Start_OM"> 			
 			<title>Start OM</title>
 			<description>Start the Operation Manager (OM)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will start the Operation Manager (OM): ${_workflow-softwareServiceInstanceName}OM
 			</instructions>
@@ -170,6 +174,8 @@ LOG
 		<step name="Start_RM"> 			
 			<title>Start RM</title>
 			<description>Start the Resource Manager (RM)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will start the Resource Manager (RM): ${_workflow-softwareServiceInstanceName}RM
 			</instructions>
@@ -199,6 +205,8 @@ LOG
 		<step name="Start_IMSCTLRegion">
 			<title>Start the IMS Control Reqion address space</title>
 			<description>Start the Control Reqion address space</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true">
 				This step will start the IMS Control Region: ${_workflow-softwareServiceInstanceName}CTL
 			</instructions>
@@ -229,6 +237,8 @@ LOG
 			<title>Wait for IMS Ready</title>
 			<description>Wait IMS to be ready for Warm Start</description>
 			<prereqStep name="Start_IMSCTLRegion" />
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions>Exec the rexx program to wait for the IMS to be ready for restart</instructions>
 			<weight>1</weight>
 			<skills>System Programmer</skills>
@@ -243,6 +253,8 @@ LOG
 			<step name="IMSWarmStart">          
 					<title>Warm Start IMS</title>
 					<description>Warm Start IMS</description>
+					<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 					<!--prereqStep name="imsCriteria" /-->
 					<instructions substitution="true">
 						This step will Warm Start IMS: ${instance-DFS_IMS_SSID}CTL
@@ -269,6 +281,8 @@ LOG
 	<step name="ICONStart"> 					
 		<title>Start IMS Connect</title>
 		<description>Start IMS Connect</description>
+		<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 		<instructions substitution="true">This step will Start IMS Connect: ${_workflow-softwareServiceInstanceName}HWS</instructions>
 		<weight>2</weight>
 		<skills>System Programmer</skills>

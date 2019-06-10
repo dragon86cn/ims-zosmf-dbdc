@@ -60,7 +60,8 @@ IBM CORP.
 		<title>Set the Workflow Variable</title>
 		<description>Set the Workflow Variable</description>
 		<instructions substitution="false">
-            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. This value will be used by all the subsequent steps. </p>
+            <p>This step allows to set the value of {_workflow-softwareServiceInstanceName}. </p>
+            <p>the value will be used by all the subsequent steps. </p>
         </instructions>
 		<weight>1</weight>
 		<skills>IMS Administrator</skills>
@@ -227,6 +228,8 @@ IBM CORP.
 		<step name="allocateWorkDs"> 			
 			<title>Allocate work Dataset for zCloud IMS</title>
 			<description>Allocate work Dataset for zCloud IMS</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>
 			<instructions substitution="true"> This step allocates a work data set needed for the workflow.</instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -285,6 +288,8 @@ IBM CORP.
 		<step name="allocateSystemDs"> 	     		
 			<title>Allocate IMS System Definitions data sets</title>
 			<description>Allocates system definition dataset</description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>		
 			<instructions substitution="true"> 
 				This JOB allocates the data sets needed for IMS system definition, in addition to
 				those allocated for SMP/E processing.
@@ -326,7 +331,7 @@ Please do not change any other aspects of the supplied Stage1 unless you are als
 your changes throughout the remaining steps.
      <br></br>
 The IMS EXEC PARM values used by the IMS created within this process is specified in the following ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB members:
-DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
+DFSPBIMS - System ${instance-DFS_IMS_SSID} (DB/DC). This member is created by a later JOB.
 </instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -342,6 +347,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="genPreprocessor"> 			   
 			<title>IMS System Definition Preprocessor Utility</title>
 			<description>Run IMS System Definition Preprocessor Utility</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step executes the IMS System Definition Preprocessor Utility.
 				Normally this utility would only be used for very large system definitions.  It is being run at this time as an example.
@@ -363,6 +370,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 			<title>Run SYSDEF Stage1</title>
 			<description>Run IMS System Definition STAGE1 process</description>
 			<prereqStep name="genPreprocessor"/>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step performs what is called Stage1 of the IMS system definition process. In other words this step will
 				be assembling the source deck which you had the opportunity to view in a previous step: ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3C201T).   <br></br>
@@ -389,6 +398,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 			<title>Run SYSDEF Stage2</title>
 			<description>Run IMS System Definition Stage2 process</description>
 			<prereqStep name="Stage1"/>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step performs what is known as the Stage2 processing to finalize the IMS system definition process.
 				You may wish to make some of the following changes before submitting this jobstream:
@@ -427,6 +438,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 	    <step name="genSecurityExits"> 		   	
 			<title>RACF Security Exits For IMS</title>
 			<description>ASSEMBLY/BIND RACF SECURITY EXITS</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> 
 				This JOB assembles and link-edits the following user exits for establishing the RACF security environment.
 				-   DFSCSGN0 the sign on/off exit.
@@ -449,6 +462,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="apfAuth"> 			        
 			<title>Authorize IMS Datasets to z/OS</title>
 			<description>Authorize IMS dataset</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				For IMS to be able to run and its functions available, the following datasets must be APF authorized:
 				-   SDXRRESL - Only if the IRLM is being used
@@ -513,6 +528,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="allocateAllSystemDs"> 		
 			<title>Allocate IMS Datasets</title>
 			<description>Allocate IMS Data Sets </description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> 
 				This JOB scratches and reallocates the data sets needed in order to prepare the zCloud IMS system and the
 				sample application (including the IMS Sample Application and the Fast Path Sample Application).
@@ -535,6 +552,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="DynamicAlloc"> 		    	
 			<title>Dynamic Allocation of IMS system Datasets</title>
 			<description>Create System data sets Dynamic Allocation Members </description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB assembles and binds the dynamic allocation definitions into
 				${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL for zCloud IMS DB Recovery Control (DBRC RECON) and sample Databases.
@@ -554,6 +573,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="allocateCatalogDB"> 		
 			<title>Create IMS Catalog Database</title>
 			<description>Allocate and Define IMS Catalog Database Resources</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> 
 				This JOB allocates the IMS catalog database data sets. It
 				also registers the IMS catalog database to the RECON, and define the default PSB and DBD. The load and image copy of the IMS Catalog database is done in a later step.
@@ -573,6 +594,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="prepDBRC"> 					
 			<title>Prepare IMS DB Recovery Control</title> <!--  COPY DBRC SKELETAL JCL TO  IMS.PROCLIB     -->
 			<description>Copy DBRC skeletal into the IMS PROCLIB</description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>		
 			<instructions substitution="true">
 				This JOB defines the basic procedures needed by the Data Base Recovery Control (DBRC), initialize its RECON dataset
 				and copies its skeletal JCL used for IMS processing to ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB.
@@ -674,6 +697,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="addIMSprocs"> 			
 			<title>Ready the IMS Proclib</title>
 			<description>Add IMS System Members to the IMS PROCLIB</description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>			
 			<instructions substitution="true">
 				This JOB adds a variety of members and control statement members to IMS.PROCLIB.
 				Refer to comments within the JOB for details on what members are being added
@@ -692,7 +717,9 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 
 		<step name="defineSubcomps"> 			
 			<title>Define IMS Subcomponents</title> <!-- Add SCI/OM/RM Members to IMS.PROCLIB  -->
-			<description>Add SCI/OM/RM parms Members to IMS.PROCLIB </description>			
+			<description>Add SCI/OM/RM parms Members to IMS.PROCLIB </description>		
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>		
 			<instructions substitution="true">
 				This JOB adds control statement members to ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB for some of the basic IMS subcomponents:
 				<ul>
@@ -716,6 +743,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="defineCQS"> 				
 			<title>Define IMS Subcomponent CQS</title> <!-- Add CQS Member to IMS.PROCLIB  -->
 			<description>Add CQS Member to IMS.PROCLIB </description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB adds control statement members to ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB for the Common Queue Server (CQS) needed
 				if you want to implement data sharing among multiple IMS images.
@@ -735,6 +764,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="createICON"> 				
 			<title>Create IMS Connect</title> <!-- Add IMS Connect job to the JOBS library  -->
 			<description> Create IMS Connect Job</description>	
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will Start IMS Connect: ${instance-DFS_IMS_SSID}HWS
 			</instructions>
@@ -751,6 +782,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="IMSConfigDefaults"> 		
 			<title>IMS Configuration Defaults</title> <!--  IMS EXEC PARMs. DFSPBxxx -->
 			<description>Define IMS Configuration Defaults</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB copies into ${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB, the control statement member that
 				specify the default values for this zCloud IMS image(also known as IMS EXEC parameters).   The default name is DFSPBIMS.
@@ -770,6 +803,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="copyProcsInIMSProclib"> 	
 			<title>Define IMS Components to z/OS</title> <!--  Copy STC Procedures to SYS1.PROCLIB   -->
 			<description>Copy IMS STC Procedures to SYS1.PROCLIB </description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB copies the IMS execution procedures to the data set designated as ${instance-zCloud_PROCLIB}.
 				During the copy, the IMS procedure is renamed to the name specified in the previous steps procedure is also copied back to ${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB. </instructions>
@@ -788,6 +823,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 			<title>Create IEFJOBS Members</title>
 			<description>Create a member of IEFJOBS for each procedure in SYS1.PROCLIB</description>
 			<prereqStep name="Stage2Submit" />
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions>Run the rexx program to build the IEFJOBS members</instructions>
 			<weight>1</weight>
 			<skills>System Programmer</skills>
@@ -804,6 +841,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="copyProcsToIMSJobsDataset"> 	
 			<title>Define IMS Resources to z/OS</title> <!--  Copy MPP, IFP, and SPOOL Print JOBs to the IMS.JOBS  -->
 			<description>Copy MPP, IFP, and SPOOL Print JOBs in the IMS library</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB copies the IMS MPP, IFP, and SPOOL Print JOBs to the ${instance-DFS_AUTH_LIB_HLQ2}.JOBS
 				data set(s).  These JOBs will be submitted to the JESx internal reader by the IMSRDR procedures (IVPnnRDx) as the result of a /START REGION IMS
@@ -823,6 +862,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="copyStagingLib"> 			
 			<title>Copy Staging Libraries</title>
 			<description>Copy the IMS staging libraries MODBLKS, ACBLIB, MATRIX, FORMAT </description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> Copy the IMS staging libraries MODBLKS, ACBLIB, MATRIX, FORMAT</instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -839,6 +880,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="PrepareExits"> 				
 			<title>Prepare Exits for Security and Connectivity</title> <!--  Assembles and link-edits the IMS default user exits    -->
 			<description>Assembles and link-edits the IMS default user exits</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB assembles and link-edits the following user exits:
 				<ul>
@@ -872,6 +915,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 			<step name="ACBLIB_AppPrep_substep1"> 			
 				<title>Data Bases Generation </title>
 				<description>Perform Data Base Descriptor (DBD) generation </description>
+				<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 				<instructions substitution="true"> 
 					This JOB uses the DBDGEN Utility to create the data base definitions
 					(DBDs) for the data base that can be used for testing of the zCloud IMS.  The assembled DBDs are link-edited into ${instance-DFS_AUTH_LIB_HLQ2}.DBDLIB.
@@ -905,6 +950,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 			<step name="ACBLIB_AppPrep_substep2"> 			
 				<title>Program Specifications Generation </title>
 				<description>Program Specification Blocks (PSBs) generation </description>
+				<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            	<approver substitution="true">$!{instance-zCloud_approver}</approver>	
 				<instructions substitution="true"> 
 					This JOB uses the PSBGEN Utility to create the program specification
 					blocks (PSBs) for the application programs that can be used by used to test this zCloud IMS.  The assembled PSBs are link-edited into ${instance-DFS_AUTH_LIB_HLQ2}.PSBLIB.
@@ -924,6 +971,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 			<step name="ACBLIB_AppPrep_substep3"> 			
 				<title>Access Control Definitions Generation </title>
 				<description>Access Control block(ACB) Definitions Generation </description>
+				<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            	<approver substitution="true">$!{instance-zCloud_approver}</approver>	
 				<instructions substitution="true"> 
 					This JOB uses the ACBGEN Utility to create the application control blocks
 					(ACBs) for the DBDs and PSBs that can be used to test teh zCloud IMS.  The ACB  members are link-edited into ${instance-DFS_AUTH_LIB_HLQ2}.ACBLIB.
@@ -964,6 +1013,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="enableOLC"> 				
 			<title>Enable IMS Local Online Change</title> <!-- Initialize MODSTAT data set and enable Online Change -->
 			<description>Initialize MODSTAT Dataset and Enable Online Change</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB initializes the ${instance-DFS_AUTH_LIB_HLQ2}.MODSTAT and ${instance-DFS_AUTH_LIB_HLQ2}.MODSTAT2 data set(s) using the INITMOD procedure.
 
@@ -989,6 +1040,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="estabilishActiveLibs"> 		
 			<title>Establish IMS Active Libraries</title>  <!-- Run Online Change Utility to copy the IMS staging libraries to active libraries-->
 			<description>Run Online Change Utility to declare active libraries</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB use the Online Change Utility to copy the IMS staging libraries
 				(MODBLKS, ACBLIB, MATRIX, FORMAT) to their active libraries (the libraries of the same names with an "A" suffix are used initially).
@@ -1008,6 +1061,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="DBRCDefaults"> 				
 			<title>Specify DB Recovery Control Defaults</title> <!-- Specify DBRC default parameter for Batch and Utility Regions -->
 			<description>Specify DBRC default parameter for Batch and Utility Regions </description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This JOB assembles and binds the DFSIDEF0 module - Installation Defaults
 				Block into the IMS execution library ${instance-DFS_AUTH_LIB_HLQ2}.SDFSRESL. The DFSIDEF0 module is used to specify the default value of the DBRC
@@ -1031,6 +1086,8 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 		<step name="loadCatalogDB"> 						
 			<title>Load IMS Catalog Database</title>
 			<description>Load the IMS Catalog Database</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> This JOB loads the IMS CATALOG database using DFS3PU00 utility</instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -1042,6 +1099,97 @@ DFSPBIMS - System ${} (DB/DC). This member is created by a later JOB.
 				<saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IV3E319K)</saveAsDataset>
 			</template>
 		</step>
+
+	<!-- ***************************************************** -->
+	<!--     IMS IVP Steps for contact list application                                     -->
+	<!-- ***************************************************** -->
+     <step name="Allocate_IVP_DB_Dataset" optional="false">
+         <title>Allocate Database Dataset for transaction IVTNO</title>
+         <description>Allocate Database Dataset for transaction IVTNO for 
+use with contacts list database</description>
+         <instructions substitution="false">Generated instruction text for step: Allocate_IVP_DB_Dataset
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSALIVT.jcl</fileTemplate>
+            <submitAs maxRc="8">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSALIVT)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Load_DB_VTNO" optional="false">
+         <title>Load contacts list database for transaction IVTNO</title>
+         <description>Load the database  of contacts (names and phone numbers) into IMS 
+that can be access by transaction IVTNO.</description>
+         <instructions substitution="false">Generated instruction text for step: Load_DB_VTNO
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSLDIVT.jcl</fileTemplate>
+            <submitAs maxRc="0">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSLDIVT)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Load_MFS_Libraries" optional="false">
+         <title>Load MFS (Message Format Service) Libraries</title>
+         <description>Message Format Service (MFS) is an IMS facility that formats messages to and from terminals.</description>
+         <instructions substitution="false">Generated instruction text for step: Load_MFS_Libraries
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSLDMFS.jcl</fileTemplate>
+            <submitAs maxRc="4">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSLDMFS)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Compile_Link_IMS_IVP" optional="false">
+         <title>Compile and Link IMS IVP Application</title>
+         <description>Compile and Link IMS IVP Application that accesses the contacts list database.</description>
+         <instructions substitution="false">Generated instruction text for step: Compile_Link_IMS_IVP
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSCLIVT.jcl</fileTemplate>
+            <submitAs maxRc="0">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSCLIVT)</saveAsDataset>
+         </template>
+      </step>
+
+      <step name="Register_Recon_IVP_Database" optional="false">
+         <title>Register contacts list database with RECON dataset</title>
+         <description>Register contacts list database with RECON dataset 
+to control database recovery.</description>
+         <instructions substitution="false">Generated instruction text for step: Register_Recon_Database
+Update this field with your own text</instructions>
+         <weight>10</weight>
+         <skills>System Admin</skills>
+         <autoEnable>true</autoEnable>
+         <canMarkAsFailed>false</canMarkAsFailed>
+         <template>
+            <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSRCIVT.jcl</fileTemplate>
+            <submitAs maxRc="0">JCL</submitAs>
+            <maxLrecl>80</maxLrecl>
+            <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(DFSRCIVT)</saveAsDataset>
+         </template>
+      </step>
 	</step>
 
 
@@ -1101,6 +1249,8 @@ LOG
 		<step name="Start_SCI"> 			
 			<title>Start SCI</title>
 			<description>Start the SCI address space</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will start the Common Service Layer (CSL) address space: ${instance-DFS_IMS_SSID}SC
 			</instructions>
@@ -1124,6 +1274,8 @@ LOG
 		<step name="Start_OM"> 			
 			<title>Start OM</title>
 			<description>Start the Operation Manager (OM)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will start the Operation Manager (OM): ${instance-DFS_IMS_SSID}OM
 			</instructions>
@@ -1147,6 +1299,8 @@ LOG
 		<step name="Start_RM"> 			
 			<title>Start RM</title>
 			<description>Start the Resource Manager (RM)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will start the Resource Manager (RM): ${instance-DFS_IMS_SSID}RM
 			</instructions>
@@ -1172,10 +1326,13 @@ LOG
 	<step name="Start_IMS"> 					
 		<title>Start the IMS Control Region</title>
 		<description>Start the IMS Control Region</description>
+
 		
 		<step name="Start_IMSCTLRegion">
 			<title>Start the IMS Control Reqion address space</title>
 			<description>Start the Control Reqion address space</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will start the IMS Control Region: ${instance-DFS_IMS_SSID}CTL
 			</instructions>
@@ -1202,10 +1359,13 @@ LOG
 		<title>Perform IMS Restart</title>
 		<description>Select the type of IMS Start: COLD, WARM, Emergency</description>
 
+		 
 		<step name="WaitJob" optional="false">
 			<title>Wait for IMS Ready</title>
 			<description>Wait IMS to be ready for Cold Start</description>
 			<prereqStep name="Start_IMSCTLRegion" />
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions>Exec the rexx program to wait for the IMS to be ready for restart</instructions>
 			<weight>1</weight>
 			<skills>System Programmer</skills>
@@ -1222,6 +1382,8 @@ LOG
 			<title>Cold Start IMS</title>
 			<description>Cold Start IMS</description>
 			<prereqStep name="WaitJob" />
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will Cold Start IMS: ${instance-DFS_IMS_SSID}CTL
 			</instructions>
@@ -1247,6 +1409,8 @@ LOG
 	<step name="ICONStart"> 					
 		<title>Start IMS Connect</title>
 		<description>Start IMS Connect</description>
+		<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+        <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 		<instructions substitution="true">This step will Start IMS Connect: ${instance-DFS_IMS_SSID}HWS</instructions>
 		<weight>2</weight>
 		<skills>System Programmer</skills>
@@ -1276,4 +1440,24 @@ LOG
 		</template>
 	</step>
 	
+	<!-- ***************************************************** -->
+	<!--     IMS  -->
+	<!-- ***************************************************** -->
+	   <step name="Start_IMS_MPP_Region" optional="false">
+      <title>Start the IMS MPP (Message Processing Program) Region</title>
+      <description>Starting the MPP Region so that an application program can execute within the MPP virtual storage.</description>
+      <instructions substitution="false">Generated instruction text for step: Start_IMS_MPP_Region
+Update this field with your own text</instructions>
+      <weight>10</weight>
+      <skills>System Admin</skills>
+      <autoEnable>true</autoEnable>
+      <canMarkAsFailed>false</canMarkAsFailed>
+      <template>
+         <fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSSTREG.jcl</fileTemplate>
+         <submitAs maxRc="0">JCL</submitAs>
+         <maxLrecl>80</maxLrecl>
+         <saveAsDataset substitution="true">${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(IMS1MPP1)</saveAsDataset>
+      </template>
+   </step>
+   
 </workflow>

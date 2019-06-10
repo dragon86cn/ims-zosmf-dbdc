@@ -9,47 +9,58 @@ The provision workflow will provision an IMS™ DB/TM subsystem with these steps
 
 | Step          | Description   | JCL  	  |
 | :------------:|:------------- |:------- |
-| 1 | Specify IMS criteria| |
-| 2 | IMS installation preparation| |
-| 2.1 | Allocate work data set for zCloud IMS| DFSALWRK.jcl|
-| 2.2 | Allocate IMS system definitions data sets| DFSALSY2.jcl|
-| 2.3 | IMS system definition preprocessor utility| DFSGNPRE.jcl|
-| 2.4 | Run SYSDEF stage 1| DFS4STG1.jcl|
-| 2.5 | Run SYSDEF stage 2| DFS4STG2.jcl|
-| 3 | Build the zCloud IMS| |
-| 3.1 | RACF security exits for IMS| DFSC105J.jcl|
-| 3.2 | Authorize IMS data sets to z/OS| DFSSETPG.jcl|
-| 3.3 | Allocate IMS data sets| DFSALSY1.jcl|
-| 3.4 | Dynamic allocation of IMS system data sets| DFSDYNAL.jcl|
-| 3.5 | Create IMS catalog database| DFSALCAT.jcl|
-| 3.6 | Prepare IMS DB recovery control| DFSE314J.jcl|
-| 3.7 | Ready the IMS proclib| DFSE302J.jcl|
-| 3.8 | Define IMS subcomponents| DFSE303J.jcl|
-| 3.9 | Define IMS subcomponent CQS| DFSE304J.jcl|
-| 3.10 | Create IMS connect| DFS4ICON.jcl|
-| 3.11 | IMS configuration defaults| DFSE305J.jcl|
-| 3.12 | Define IMS components to z/OS| DFS4CPYP.jcl|
-| 3.13 | Define IMS resources to z/OS| DFSE313J.jcl|
-| 3.14 | Copy staging libraries| DFSCPYST.jcl|
-| 3.15 | Prepare exits for security and connectivity| DFSE315J.jcl|
-| 3.16 | Prepare ACBLIB for sample applications| |
-| 3.16.1 | Database generation| DFSAPPGN.jcl|
-| 3.16.2 | Program specifications generation| DFS4APPG.jcl|
-| 3.16.3 | Access control definitions generation|
-| 3.17 | Enable IMS local online change| DFSENOLC.jcl|
-| 3.18 | Establish IMS active libraries| DFS4ACTV.jcl|
-| 3.19 | Specify DB recovery control defaults| DFSDFDRC.jcl|
-| 3.20 | Load IMS catalog database| DFSLDCAT.jcl|
-| 4 | Start IMS concomitant address spaces| |
-| 4.1 | Start SCI| |
-| 4.2 | Start OM| |
-| 4.3 | Start RM| |
-| 5 | Start the IMS control region| |
-| 5.1 | Start the IMS control region address space| |
-| 6 | Perform IMS restart| |
-| 6.1 | Wait for IMS to be ready for cold start| WaitJob.rexx|
-| 6.2 | Cold start IMS| |
-| 7 | Start IMS connect| |
+| 1 | Set the Workflow Variable| |
+| 2 | Assign Dynamic Provisioning Variables| |
+| 3 | Specify IMS criteria| |
+| 4 | IMS installation preparation| |
+| 4.1 | Allocate work data set for zCloud IMS| DFSALWRK.jcl|
+| 4.2 | Allocate IMS system definitions data sets| DFSALSY2.jcl|
+| 4.3 | IMS system definition preprocessor utility| DFSGNPRE.jcl|
+| 4.4 | Run SYSDEF stage 1| DFS4STG1.jcl|
+| 4.5 | Run SYSDEF stage 2| DFS4STG2.jcl|
+| 4.6 | Build the zCloud IMS| |
+| 4.6.1 | RACF security exits for IMS| DFSC105J.jcl|
+| 4.6.2 | Authorize IMS data sets to z/OS| DFSSETPG.jcl|
+| 4.6.3 | Allocate IMS data sets| DFSALSY1.jcl|
+| 4.6.4 | Dynamic allocation of IMS system data sets| DFSDYNAL.jcl|
+| 4.6.5 | Create IMS catalog database| DFSALCAT.jcl|
+| 4.6.6 | Prepare IMS DB recovery control| DFSE314J.jcl|
+| 4.6.7 | Allocating TCPIP port| |
+| 4.6.8 | Allocating SSL TCPIP port| |
+| 4.6.9 | Ready the IMS proclib| DFSE302J.jcl|
+| 4.6.10 | Define IMS subcomponents| DFSE303J.jcl|
+| 4.6.11 | Define IMS subcomponent CQS| DFSE304J.jcl|
+| 4.6.12 | Create IMS connect| DFS4ICON.jcl|
+| 4.6.13 | IMS configuration defaults| DFSE305J.jcl|
+| 4.6.14 | Define IMS components to z/OS| DFS4CPYP.jcl|
+| 4.6.15 | Create IEFJOBS Members| IEFJOBS.rexx|
+| 4.7 | Define IMS resources to z/OS| DFSE313J.jcl|
+| 4.8 | Copy staging libraries| DFSCPYST.jcl|
+| 4.9 | Prepare exits for security and connectivity| DFSE315J.jcl|
+| 4.10 | Prepare ACBLIB for sample applications| |
+| 4.10.1 | Database generation| DFSAPPGN.jcl|
+| 4.10.2 | Program specifications generation| DFS4APPG.jcl|
+| 4.10.3 | Access control definitions generation|
+| 4.11 | Enable IMS local online change| DFSENOLC.jcl|
+| 4.12 | Establish IMS active libraries| DFS4ACTV.jcl|
+| 4.13 | Specify DB recovery control defaults| DFSDFDRC.jcl|
+| 4.14 | Load IMS catalog database| DFSLDCAT.jcl|
+| 4.15 | Allocate Database Dataset for transaction IVTNO | DFSALIVT.jcl |
+| 4.16 | Load contacts list database for transaction IVTNO | DFSLDIVT.jcl |
+| 4.17 | Load MFS (Message Format Service) Libraries | DFSLDMFS.jcl |
+| 4.18 | Compile and link IMS IVP Application | DFSCLIVT.jcl |
+| 4.19 | Register contacts list database with RECON dataset | DFSRCIVT.jcl |
+| 5 | Start IMS concomitant address spaces| |
+| 5.1 | Start SCI| |
+| 5.2 | Start OM| |
+| 5.3 | Start RM| |
+| 6 | Start the IMS control region| |
+| 6.1 | Start the IMS control region address space| |
+| 7 | Perform IMS restart| |
+| 7.1 | Wait for IMS to be ready for cold start| WaitJob.rexx|
+| 7.2 | Cold start IMS| |
+| 8 | Start IMS connect| |
+| 9 | Start the IMS MPP (Message Processing Program) Region | DFSSTREG.jcl |
 
 
 
@@ -58,25 +69,35 @@ The de-provision workflow will de-provision an IMS™ DB/TM subsystem with these
 
 | Step          | Description   | JCL  	  |
 | :------------:|:------------- |:------- |
-| 1 | Specify IMS criteria| |
-| 2 | Perform IMS shutdown| |
-| 2.1 | Stop all IMS resources| DFSSTPRS.jcl|
-| 2.2 | Immediate IMS shutdown| DFSISHUT.jcl|
-| 3 | Stop IMS concomitant address spaces| |
-| 3.1 | Stop IMS connect| DFSSTPIC.jcl|
-| 3.2 | Stop OM| DFSSTPOM.jcl|
-| 3.3 | Stop RM| DFSSTPRM.jcl|
-| 3.4 | Stop CSL| DFSSTPAS.jcl|
-| 4 | Unmount ZFS files| DFSUNMNT.jcl|
-| 5 | Delete IMS system libraries| |
-| 5.1 | Delete IMS system definition data sets| DFSSYSDL.jcl|
-| 6 | Destroy the zCloud IMS environment| |
-| 6.1 | Delete IMS data sets| DFSDELLB.jcl|
-| 6.2 | Delete IMS catalog database| DFSDCTLG.jcl|
-| 7 | Delete z/OS components| |
-| 7.1 | Unauthorize data sets to z/OS| DFSDLAPF.jcl|
-| 7.2 | Delete IMS services from z/OS| |
-| 7.3 | Delete IMS components from z/OS| DFSDLMBR.jcl|
+| 1 | Set the Workflow Variable| |
+| 2 | Assign Dynamic Provisioning Variables| |
+| 3 | Specify IMS criteria| |
+| 4 | Wait for IMS Ready| |
+| 5 | Perform IMS shutdown| |
+| 5.1 | Stop all IMS resources| DFSSTPRS.jcl|
+| 5.2 | Immediate IMS shutdown| DFSISHUT.jcl|
+| 6 | Stop IMS concomitant address spaces| |
+| 6.1 | Stop IMS connect| DFSSTPIC.jcl|
+| 6.2 | Stop OM| DFSSTPOM.jcl|
+| 6.3 | Stop RM| DFSSTPRM.jcl|
+| 6.4 | Stop CSL| DFSSTPAS.jcl|
+| 7 | Unmount ZFS files| DFSUNMNT.jcl|
+| 8 | Delete IMS system libraries| |
+| 8.1 | Delete IMS system definition data sets| DFSSYSDL.jcl|
+| 9 | Destroy the zCloud IMS environment| |
+| 9.1 | Delete IMS data sets| DFSDELLB.jcl|
+| 9.2 | Delete IMS catalog database| DFSDCTLG.jcl|
+| 9.3 | Delete IVP Datasets | DFSDIVPD.jcl|
+| 10 | Delete z/OS components| |
+| 10.1 | Unauthorize data sets to z/OS| DFSDLAPF.jcl|
+| 10.2 | Delete IMS services from z/OS| |
+| 10.3 | Delete IEFJOBS Members| |
+| 10.4 | Delete IMS components from z/OS| DFSDLMBR.jcl|
+| 11 | Returning IMSConnectports| |
+| 11.1 | Returning IMSConnect port| |
+| 11.2 | Returning IMSSSLConnect port| |
+
+
 
 
 #### Input variables
@@ -119,10 +140,16 @@ others.
 | DFS_IXUSTIM1 | EXEC time parameter for SMP/E, SYSDEF STAGE1|
 | DFS_IXUSTIM3 | EXEC time parameter for MPPs, IFPs, IRLM, VTAM|
 | GIM_IMS_GLOBALzone_CSI | IMS SMP/E target zone ID|
-| GIM_IMS_TARGETzone | IMS SMP/E g      lobal zone CSI|
+| GIM_IMS_TARGETzone | IMS SMP/E global zone CSI|
 | DFS_MOUNTPOINT | Mount point for unix files|
 | DFS_FSTYPE | File system for unix files|
 | DFS_IMS_SECURITY | True or false value to use SMS-managed DASD for IMS libraries|
+| DFS_useIEFJOBS = N |Use IEFJOBS dataset or not|
+| zCloud_IEFJOBS z/OS data set that contains job source JCL for started tasks|
+| zCloud_approver | Approver for Cloud|
+| zCloud_admin | Admin userid for Cloud provisioning|
+| zCloud_IMS_SVC_Type2 | SVC Values|
+| zCloud_IMS_SVC_Type4 | SVC Values|
 
 
 ## Pre-requisites
@@ -130,28 +157,32 @@ others.
 * Identify the z/OS and IMS system parameters.
 * IMS SVCs are installed on the system.
 * The workflow files are installed in a suitable USS directory.
-* z/OSMF must be started. Both the angel and server z/OSMF address spaces must be started. 
+* z/OSMF must be started. Both the angel and server z/OSMF address spaces must be started.
 
-## Security requirements 
+## Security requirements
 To run the workflow, you need the following authority:
 * RACF READ authority on SMP/E-installed IMS libraries.
 * RACF UPDATE authority on the high-level qualifiers (HLQs) you are using for the IMS instance libraries.
 * Authority to ADD or DELETE APF authorizations.
 
-## Package structure 
+## Package structure
 The repository includes the following files:
+* ims.mf
+  * This manifest file can be used to create and new Cloud Provisioning and Management Software Services template.
 * provision.xml
   * This workflow XML provisions an IMS Fast Path DEDB database. Do not modify this file.
-* deprovision.xml   
+* deprovision.xml
   * This workflow XML de-provisions an IMS Fast Path DEDB database. Do not modify this file.
+* StartIMS.xml
+  * This workflow XML starts the IMS control region and IMS resources.
+* StopIMS.xml
+  * This workflow XML stops the IMS control region and IMS resources.
 * IMSVariables.xml
   * This file defines the variables referenced by the steps in the workflow.
 * workflow_variables.properties
-  * This properties file contains values for the variables referenced in the provision.xml and deprovision.xml workflows. Edit the workflow_variables.properties file to specify your system specific information for the variables in the file.
-* actions.xml
-  * This file defines the actions that can be taken on the instance of the template. Actions like deprovision, start, stop. Do not modify this file.  
+  * This properties file contains values for the variables referenced in the provision_IMS_DEDB.xml and deprovision_IMS_DEDB.xml workflows. Edit the workflow_variables.properties file to specify your system specific information for the variables in the file.
 
-## Installation 
+## Installation
 * Use FTP to transfer the provision.xml, deprovision.xml, and the workflow_variables.properties files to USS on the z/OS host in binary mode.
 * Make these files visible to the z/OSMF application. Do this by changing the access permissions of the files using the chmod command.
   * Example chmod commands:
@@ -159,7 +190,7 @@ The repository includes the following files:
     chmod 755 provision.xml
     ```
   * Or if the file is in a folder with the name of workflows:
-    ```Java 
+    ```Java
     chmod -R 755 workflows
     ```
 
@@ -179,82 +210,16 @@ The repository includes the following files:
 
 For more information about running a workflow see [Creating a workflow](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zosmfworkflows.help.doc/izuWFhpCreateWorkflowDialog.html) in the IBM Knowledge Center.
 
-## Creating a Software Services Template using the software services in Cloud Provisioning in z/OSMF 
-1. Select **Cloud Provisioning** from the left menu.
-1. Select the **Software Services** drop down menu.
-1. From **Templates** tab, Select **Add Template(Standard)**.
-1. In the Add Standard Template UI, specify the following information:
-    *   Template name
-    *   Workflow definition file
-    *   Workflow variable input file
-    *   Actions file 
-1. Select **Ok**.
-1. Template is created and can be seen in template table.
-1. Associate Tenant 
-    *   Select the above template created and go to Actions -> Associate Tenant. 
-    *   A dialog with pop-up window will display for Associate Tenant. 
-    *   To start with Domain is default and Tenant also default.   
-    *   Resource pool selection: Select **Create a dedicated resource pool** and Select **Ok**.  
-    *   A new UI - **Add Template and Resource Pool for Tenant: default** will open up with Instance Details tab.  
-    *   Specify general name prefix:
-        *   2 letter prefix eg. IM  
-        This is the prefix for the template instance where every new instance you run, it will dynamically name itself like IM00, IM01 depending on the number of software service instances the user defines for that template.
-    *   Maximum number of software services instances (1-1296): 
-        *   User defined number that limits the no. of instances
-    *   Next, go to Resource Management tab form the left   
-    *   In Resources for template: Select **Create network resource pool**
-    *   Select **Ok**.
-    *   Following message will be seen in the pop-up window : 
-        ```
-        A resource pool for the template will be created with no workload management resources. 
-        It will be created with network resources only. The network administrator must complete 
-        the network resource pool definition in the Configuration Assistant task.
-        ``` 
-    *   Select **Ok**. 
-
-For more information about running a workflow as a Software Services template see [Preparing to use Cloud Provisioning](https://www.ibm.com/support/knowledgecenter/SSLTBW_2.1.0/com.ibm.zos.v2r1.izua300/izuconfig_CloudProvSecuritySetup.htm) in the IBM Knowledge Center.
-
-## Dynamic Port Allocation 
-**Before completing this task, see [Configuring Cloud Policy](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/cloud/CloudPolicyCfgOverview.html) to setup Configuration Assistant and [Using the Systems Tab](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/cloud/SystemsMainTabUsing.html) to create a new TCP/IP stack.**
-1. Configuration -> Configuration Assistant on the left panel of the z/OSMF UI. 
-1. Select option: **Manage z/OS Cloud configuration** and Select **Proceed**.
-1. Select the Cloud Domain: **default** and Select **Proceed**.
-1. A table is displayed in Network Resource Pools tab with different fields like template name, has provisioned resources, completion status, etc. To provision or run the template instance, completion status for the template has to be complete.
-     * Select the template - Go to Actions -> Modify, in Attributes tab - Select **Is Complete** status.
-1. In Port Allocation tab, if there is no previously defined Port Ranges name in the table then create one or just select one from the table.
-1. To Create Port ranges, select Actions -> New 
-    *   Specify the name, uncheck the **Is Quiesced** status
-    *   Select the row and Specify the port range(eg. 10000 - 10100) and uncheck the **Is Quiesced**.  
-    *   Select **Save** and Continue.
-
-## Run the software service template 
-1. Cloud Provisioning -> Software Services: from the Templates tab, select the check box for the template you created and select Actions -> Test run.
-1. The following message will be displayed - 
-    ```
-    The software services instance (name of the instance dynamically created) has been started.
-    ```
-1. Go to the instances tab to see the status of the new service instance. 
-1. If the provisioning of the software service instance is 100% successful, the state will show **Provisioned** in green. 
-1. Using the same software services template, a user can provision multiple software service instances.
-
-
-## Actions on the software service instance 
-1. To perform actions against the software instance, select the instance that was provisioned and click on the desired Action -> Perform -> deprovision or stop or start.
-1. Deprovision will stop all IMS resources, the IMS control region, IMS Connect, delete all of the allocated datasets, clean up the environment that was provisioned, and release the allocated ports to make them available for reuse.
-1. Stop will stop all IMS resources, the IMS Control region, and IMS Connect.
-1. Start will start all IMS resources, the IMS Control region, and IMS Connect.
-
-
 ## Troubleshooting
 * IZUWF0105E   Workflow property file file-name is either not found or cannot be accessed
   * Typically, this error occurs when the file does not exist at the given path. If the file does exist, access permission to the file must be set by using the chmod command.
 * If there is no **Workflows** menu option in the z/OSMF web interface configure the IZUPRMxx member in SYS.PARMLIB to specify the WORKLOAD_MGMT in the PLUGINS statement. For more information see [creating a IZUPRMxx](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.2.0/com.ibm.zos.v2r2.izua300/izuconfig_IZUPRMxx.htm) in the IBM Knowledge Center.
-  * Example: 
-  
+  * Example:
+
         PLUGINS(INCIDENT_LOG  
         COMMSERVER_CFG
-        CAPACITY_PROV 
-        SOFTWARE_MGMT 
+        CAPACITY_PROV
+        SOFTWARE_MGMT
         ISPF          
         RESOURCE_MON  
         WORKLOAD_MGMT)
@@ -262,3 +227,6 @@ For more information about running a workflow as a Software Services template se
 ## z/OSMF documentation
 
 Visit the IBM Knowledge Center for more information on [IBM z/OS Management Facility](https://www.ibm.com/support/knowledgecenter/search/IBM%20z%2FOS%20Management%20Facility?scope=SSLTBW_2.2.0).
+
+
+End

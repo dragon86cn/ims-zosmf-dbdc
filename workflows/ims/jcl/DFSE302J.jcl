@@ -6,6 +6,14 @@
 //            DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.PROCLIB(&MBR)
 //SYSIN    DD DUMMY
 //        PEND
+//INSTUPDT PROC MBR=TEMPNAME  
+//*
+//P        EXEC PGM=IEBGENER
+//SYSPRINT DD SYSOUT=*
+//SYSUT2   DD DISP=SHR,
+//            DSN=${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.INSTALL(&MBR)
+//SYSIN    DD DUMMY
+//        PEND
 //*********************************************************************
 //* ADD SCRIPT TO TIME CONTROL OPTION (TCO) DATA SET
 //*********************************************************************
@@ -743,3 +751,28 @@ POOLID=(VSM1,VSRBF=(2048,500,D))
 ${instance-CSQ_SSID},MQM1,CSQQESMT,,R,
 /*
 //*
+//***************************************************************
+//* UPDATE
+//*
+//***************************************************************
+//***************************************************************
+//PHONEIN EXEC PROC=INSTUPDT,MBR=PHONEIN
+//P.SYSUT1 DD *
+S11 1 1 1 1       00001                             
+L        ISRT  A1111111                             
+L        DATA  LAST1     FIRST1    8-111-1111D01/R01
+L        ISRT  A1111111                             
+L        DATA  LAST2     FIRST2    8-111-2222D02/R02
+L        ISRT  A1111111                             
+L        DATA  LAST3     FIRST3    8-111-3333D03/R03
+L        ISRT  A1111111                             
+L        DATA  LAST4     FIRST4    8-111-4444D04/R04
+L        ISRT  A1111111                             
+L        DATA  LAST5     FIRST5    8-111-5555D05/R05
+L        ISRT  A1111111                             
+L        DATA  LAST6     FIRST6    8-111-6666D06/R06
+/*
+//DFSIVF1 EXEC PROC=INSTUPDT,MBR=DFSIVF1
+//P.SYSUT1 DD DISP=SHR,
+//         DSN=${instance-DFS_AUTH_LIB_HLQ}.${instance-DFS_AUTH_LIB_SYSHLQ2}.SDFSISRC(DFSIVF1)
+/*

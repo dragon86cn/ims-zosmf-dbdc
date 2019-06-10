@@ -6,7 +6,7 @@
 <!-- ********************************************************** -->
 <!-- ********************************************************** -->
 
-<variable name="DFS_ENVIRONMENT">
+<variable name="DFS_ENVIRONMENT" visibility="public">
     <label>ENVIRONMENT</label>
     <abstract>Environment for which the IMS system is to be provisioned/de-provisioned (DEV, TEST, QA, PROD)</abstract>
     <description>The environment for which the IMS system is to be provisioned/de-provisioned. The log datasets, pools sizes, DBRC RECON and a variety of other datasets size will vary depending on the environment chosen.</description>
@@ -20,7 +20,7 @@
 	</string>
 </variable>
 
-<variable name="DFS_IMS_USERID">
+<variable name="DFS_IMS_USERID" visibility="public">
 	<label>IMS_USERID</label>
 	<abstract>TSO user ID for IMS</abstract>
 	<description>The user ID to be used to provision the IMS System.
@@ -40,7 +40,7 @@
         <string/>
 </variable>
 
-<variable name="DFS_AUTH_LIB_HLQ">
+<variable name="DFS_AUTH_LIB_HLQ" visibility="public">
 	<label>Dataset HLQ</label>
 	<abstract>High-level qualifier</abstract>
 	<description>The data set high-level qualifier you wish to use when creating the IMs datasets and saving the generated JCL.</description>
@@ -51,7 +51,7 @@
 	</string>
 </variable>
 
-<variable name="DFS_AUTH_LIB_SYSHLQ2">     					<!--  High level DSNAME qualifier for IMS System data sets -->
+<variable name="DFS_AUTH_LIB_SYSHLQ2" visibility="public">     					<!--  High level DSNAME qualifier for IMS System data sets -->
 <label>Second level qualifier for IMS System datasets</label>
 	<abstract>Second level DSNAME qualifier for IMS System (SYS) data sets</abstract>
 	<description>This variable specifies the second level DSNAME qualifier to be used when referencing IMS System data sets.
@@ -69,7 +69,7 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="DFS_AUTH_LIB_HLQ1">      					<!--  First High level DSNAME qualifier for IMS Instance data sets -->
+<variable name="DFS_AUTH_LIB_HLQ1" visibility="public">      					<!--  First High level DSNAME qualifier for IMS Instance data sets -->
 <label>First level qualifier for IMS Instance datasets</label>
 	<abstract>First level DSNAME qualifier for IMS Instance data sets to be written to</abstract>
 	<description>This variable specifies the first level DSNAME qualifier to be used when allocating and referencing IMS Instance data sets.
@@ -86,7 +86,7 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="DFS_AUTH_LIB_HLQ2">      					<!--  High level DSNAME qualifier for IMS Instance data sets -->
+<variable name="DFS_AUTH_LIB_HLQ2" visibility="public">      					<!--  High level DSNAME qualifier for IMS Instance data sets -->
 <label>Second level qualifier for IMS Instance datasets</label>
 	<abstract>Second level DSNAME qualifier for IMS Instance data sets to be written to</abstract>
 	<description>This variable specifies the second level DSNAME qualifier to be used when allocating and referencing IMS Instance data sets.
@@ -128,6 +128,28 @@ to this group will be changed accordingly.
 		<regularExpression>[a-zA-Z0-9 @._-]{1,50}</regularExpression>
 	</string>
 </variable>
+
+
+<variable name="zCloud_admin">
+	<label>Admin userid</label>
+	<abstract>Admin userid</abstract>
+	<description>
+		Admin userid
+	</description>
+	<category>UserID</category>
+	<string/>
+</variable>
+
+<variable name="zCloud_approver">
+	<label>Approver userid</label>
+	<abstract>Approver userid</abstract>
+	<description>
+		Approver userid
+	</description>
+	<category>UserID</category>
+	<string/>
+</variable>
+
 
 
 <!-- ****************************************************************** -->
@@ -186,7 +208,7 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="zCloud_PROCLIB" scope="instance">    <!-- z/OS PROC Library (SYS1.PROCLIB) -->
+<variable name="zCloud_PROCLIB" scope="instance" visibility="public">    <!-- z/OS PROC Library (SYS1.PROCLIB) -->
 	<label>IMS Proc Library</label>
 	<abstract>Dataset to store IMS procedures</abstract>
 	<description>
@@ -259,7 +281,7 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="zCloud_IEFJOBS" scope="instance">    <!-- z/OS PROC Library (SYS1.IEFJOBS) -->
+<variable name="zCloud_IEFJOBS" scope="instance" visibility="public">    <!-- z/OS PROC Library (SYS1.IEFJOBS) -->
 	<label>z/OS Proc Library</label>
 	<abstract>z/OS data set that contains job source JCL for started tasks.</abstract>
 	<description>
@@ -303,7 +325,7 @@ to this group will be changed accordingly.
 <!-- ****************************************************************** -->
 <!-- Variables for zCloud_Subsystems: COMMON and GLOBAL                 -->
 <!-- ****************************************************************** -->
-<variable name="DFS_IMS_SSID"> <!-- Subsystem name for IMS -->
+<variable name="DFS_IMS_SSID" visibility="public"> <!-- Subsystem name for IMS -->
 	<label>IMS Subsystem name</label>
 	<abstract>Subsystem name for the zCloud IMS</abstract>
 	<description>
@@ -365,7 +387,7 @@ to this group will be changed accordingly.
 <!-- ****************************************************************** -->
 <!-- Variables for zCloud_VTAM (nodes, applications, resources)         -->
 <!-- ****************************************************************** -->
-<variable name="IST_VTAM_Procedure" scope="instance">	 <!-- VTAM procname used to start zCloud VTAM -->
+<variable name="IST_VTAM_Procedure" scope="instance" visibility="public">	 <!-- VTAM procname used to start zCloud VTAM -->
 	<label>VTAM Procedure</label>
 	<abstract>VTAM Procedure name</abstract>
 	<description>
@@ -451,7 +473,7 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="DFS_VTAM_NODE_IMSMTO" scope="instance"> <!-- VTAM Node name for IMS Master Terminal ** same as IXUVNDP1 ** -->
+<variable name="DFS_VTAM_NODE_IMSMTO" scope="instance" visibility="public"> <!-- VTAM Node name for IMS Master Terminal ** same as IXUVNDP1 ** -->
 	<label>VTAM Node for IMS MTO</label>
 	<abstract>VTAM Node name for IMS Master Terminal</abstract>
 	<description>
@@ -578,11 +600,35 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
+<variable name="zCloud_IMS_SVC_Type2">
+	<label>IMS Type 2 SVC</label>
+	<abstract>IMS Type 2 SVC</abstract>
+	<description>IMS Type 2 SVC</description>
+	<category>Jobs</category>
+	<integer>
+		<minValue>200</minValue>
+		<maxValue>255</maxValue>
+		<default>254</default>
+	</integer>
+</variable>
+
+<variable name="zCloud_IMS_SVC_Type4">
+	<label>IMS Type 4 SVC</label>
+	<abstract>IMS Type 4 SVC</abstract>
+	<description>IMS Type 4 SVC</description>
+	<category>Jobs</category>
+	<integer>
+		<minValue>200</minValue>
+		<maxValue>255</maxValue>
+		<default>255</default>
+	</integer>
+</variable>
+
 
 <!-- ****************************************************************** -->
 <!-- Variables for zCloud_IMS Installation.                             -->
 <!-- ****************************************************************** -->
-<variable name="zCloud_IMSConnect" scope="instance"> 	<!-- The IMS Connect name that identifies it in the IMSplex  (IXUISCPX)-->
+<variable name="zCloud_IMSConnect" scope="instance" visibility="public"> 	<!-- The IMS Connect name that identifies it in the IMSplex  (IXUISCPX)-->
 	<label>IMS Connect name</label>
 	<abstract>The IMS Connect name in the IMSplex</abstract>
 	<description>
@@ -606,7 +652,7 @@ to this group will be changed accordingly.
 	<string/>
 </variable>
 
-<variable name="DFS_REGION_TCPIPPORT" scope="instance" visibility="public">
+<variable name="DFS_REGION_TCPIPPORT" scope="instance">
         <label>DFS_REGION_TCPIPPORT</label>
         <abstract>DFS_REGION_TCPIPPORT</abstract>
         <description>Dynamically assign TCPIP Port number to be used for TCPIP connections.</description>
@@ -624,7 +670,7 @@ to this group will be changed accordingly.
 	<string/>
 </variable>
 
-<variable name="DFS_REGION_SSLTCPIPPORT" scope="instance" visibility="public">
+<variable name="DFS_REGION_SSLTCPIPPORT" scope="instance">
         <label>DFS_REGION_SSLTCPIPPORT</label>
         <abstract>DFS_REGION_SSLTCPIPPORT</abstract>
         <description>Dynamically assign TCPIP Port number to be used for TCPIP connections.</description>
@@ -647,7 +693,7 @@ to this group will be changed accordingly.
 	</string>
 </variable>
 
-<variable name="DFS_IMSPlex" scope="instance"> 	<!-- The IMS PLEX name  -->
+<variable name="DFS_IMSPlex" scope="instance" visibility="public"> 	<!-- The IMS PLEX name  -->
 	<label>IMS Plex Name</label>
 	<abstract>IMSPLEX name for this zCloud IMS </abstract>
 	<description>

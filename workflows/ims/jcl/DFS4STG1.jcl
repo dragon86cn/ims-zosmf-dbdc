@@ -62,7 +62,7 @@
 *
 * IMSCTF  MACRO --
 *
-         IMSCTF SVCNO=(,203,202),                                      X
+         IMSCTF SVCNO=(,${instance-zCloud_IMS_SVC_Type2},${instance-zCloud_IMS_SVC_Type4}),                                      X
                LOG=SNGL,                                               X
                CPLOG=500000,                                           X
                RDS=(LGDK,4096),                                        X

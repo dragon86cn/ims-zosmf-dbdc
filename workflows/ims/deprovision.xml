@@ -218,6 +218,8 @@ IBM CORP.
         <step name="immediateShutdown">
             <title>Immediate IMS Shutdown</title>
             <description>Immediate IMS Shutdown (FREEZE)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
             <condition>
                 <expression>${WaitJob.returnCode} != null</expression>
                 <description></description>
@@ -233,7 +235,7 @@ IBM CORP.
             <autoEnable>true</autoEnable>
             <template>
                 <fileTemplate substitution="true">jcl/DFSISHUT.jcl</fileTemplate>
-                <submitAs>JCL</submitAs>
+				<submitAs maxRc="12">JCL</submitAs>
                 <maxLrecl>80</maxLrecl>
             </template>
         </step>
@@ -249,6 +251,8 @@ IBM CORP.
 		<step name="stopICON"> 			
 			<title>Stop IMS Connect</title>
 			<description>Stop IMS Connect</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will Stop IMS Connect: ${instance-DFS_IMS_SSID}HWS
 			</instructions>
@@ -266,6 +270,8 @@ IBM CORP.
 		<step name="stopOM"> 			
 			<title>Stop OM</title>
 			<description>Stop the Operation Manager (OM)</description>	
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will Stop (CANCEL) the Operation Manager (OM): ${instance-DFS_IMS_SSID}OM
 			</instructions>
@@ -283,6 +289,8 @@ IBM CORP.
 		<step name="stopRM"> 			
 			<title>Stop RM</title>
 			<description>Stop the Resource Manager (RM)</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step will Stop (CANCEL) the Resource Manager (RM): ${instance-DFS_IMS_SSID}RM
 			</instructions>
@@ -300,6 +308,8 @@ IBM CORP.
 		<step name="stopCSL"> 			
 			<title>Stop CSL</title>
 			<description>Stop the Common Service Layer (CSL) address space</description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>		
 			<instructions substitution="true">
 				This step will Stop (CANCEL) the Common Service Layer (CSL) address space: ${instance-DFS_IMS_SSID}SCI
 			</instructions>
@@ -319,6 +329,8 @@ IBM CORP.
 	<step name="unMountZFSFiles"> 			
 		<title>Unmount ZFS files</title>
 		<description>Unmount ZFS files</description>
+		<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+        <approver substitution="true">$!{instance-zCloud_approver}</approver>	
         <condition>
             <expression>${WaitJob.returnCode} != null </expression>
             <description></description>
@@ -348,6 +360,8 @@ IBM CORP.
 		<step name="deleteSYSDEFLibs"> 	    	
 			<title>Delete IMS System Definitions data sets</title>
 			<description>Scratches system definition dataset</description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> This JOB scratches the data sets used for IMS system definition</instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -372,6 +386,8 @@ IBM CORP.
 		<step name="deleteIMSruntimeLibs"> 			
 			<title>Delete IMS Datasets</title>
 			<description>Delete IMS Data Sets </description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> 
 				This JOB scratches the data sets used to create the zCloud IMS system.
 			</instructions>
@@ -389,6 +405,8 @@ IBM CORP.
 		<step name="deleteIMSCatalog"> 			
 			<title>Delete IMS Catalog Database</title>
 			<description>Delete the IMS Catalog Database</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> This JOB scratches the IMS catalog database data sets. </instructions>
 			<weight>10</weight>
 			<skills>System Admin</skills>
@@ -399,6 +417,21 @@ IBM CORP.
 				<maxLrecl>80</maxLrecl>
 			</template>
 		</step>	
+
+		<step name="deleteIvpDatasets" optional="false">
+   			<title>Delete IVP Datasets</title>
+   			<description>Delete IMS verification (IVP) datasets</description>
+   			<instructions substitution="false">This JOB purges the IMS IVP data sets.</instructions>
+   			<weight>10</weight>
+   			<skills>System Admin</skills>
+   			<autoEnable>true</autoEnable>
+   			<canMarkAsFailed>false</canMarkAsFailed>
+   			<template>
+      			<fileTemplate filePathSubstitution="false" substitution="true">jcl/DFSDIVPD.jcl</fileTemplate>
+      			<submitAs maxRc="0">JCL</submitAs>
+      			<maxLrecl>80</maxLrecl>
+   			</template>
+		</step>
 
 	</step>
 
@@ -411,6 +444,8 @@ IBM CORP.
 		<step name="unauthIMSLibs"> 			
 			<title>Unauthorize Datasets to z/OS</title>
 			<description>Remove APF authorization for IMS dataset</description>			
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				The following datasets will be deleted from the APF authorization:  SDXRRESL, SDFSRESL, MODBLKS, MODBLKSA,  MODBLKSB.
 				Please update your IEAAPFxx or PROGxx member of SYS1.PARMLIB, if these changes were made permanent
@@ -429,6 +464,8 @@ IBM CORP.
 		<step name="deleteIMSSVC">  			
 			<title>Delete IMS Services from z/OS</title>
 			<description>Delete IMS SVC Type-2 Type-4 from z/OS</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true"> 
 				The IMS Type-2 and Type-4 SVC must be disassociated with the z/OS nucleus.
 				<p>
@@ -444,6 +481,8 @@ IBM CORP.
 		<step name="deleteIEFJOBSMembers" optional="false">
 			<title>Delete IEFJOBS Members</title>
 			<description>Delete members of IEFJOBS created by provisioning</description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions>Run the rexx program to delete the IEFJOBS members</instructions>
 			<weight>1</weight>
 			<skills>System Programmer</skills>
@@ -459,6 +498,8 @@ IBM CORP.
         <step name="cleanupProcLib"> 			
 			<title>Delete IMS Components from z/OS</title> 		<!--  delete STC Procedures to SYS1.PROCLIB   -->
 			<description>Delete IMS Components from SYS1.PROCLIB </description>
+			<runAsUser substitution="true">$!{instance-zCloud_admin}</runAsUser>
+            <approver substitution="true">$!{instance-zCloud_approver}</approver>	
 			<instructions substitution="true">
 				This step deletes the IMS execution procedures from ${instance-zCloud_PROCLIB}: 	
 				${instance-DFS_IMS_SSID}CTL, ${instance-DFS_IMS_SSID}DLI, ${instance-DFS_IMS_SSID}RD1, ${instance-DFS_IMS_SSID}OM, ${instance-DFS_IMS_SSID}SCI
