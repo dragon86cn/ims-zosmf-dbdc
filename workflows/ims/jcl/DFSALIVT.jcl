@@ -127,11 +127,11 @@
                 TRACKS(05)                      -
                )                                -
            DATA(                                -
-                NAME(${instance-DFS_AUTH_LIB_HLQ1}.DATA) -
+                NAME(${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSIVD1I.DATA) -
                CONTROLINTERVALSIZE(2048)       -
               )                                -
          INDEX(                                -
-               NAME(${instance-DFS_AUTH_LIB_HLQ1}.INDX) -
+               NAME(${instance-DFS_AUTH_LIB_HLQ1}.${instance-DFS_AUTH_LIB_HLQ2}.DFSIVD1I.INDX) -
                CONTROLINTERVALSIZE(4096)       -
               )
 //*
