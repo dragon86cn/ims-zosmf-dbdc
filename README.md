@@ -210,6 +210,47 @@ The repository includes the following files:
 
 For more information about running a workflow see [Creating a workflow](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zosmfworkflows.help.doc/izuWFhpCreateWorkflowDialog.html) in the IBM Knowledge Center.
 
+## Contacts Database Sample Application
+Upon successful provisioning of the workflow using z/OSMF, a sample contacts database application will be running in an MPP region that has been initialized with a VTAM terminal through the use of the `/OPNDST` command. The application transaction code is **IVTNO** that will query a IMS database and respond according to the request parameters. You can query the database to retrieve contact information such as first name, last name, telephone extension, and zip code. 
+
+The application supports process code operations that include **ADD**, **DELETE**, **UPDATE**, **DISPLAY** and **TADD**. These process codes can be used with a request to operate on **LAST NAME**, **FIRST NAME**, **EXTENSION NUMBER** and **ZIP CODE**.
+
+## Steps Connecting to Sample Application
+Successful connectivity to the sample application requires that you establish a **VTAM** session **before** running the workflow that provisions IMS with z/OSMF. Ensure you have an **active** and **connected** **x3270** session with **VTAM**. 
+
+Connecting to a VTAM session can be configuration specific beyond the defaults, so only a general guide will be demonstrated.
+
+1. Use the LOGON command to connect to a VTAM terminal session.
+    * [LOGON command documentation](https://www.ibm.com/support/knowledgecenter/en/SSLTBW_2.3.0/com.ibm.zos.v2r3.istrdr0/rlogonsyn.htm)
+    * The **APPLID** will correspond to the value entered for **IST_VTAM_IMSAPPLID** in the [workflow variable properties file](workflows/ims/workflow_variables.properties)
+1. Initially the terminal session will be blank and will appear to remain inactive until the provisioning has completed.
+    * When the sample application has connected with a VTAM terminal the session will look similar to the screen capture below.
+      ![VTAM connected](img/vtam.connected.png)
+1. To display an interactive panel for the sample application, use the MFS service to the process the request and send a reply back to the terminal.
+    * Enter the command `/FOR IVTNO` to access the MFS panel for the sample application.
+      ![VTAM for ivtno cmd](img/for.ivtno.png)
+      ![MFS application panel](img/mfs.panel.png)
+1. In the MFS panel enter the values:
+    * PROCESS CODE: DISPLAY
+    * LAST NAME: LAST1  
+      ![MFS application input](img/mfs.input.png)
+    * Press Enter to see the results below.
+      ![MFS application result](img/mfs.result.png)
+## Steps Running the Sample Application
+Optionally, the sample application can be run in the IMS console using the applications transaction code IVTNO.
+1. Sign onto an IMS user terminal session.
+    * Below is a screen capture of a IMS terminal session
+      ![IMS terminal session example](img/ims.terminal.png)
+    * Using the ims reply number which can be found alongside the IMS READY message, use the command syntax:
+      `<IMS REPLY NUMBER><Transaction Code><5 spaces><Process code><3 spaces><Last Name><5 spaces><period>`
+    * In the following screen capture, the reply number is 28 and the command run is: `28IVTNO     DISPLAY   LAST1     .`
+      ![ims display command example](img/ims.display.cmd.png)
+    * The IMS console will display a new reply number 29 and the command it ran. 
+      * To obtain the result, run the command `29/.` which follows syntasx `<IMS REPLY NUMBER></.>`
+        ![IMS Display tran result](img/ims.reply.display.cmd.png)
+    * The result **FIRST1    8-111-1111D01/R010001  IMS1** will be shown in the IMS terminal session. 
+      ![IMS Display tran result](img/ims.result.display.cmd.png)
+
 ## Troubleshooting
 * IZUWF0105E   Workflow property file file-name is either not found or cannot be accessed
   * Typically, this error occurs when the file does not exist at the given path. If the file does exist, access permission to the file must be set by using the chmod command.
